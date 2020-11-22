@@ -34,14 +34,15 @@ const styles = StyleSheet.create({
     welcomePage2: {
         height: Dimensions.get('window').height ,
         flexDirection: 'column',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        justifyContent: 'center'
     },
     welcomeContainer: {
         marginTop: Dimensions.get('window').height * .15,
-        //height: Dimensions.get('window').height * .94,
         alignItems: 'center',
         justifyContent: 'center',
-        width: Dimensions.get('window').width
+        width: Dimensions.get('window').width,
+        alignSelf: 'center'
     },
     welcomeToText: {
         fontSize: 30,

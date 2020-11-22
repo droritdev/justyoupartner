@@ -110,7 +110,7 @@ app.post('/trainers/register', trainerRegister.register);
 app.get('/trainers/:email', findTrainerByEmail.getTrainerByEmail);
 
 //End point for editing the trainer profile
-app.put('/trainers/settings/edit-profile', trainerEditProfile.editProfile);
+app.put('/trainers/settings/edit-profile/:email', trainerEditProfile.editProfile);
 
             ////**Client end points**////   
 

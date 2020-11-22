@@ -119,59 +119,59 @@ const EmailVerificationTrainer = ({navigation}) => {
     }
 
     return(
-      <SafeAreaView>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={handleArrowButton}
-          >
-            <Image
-              source={require('../../../images/arrowBack.png')}
-              style={styles.arrowImage}
-            />
-          </TouchableOpacity>
-          <Text style={styles.verifyEmailTitle}>Verify email</Text>
-          <Text style={styles.verifyEmailText}>We've sent a code to {<Text style={{color: 'deepskyblue'}}>{emailAddress}</Text>}. To continue, enter your code here bellow.</Text>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              placeholder='Enter your code'
-              textAlign='center'
-              onChangeText={text => handleOnInputChange(text)}
-            />
-            {isErrorCodeMessage ?
-              <Text style={styles.codeErrorText}>{codeErrorMessage}</Text>
-            :null}
-          </View>
-          <View style={styles.fotterContainer}>
-              <Text style={styles.didntGetEmailText}>Didn't get an email? Please make sure we have your email address right, or maybe it went to spam</Text>
-              <TouchableOpacity 
-                style={styles.sendAgainButton}
-                onPress={handleResendEmail}
-              >
-                <Text style={styles.sendAgainButtonText}>Resend email</Text> 
-              </TouchableOpacity>
-          </View>
-          <View style={styles.nextButtonContainer}>
-              <TouchableOpacity
-                  style={styles.nextButton}
-                  onPress={handleNext}
-              >
-                  <Text style={styles.nextButtonText}>Next</Text>
-              </TouchableOpacity>
-          </View>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity
+          onPress={handleArrowButton}
+        >
+          <Image
+            source={require('../../../images/arrowBack.png')}
+            style={styles.arrowImage}
+          />
+        </TouchableOpacity>
+        <Text style={styles.verifyEmailTitle}>Verify email</Text>
+        <Text style={styles.verifyEmailText}>We've sent a code to {<Text style={{color: 'deepskyblue'}}>{emailAddress}</Text>}. To continue, enter your code here bellow.</Text>
+        <View style={styles.textInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder='Enter your code'
+            textAlign='center'
+            onChangeText={text => handleOnInputChange(text)}
+          />
+          {isErrorCodeMessage ?
+            <Text style={styles.codeErrorText}>{codeErrorMessage}</Text>
+          :null}
+        </View>
+        <View style={styles.fotterContainer}>
+            <Text style={styles.didntGetEmailText}>Didn't get an email? Please make sure we have your email address right, or maybe it went to spam</Text>
+            <TouchableOpacity 
+              style={styles.sendAgainButton}
+              onPress={handleResendEmail}
+            >
+              <Text style={styles.sendAgainButtonText}>Resend email</Text> 
+            </TouchableOpacity>
+        </View>
+        <View style={styles.nextButtonContainer}>
+            <TouchableOpacity
+                style={styles.nextButton}
+                onPress={handleNext}
+            >
+                <Text style={styles.nextButtonText}>Next</Text>
+            </TouchableOpacity>
         </View>
       </SafeAreaView>
     )
   }
   
   const styles = StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: 'white',
+    },
     container: {
       flexDirection: 'column',
-      height: Dimensions.get('window').height * .95,
+      height: Dimensions.get('window').height,
       backgroundColor: 'white'
     },
     arrowImage: {
-        marginTop: 20,
         marginLeft: 20
     },
     verifyEmailTitle: {
@@ -237,7 +237,6 @@ const EmailVerificationTrainer = ({navigation}) => {
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {

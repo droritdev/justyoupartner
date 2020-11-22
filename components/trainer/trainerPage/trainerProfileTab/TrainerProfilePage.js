@@ -1,7 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import SlidingUpPanel from 'rn-sliding-up-panel';
 import axios from 'axios';
 
 import {CountryContext} from '../../../../context/trainerContextes/CountryContext';
@@ -52,11 +51,16 @@ const TrainerProfilePage = ({navigation}) => {
     //Calculate the trainers age according to the his birthday
     useEffect(() => {
         axios
-            .get('/trainers/omer12@walla.com',
+            .get('/trainers/omer@hotmail.com',
             config
         )
         .then((doc) => {
             if(doc){
+                dispatchEmail({
+                    type: 'SET_EMAIL_ADDRESS',
+                    emailAddress: doc.data[0].email   
+                });
+
                 dispatchFirst({
                     type: 'SET_FIRST_NAME',
                     firstName: doc.data[0].name.first
@@ -71,6 +75,20 @@ const TrainerProfilePage = ({navigation}) => {
                     type: 'SET_BIRTHDAY',
                     birthday: doc.data[0].birthday
                 })
+
+                let array = doc.data[0].birthday.split('/');
+                let today = new Date();
+                let year = today.getFullYear();
+                let month = today.getMonth();
+                let todayDay = today.getDate();
+                let age = year - (Number(array[2]));
+                if(month < (Number(array[0]))){
+                    age--;
+                }
+                if((Number(array[0])) === month && todayDay < (Number(array[1]))){
+                    age--
+                }
+                setAge(age);
 
                 dispatchCategories({
                     type: 'SET_CATEGORIES',
@@ -121,20 +139,6 @@ const TrainerProfilePage = ({navigation}) => {
                     type: 'SET_COUPLE_OUTDOOR',
                     coupleOutdoor: doc.data[0].prices.couple.coupleOutdoor
                 })
-
-                let array = birthday.split('/');
-                let today = new Date();
-                let year = today.getFullYear();
-                let month = today.getMonth();
-                let todayDay = today.getDate();
-                let age = year - (Number(array[2]));
-                if(month < (Number(array[0]))){
-                    age--;
-                }
-                if((Number(array[0])) === month && todayDay < (Number(array[1]))){
-                    age--
-                }
-                setAge(age);
             }
             else{
                 alert("No trainer");

@@ -64,8 +64,8 @@ const App = () => {
     <GlobalStore>
       <NavigationContainer>
         <Stack.Navigator 
-          initialRouteName='TrainerContainer'
           screenOptions={{headerShown: false}}
+          initialRouteName='TrainerContainer'
         >
           <Stack.Screen name='WelcomePopUp' component={WelcomePopUp} />
           <Stack.Screen name='GetStarted' component={GetStarted} />

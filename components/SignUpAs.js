@@ -26,30 +26,28 @@ const SignUpAs = ({navigation}) => {
     }
 
     return(
-        <SafeAreaView>
-            <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.justYouHeader}>Just You</Text>
-                    <Text style={styles.PartnerText}>Partner</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.headerContainer}>
+                <Text style={styles.justYouHeader}>Just You</Text>
+                <Text style={styles.PartnerText}>Partner</Text>
+            </View>
+            <Text style={styles.signUpAsTitle}>Sign up as:</Text>
+            <View style={styles.buttonsContainer}>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleOnPersonalTrainerPress}
+                    >
+                        <Text style={styles.buttonText}>Personal Trainer</Text>
+                    </TouchableOpacity>
                 </View>
-                <Text style={styles.signUpAsTitle}>Sign up as:</Text>
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={handleOnPersonalTrainerPress}
-                        >
-                            <Text style={styles.buttonText}>Personal Trainer</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={handleOnPlacePress}
-                        >
-                            <Text style={styles.buttonText}>Place</Text>
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleOnPlacePress}
+                    >
+                        <Text style={styles.buttonText}>Place</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>

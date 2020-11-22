@@ -6,6 +6,9 @@ import TrainerProfilePage from './TrainerProfilePage'
 import QuestionsAndAnswers from './QuestionsAndAnswers';
 import WhyUS from './WhyUs';
 import TrainerEditProfile from './TrainerEditProfile';
+import TrainerAboutMeEditProfile from './TrainerAboutMeEditProfile';
+import TrainerCertificationsEditProfile from './TrainerCertificationsEditProfile';
+import TrainerPickCategoriesEditProfile from './TrainerPickCategoriesEditProfile';
 import TrainerSettings from './TrainerSettings';
 import ChangeEmailAddress from './ChangeEmailAddres';
 import ChangePhoneNumber from './ChangePhoneNumber';
@@ -18,12 +21,14 @@ const TrainerProfilePageStack = ({navigation}) => {
     return(
         <Stack.Navigator
             screenOptions={{headerShown: false}}
-            initialRouteName='TrainerProfilePage'  
         >
             <Stack.Screen name='TrainerProfilePage' component={TrainerProfilePage}/>
             <Stack.Screen name='QuestionsAndAnswers' component={QuestionsAndAnswers}/>
             <Stack.Screen name='WhyUS' component={WhyUS}/>
             <Stack.Screen name='TrainerEditProfile' component={TrainerEditProfile}/>
+            <Stack.Screen name='TrainerPickCategoriesEditProfile' component={TrainerPickCategoriesEditProfile}/>
+            <Stack.Screen name='TrainerAboutMeEditProfile' component={TrainerAboutMeEditProfile}/>
+            <Stack.Screen name='TrainerCertificationsEditProfile' component={TrainerCertificationsEditProfile}/>
             <Stack.Screen name='TrainerSettings' component={TrainerSettings}/>
             <Stack.Screen name='ChangeEmailAddress' component={ChangeEmailAddress}/>
             <Stack.Screen name='ChangePhoneNumber' component={ChangePhoneNumber}/>

@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, KeyboardAvoidingView} from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
@@ -98,8 +98,7 @@ const SignUpTrainer = ({navigation}) => {
     }
   
     return(
-      <SafeAreaView>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <TouchableOpacity
               onPress={handleArrowButton}
           >
@@ -141,86 +140,84 @@ const SignUpTrainer = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      height: Dimensions.get('window').height * .95,
-      flexDirection: 'column',
-      backgroundColor: 'white'
-    },
-    arrowImage: {
-      marginTop: 20,
-      marginLeft: 20
-    },
-    justYouHeader: {
-      color: 'deepskyblue',
-      fontWeight: 'bold',
-      fontSize: 30,
-      marginTop: 30,
-      marginLeft: 20,
-    },
-    signUpText: {
-      fontSize: 40,
-      fontWeight: 'bold',
-      width: Dimensions.get('window').width * .8,
-      marginTop: 20,
-      marginLeft: 20,
-    },
-    inputTitle: {
-      marginTop: 60,
-      fontSize: 20,
-      marginLeft: 20,
-    },
-    textInput: {
-      borderColor: 'deepskyblue',
-      borderRadius: 20,
-      borderWidth: 3,
-      height: Dimensions.get('window').height * .08,
-      marginRight: 20,
-      marginTop: 8,
-      justifyContent: 'center',
-      marginLeft: 20,
-    },
-    emailErrorText: {
-        textAlign:'center',
-        color: 'red',
-        fontSize: 20
-    },
-    fotterContainer: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      marginBottom: 40,
-      alignItems: 'center'
-    },
-    nextButton: {
-      width: Dimensions.get('window').width * .9,
-      height: Dimensions.get('window').height * .065,
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignSelf: 'center',
-      backgroundColor: 'deepskyblue',
-      borderRadius: 20
+  container: {
+    height: Dimensions.get('window').height,
+    flexDirection: 'column',
+    backgroundColor: 'white'
   },
-    nextButtonText: {
-      fontSize: 25,
-      fontWeight: 'bold',
-      color: 'white'
+  arrowImage: {
+    marginTop: 20,
+    marginLeft: 20
+  },
+  justYouHeader: {
+    color: 'deepskyblue',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginTop: 30,
+    marginLeft: 20,
+  },
+  signUpText: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    width: Dimensions.get('window').width * .8,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  inputTitle: {
+    marginTop: 60,
+    fontSize: 20,
+    marginLeft: 20,
+  },
+  textInput: {
+    borderColor: 'deepskyblue',
+    borderRadius: 20,
+    borderWidth: 3,
+    height: Dimensions.get('window').height * .08,
+    marginRight: 20,
+    marginTop: 8,
+    justifyContent: 'center',
+    marginLeft: 20,
+  },
+  emailErrorText: {
+      textAlign:'center',
+      color: 'red',
+      fontSize: 20
+  },
+  fotterContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  nextButton: {
+    width: Dimensions.get('window').width * .9,
+    height: Dimensions.get('window').height * .065,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'deepskyblue',
+    borderRadius: 20
+  },
+  nextButtonText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'white'
   },
   alreadyHaveAccountContainer: {
     flexDirection: 'row',
     marginTop: 20
   },
-    alreadyHaveAnAccountText: {
-      color: 'grey'
-    },
-    signInText: {
-      fontWeight: 'bold',
-      color: 'deepskyblue'
-    }
+  alreadyHaveAnAccountText: {
+    color: 'grey'
+  },
+  signInText: {
+    fontWeight: 'bold',
+    color: 'deepskyblue'
+  }
 });
 
 export default SignUpTrainer;

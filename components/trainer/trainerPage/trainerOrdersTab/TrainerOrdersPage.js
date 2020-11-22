@@ -12,8 +12,16 @@ const TrainerOrdersPage = ({navigation}) => {
         setIsPending(!isPending);
     }
 
+    const handleOnArrowPendingPressed = () => {
+        navigation.navigate('PendingApprovalOrder');
+    }
+
+    const handleArrowApprovedPressed = () => {
+        navigation.navigate('ApprovedOrder');
+    }
+
     return(
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeArea}>
             <ScrollView style={styles.container}> 
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
@@ -22,94 +30,89 @@ const TrainerOrdersPage = ({navigation}) => {
                 <View style={ styles.pendingOrApprovedContainer}>
                     <TouchableOpacity 
                         style={isPending ? styles.pendingLabeld : styles.pendingNotLabeld}
-                        onPress={handleFlipToggle}
+                        onPress={() => handleFlipToggle()}
                     >
                         <Text style={isPending ? styles.pendingTextLabeld : styles.pendingTextNotLabeld}>PENDING</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={isPending ? styles.approvedLabeld : styles.approvedNotLabeld}
-                        onPress={handleFlipToggle}
+                        onPress={() => handleFlipToggle()}
                     >
                         <Text style={isPending ? styles.approvedTextNotLabeld : styles.approvedTextLabeld}>APPROVED</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.pendingContainer}>
-                    <View style={styles.pendingOrderView}>
-                        <View style={styles.pendingOrder}>
-                            <TouchableOpacity>
-                                <Image
-                                    style={styles.image}
-                                />
-                            </TouchableOpacity>
-                            <View style={styles.nameBox}>
-                                <Text style={styles.nameText}>Omer Ohana</Text>
+                {isPending ?
+                    <View style={styles.pendingContainer}>
+                        <View style={styles.pendingOrderView}>
+                            <View style={styles.pendingOrder}>
+                                <TouchableOpacity>
+                                    <Image
+                                        style={styles.image}
+                                    />
+                                </TouchableOpacity>
+                                <View style={styles.nameBox}>
+                                    <Text style={styles.nameText}>Omer Ohana</Text>
+                                </View>
+                                <View style={styles.dateBox}>
+                                    <Text style={styles.dateText}>3.6.2020</Text>
+                                </View>
+                                <TouchableOpacity 
+                                    style={styles.arrowButton}
+                                    onPress={() => handleOnArrowPendingPressed()}
+                                >
+                                    <Image
+                                        source={require('../../../../images/arrowBlueButton.png')}
+                                        style={styles.arrowImage}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                            <View style={styles.dateBox}>
-                                <Text style={styles.dateText}>3.6.2020</Text>
-                            </View>
-                            <TouchableOpacity style={styles.arrowButton}>
-                                <Image
-                                    source={require('../../../../images/arrowBlueButton.png')}
-                                    style={styles.arrowImage}
-                                />
-                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.pendingOrderView}>
-                        <View style={styles.pendingOrder}>
-                            <TouchableOpacity>
-                                <Image
-                                    style={styles.image}
-                                />
-                            </TouchableOpacity>
-                            <View style={styles.nameBox}>
-                                <Text style={styles.nameText}>Omer Ohana</Text>
+                    : 
+                    <View style={styles.pendingContainer}>
+                        <View style={styles.pendingOrderView}>
+                            <View style={styles.pendingOrder}>
+                                <TouchableOpacity>
+                                    <Image
+                                        style={styles.image}
+                                    />
+                                </TouchableOpacity>
+                                <View style={styles.nameBox}>
+                                    <Text style={styles.nameText}>Daniel Neeman</Text>
+                                </View>
+                                <View style={styles.dateBox}>
+                                    <Text style={styles.dateText}>4.9.2020</Text>
+                                </View>
+                                <TouchableOpacity 
+                                    style={styles.arrowButton}
+                                    onPress={() => handleArrowApprovedPressed()}
+                                >
+                                    <Image
+                                        source={require('../../../../images/arrowBlueButton.png')}
+                                        style={styles.arrowImage}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                            <View style={styles.dateBox}>
-                                <Text style={styles.dateText}>3.6.2020</Text>
-                            </View>
-                            <TouchableOpacity style={styles.arrowButton}>
-                                <Image
-                                    source={require('../../../../images/arrowBlueButton.png')}
-                                    style={styles.arrowImage}
-                                />
-                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.pendingOrderView}>
-                        <View style={styles.pendingOrder}>
-                            <TouchableOpacity>
-                                <Image
-                                    style={styles.image}
-                                />
-                            </TouchableOpacity>
-                            <View style={styles.nameBox}>
-                                <Text style={styles.nameText}>Omer Ohana</Text>
-                            </View>
-                            <View style={styles.dateBox}>
-                                <Text style={styles.dateText}>3.6.2020</Text>
-                            </View>
-                            <TouchableOpacity style={styles.arrowButton}>
-                                <Image
-                                    source={require('../../../../images/arrowBlueButton.png')}
-                                    style={styles.arrowImage}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+                    }
             </ScrollView>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         backgroundColor: 'white'
+    },
+    container: {
+        backgroundColor: 'white',
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
     },
     headerContainer: {
         alignItems: 'center',
-      },
+    },
     justYouHeader: {
         fontSize: 25,
         fontWeight: 'bold'

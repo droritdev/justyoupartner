@@ -2,20 +2,20 @@ import React, { useContext, useEffect, useState } from 'react'
 import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {AboutMeContext} from '../../../context/trainerContextes/AboutMeContext';
+import {AboutMeContext} from '../../../../context/trainerContextes/AboutMeContext';
 
 //Here The trainer user writes about him
-const AboutMeTrainer = ({navigation}) => {
+const TrainerAboutMeEditProfile = ({navigation}) => {
     const {aboutMe, dispatchAboutMe} = useContext(AboutMeContext);
     
     const [isLimit, setIsLimit] = useState(false);
-    const [charsLength, setCharsLength] = useState(0);
+    const [charsLength, setCharsLength] = useState(aboutMe.length);
 
     const charLimit = 501;
 
     //Sets the display text to blank if nothing was writen. If written, the details will be displayed
     useEffect(() => {
-        if(aboutMe === 'ABOUT ME'){
+        if(aboutMe === 'Personal Trainer'){
             dispatchAboutMe({
                 type: 'SET_ABOUT_ME',
                 aboutMe: ""
@@ -28,10 +28,10 @@ const AboutMeTrainer = ({navigation}) => {
         if(aboutMe === ""){
             dispatchAboutMe({
                 type: 'SET_ABOUT_ME',
-                aboutMe: "ABOUT ME"
+                aboutMe: "Personal Trainer"
             })
         }
-        navigation.navigate('ProfileDetailsPage2Trainer')
+        navigation.navigate('TrainerEditProfile');
     }
     
     //Sets the deatils object to the value
@@ -56,7 +56,7 @@ const AboutMeTrainer = ({navigation}) => {
                 onPress={() => handleArrowButton()}
                 >
                 <Image
-                    source={require('../../../images/arrowBack.png')}
+                    source={require('../../../../images/arrowBack.png')}
                     style={styles.arrowImage}
                 />
                 </TouchableOpacity>
@@ -120,4 +120,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default AboutMeTrainer;
+export default TrainerAboutMeEditProfile;

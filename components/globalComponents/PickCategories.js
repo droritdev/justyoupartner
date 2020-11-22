@@ -18,6 +18,7 @@ const PickCategories = (props) => {
 
     return (
         <TagSelect
+            value={props.value}
             data={props.data}
             itemStyle={styles.item}
             itemLabelStyle={styles.label}

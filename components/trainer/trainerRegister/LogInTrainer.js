@@ -39,12 +39,12 @@ const LogInTrainer = ({navigation}) => {
         <SafeAreaView>
             <View style={styles.container}>
                 <TouchableOpacity
-                onPress={handleArrowButton}
+                    onPress={handleArrowButton}
                 >
-                <Image
-                    source={require('../../../images/arrowBack.png')}
-                    style={styles.arrowImage}
-                />
+                    <Image
+                        source={require('../../../images/arrowBack.png')}
+                        style={styles.arrowImage}
+                    />
                 </TouchableOpacity>
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouTitle}>Just You</Text>

@@ -1,39 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
-import {AboutMeContext} from '../../../context/trainerContextes/AboutMeContext';
+import {CertificationsContext} from '../../../../context/trainerContextes/CertificationsContext';
 
-//Here The trainer user writes about him
-const AboutMeTrainer = ({navigation}) => {
-    const {aboutMe, dispatchAboutMe} = useContext(AboutMeContext);
-    
+//Here The trainer user writes his certifications
+const TrainerCertificationsEditProfile = ({navigation}) => {
+    const {certifications, dispatchCertifications} = useContext(CertificationsContext);
+
     const [isLimit, setIsLimit] = useState(false);
-    const [charsLength, setCharsLength] = useState(0);
+    const [charsLength, setCharsLength] = useState(certifications.length);
 
-    const charLimit = 501;
+    const charLimit = 251;
 
     //Sets the display text to blank if nothing was writen. If written, the details will be displayed
     useEffect(() => {
-        if(aboutMe === 'ABOUT ME'){
-            dispatchAboutMe({
-                type: 'SET_ABOUT_ME',
-                aboutMe: ""
+        if(certifications === 'CERTIFICATIONS'){
+            dispatchCertifications({
+                type: 'SET_CERTIFICATIONS',
+                certifications: ""
             })
         }
     }, [])
 
     //Navigates back to the profile details page
     const handleArrowButton = () => {
-        if(aboutMe === ""){
-            dispatchAboutMe({
-                type: 'SET_ABOUT_ME',
-                aboutMe: "ABOUT ME"
+        if(certifications === ""){
+            dispatchCertifications({
+                type: 'SET_CERTIFICATIONS',
+                certifications: "Personal Trainer"
             })
         }
-        navigation.navigate('ProfileDetailsPage2Trainer')
+        navigation.navigate('TrainerEditProfile');
     }
-    
+
     //Sets the deatils object to the value
     const handleOnInputChange = (value) => {
         if(value.length === charLimit){
@@ -42,9 +42,9 @@ const AboutMeTrainer = ({navigation}) => {
         else{
             setCharsLength(value.length);
             setIsLimit(false)
-            dispatchAboutMe({
-                type: 'SET_ABOUT_ME',
-                aboutMe: value
+            dispatchCertifications({
+                type: 'SET_CERTIFICATIONS',
+                certifications: value
             })
         }
     }
@@ -56,17 +56,17 @@ const AboutMeTrainer = ({navigation}) => {
                 onPress={() => handleArrowButton()}
                 >
                 <Image
-                    source={require('../../../images/arrowBack.png')}
+                    source={require('../../../../images/arrowBack.png')}
                     style={styles.arrowImage}
                 />
                 </TouchableOpacity>
                 <Text style={styles.profileDetailesText}>Profile Details</Text>
             </View>
-            <Text style={styles.writeAboutYourselfTitle}>Write about yourself (up to {charLimit-1} chars):  {charsLength}</Text>
+            <Text style={styles.shareYourCertifications}>Share certifications (up to {charLimit-1} chars):  {charsLength}</Text>
             <View style={styles.textConatiner}>
                 <View style={styles.textInputContainer}>
                     <TextInput
-                        value={aboutMe}
+                        value={certifications}
                         multiline={true}
                         style={styles.textInput}
                         onChangeText={(value) => handleOnInputChange(value)}
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 38
     },
-    writeAboutYourselfTitle: {
+    shareYourCertifications: {
         marginTop: 10,
         marginLeft: 20,
         fontSize: 20,
@@ -120,4 +120,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default AboutMeTrainer;
+export default TrainerCertificationsEditProfile;
