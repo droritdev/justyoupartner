@@ -1,23 +1,34 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
+import Dialog from "react-native-dialog";
 import {Accordion, Block} from 'galio-framework';
 
 //The question and answers page
 const TrainerSettings = ({navigation}) => {
+
+    const [dialogVisible, setDialogVisible] = useState(false);
 
     //Navigates back to the profile page
     const handleOnArrowPress = () => {
         navigation.navigate('TrainerProfilePage');
     }
 
-    const handleOnChangeEmailPress = () => {
-        navigation.navigate('ChangeEmailAddress');
+    const handleYesDialog = () => {
+        setDialogVisible(false);
+        navigation.navigate('TrainerProfilePage');
+    };
+
+    const handleNoDialog = () => {
+        setDialogVisible(false);
+    };
+
+    const handleOnSignOutPress = () => {
+        setDialogVisible(true);
     }
 
-    const handleOnDisablePressed = () => {
-        navigation.navigate('DisableAccount');
+    const handleOnChangeEmailPress = () => {
+        navigation.navigate('ChangeEmailAddress');
     }
 
     const handleOnChangePhonePressed = () => {
@@ -26,6 +37,14 @@ const TrainerSettings = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
+            <View>
+                <Dialog.Container visible={dialogVisible}>
+                    <Dialog.Title style={styles.dialogTitle}>Are You Sure?</Dialog.Title>
+                    <Dialog.Button style={styles.cancelDialog} label="Cancel" onPress={(() => handleNoDialog())} />
+                    <Dialog.Button style={styles.signOutDialog} label="Sign Out" onPress={() => handleYesDialog()} />
+
+                </Dialog.Container>
+            </View>
             <View style={styles.container}>
                 <View style={styles.titlesContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
@@ -119,10 +138,15 @@ const TrainerSettings = ({navigation}) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.signOutRow}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => handleOnSignOutPress()}
+                        >
                             <Text style={styles.signOutTitle}>Sign out</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.arrowButton}>
+                        <TouchableOpacity 
+                            style={styles.arrowButton}
+                            onPress={() => handleOnSignOutPress()}
+                        >
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
@@ -139,6 +163,20 @@ const styles = StyleSheet.create({
     safeArea: {
         backgroundColor: 'white',
         flex: 1
+    },
+    dialogTitle: {
+        fontWeight: 'bold',
+        fontSize: 20
+    },
+    dialogContent: {
+        fontSize: 18
+    },
+    cancelDialog: {
+        color: 'black'
+    },
+    signOutDialog: {
+        color: 'red',
+        fontWeight: 'bold'
     },
     container: {
         flex: 1

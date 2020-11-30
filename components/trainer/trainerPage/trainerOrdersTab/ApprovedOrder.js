@@ -5,7 +5,6 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 //The trainer's order page - pennding + approved
 const ApprovedOrder = ({navigation}) => {
 
-
     const handleArrowButton = () => {
         navigation.navigate('TrainerOrdersPage');
     }

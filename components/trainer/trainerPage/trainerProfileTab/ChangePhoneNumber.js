@@ -6,11 +6,143 @@ import FlipToggle from 'react-native-flip-toggle-button';
 //The question and answers page
 const ChangePhoneNumber = ({navigation}) => {
 
+    const [areaCodeInput, setAreaCodeInput] = useState("");
+    const [phoneNumberInput, setPhoneNumberInput] = useState("");
+    const [fullPhoneNumber,setFullPhoneNumber] = useState("");
     const [codeInput, setCodeInput] = useState("");
+    const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
+    const [codeErrorMessage, setCodeErrorMessage] = useState("");
+    const [doneErrorMessage, setDoneErrorMessage] = useState("");
+    const [isCodeError, setIsCodeError] = useState(false);
+    const [isPhoneError, setIsPhoneError] = useState(false);
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isDoneError, setIsDoneError] = useState(false);
 
-    //Navigates back to the profile page
+    //Navigates back to the Settings page
     const handleOnArrowPress = () => {
         navigation.navigate('TrainerSettings');
+    }
+
+    const sendVerifyCode = () => {
+        setIsPhoneError(false);
+        setIsCodeError(false);
+        setIsDoneError(false);
+        setIsCodeSent(true);
+        alert("Code Sent");
+        // axios
+        //   .post('/send-verification-code', {
+        //     to: fullPhoneNumber,
+        //     channel: "email"
+        //   },
+        //   config
+        // )
+        // .then((res) => {
+        //   if(res !== null) {
+        //     if(res.data.status === 'pending'){
+        //       alert('pending')
+        //     }
+        //     else{
+        //       alert(res.data);
+        //     }
+        //   }
+        //   else{
+        //     alert("Error 2");
+        //   }
+        // }
+        // )
+        // .catch((error) => {
+        //   alert(error)
+        // })
+    }
+
+    const verifyCode = () => {
+        navigation.navigate('TrainerSettings');
+        // axios
+        //   .post('/verify-code', {
+        //     to: fullPhoneNumber,
+        //     code: codeInput
+        //   },
+        //   config
+        // )
+        // .then((res) => {
+        //   if(res !== null) {
+        //     if(res.data.status === 'approved'){
+        //       setIsErrorCodeMessage(false);
+        //       setCodeErrorMessage("");
+        //       navigation.navigate('Settings');
+        //     }
+        //     else{
+        //       setCodeErrorMessage("Wrong Code - try again")
+        //     }
+        //   }
+        //   else{
+        //     alert("Error2")
+        //   }
+        // }
+        // )
+        // .catch((error) => {
+        //   alert(error)
+        // })
+    }
+
+    const handleOnChangeAreaCode = (text) => {
+        setIsPhoneError(false);
+        setIsCodeError(false);
+        setIsDoneError(false);
+        setAreaCodeInput(text);
+    }
+
+    const handleOnChangePhoneNumber = (text) => {
+        setIsPhoneError(false);
+        setIsCodeError(false);
+        setIsDoneError(false);
+        setPhoneNumberInput(text);
+    }
+
+    const handleOnVerifyPressed = () => {
+        if(areaCodeInput === "" || phoneNumberInput === ""){
+            setIsPhoneError(true);
+            setPhoneErrorMessage("Fill the fields");
+        }
+        else if(!(Number(areaCodeInput)) || !(Number(phoneNumberInput))){
+            setIsPhoneError(true);
+            setPhoneErrorMessage("Enter digits only");
+        }
+        else{
+            setFullPhoneNumber("+972"+(areaCodeInput.concat(phoneNumberInput)));
+            sendVerifyCode();
+        }
+    }
+
+    const handleOnCodeInputChange = (value) => {
+        setIsPhoneError(false);
+        setIsCodeError(false);
+        setIsDoneError(false);
+        setCodeInput(value);
+    }
+
+    const handleOnDonePressed = () => {
+        setIsPhoneError(false);
+        setIsCodeError(false);
+        if(!isCodeSent){
+            setIsDoneError(true);
+            setDoneErrorMessage("First verify your phone number");
+        }
+        else if(codeInput === ""){
+            setIsDoneError(true);
+            setDoneErrorMessage("Enter your code");
+        }
+        else if(!(Number(codeInput))){
+            setIsDoneError(true);
+            setDoneErrorMessage("Enter digits only");
+        }
+        else if(codeInput.length != 5){
+            setIsDoneError(true);
+            setDoneErrorMessage("Code is 5 digits");
+        }
+        else{
+            verifyCode();
+        }
     }
 
     return(
@@ -28,30 +160,32 @@ const ChangePhoneNumber = ({navigation}) => {
                 />
             </TouchableOpacity>
             <Text style={styles.changePhoneTitle}>Change phone number</Text>
-            <View style={styles.phoneTextInput}>
-                <TextInput
-                    style={styles.areaCodeInput}
-                    textAlign='center'
-                    placeholder='+001'
-                    //onChangeText={text => handleOnChangeAreaCode(text)}
-                />
-                <TextInput
-                    style={styles.phoneNumberInput}
-                    textAlign='center'
-                    placeholder='00000000000'
-                    //onChangeText={text => handleOnChangePhoneNumber(text)}
-                />
+            <View style={styles.phoneAndError}>
+                <View style={styles.phoneTextInput}>
+                    <TextInput
+                        style={styles.areaCodeInput}
+                        textAlign='center'
+                        placeholder='+001'
+                        onChangeText={text => handleOnChangeAreaCode(text)}
+                    />
+                    <TextInput
+                        style={styles.phoneNumberInput}
+                        textAlign='center'
+                        placeholder='00000000000'
+                        onChangeText={text => handleOnChangePhoneNumber(text)}
+                    />
+                </View>
+                {isPhoneError ?
+                    <Text style={styles.phoneErrorMessage}>{phoneErrorMessage}</Text>
+                :null}
             </View>
-            {/* {isPhoneError ?
-                <Text style={styles.phoneErrorMessage}>{phoneErrorMessage}</Text>
-            :null} */}
             <View style={styles.verifyExplenationContainer}>
                 <Text style={styles.verifyExplenationText}>Adding your phone number will strengthen your account security. We'll send you a text with a 5-digit code to verify your account.</Text>
             </View>
             <View style={styles.verifyButtonContainer}>
                 <TouchableOpacity
                     style={styles.verifyButton}
-                    //onPress={handleVerify}
+                    onPress={() => handleOnVerifyPressed()}
                 >
                     <Text style={styles.verifyButtonText}>Verify</Text>
                 </TouchableOpacity>
@@ -61,22 +195,25 @@ const ChangePhoneNumber = ({navigation}) => {
                     style={{fontSize: 25}}
                     textAlign='center'
                     placeholder='Enter your code'
-                    //onChangeText={text => handleInput(text)}
+                    onChangeText={text => handleOnCodeInputChange(text)}
                     value={codeInput}
                 />
             </View>
             <View>
                 <TouchableOpacity 
                 style={styles.sendAgainButton}
-                //onPress={sendVerificationCode}
+                onPress={() => handleOnVerifyPressed()}
                 >
                     <Text style={styles.resendCodeText}>No SMS? Tap to resend</Text> 
                 </TouchableOpacity>
             </View>
             <View style={styles.doneButtonContainer}>
+                {isDoneError ? 
+                    <Text style={styles.doneErrorMessage}>{doneErrorMessage}</Text>
+                : null}
                 <TouchableOpacity
                     style={styles.doneButton}
-                    //onPress={handleVerify}
+                    onPress={() => handleOnDonePressed()}
                 >
                     <Text style={styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
@@ -111,7 +248,10 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
         marginLeft: 20,
-        marginTop: Dimensions.get('window').height * .03,
+        marginTop: Dimensions.get('window').height * .05,
+    },
+    phoneAndError: {
+        height: Dimensions.get('window').height * .09,
     },
     phoneTextInput: {
         flexDirection: 'row',
@@ -197,6 +337,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         marginBottom: 100
+    },
+    doneErrorMessage: {
+        color: 'red',
+        textAlign: 'center',
+        marginBottom: 10
     },
     doneButton: {
         width: Dimensions.get('window').width * .9,

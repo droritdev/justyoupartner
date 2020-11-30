@@ -5,7 +5,6 @@ import axios from 'axios';
 
 import {EmailContext} from '../../../../context/trainerContextes/EmailContext';
 
-//The question and answers page
 const ChangeEmailAddress = ({navigation}) => {
     const {emailAddress, dispatchEmail} = useContext(EmailContext);
 
@@ -28,6 +27,7 @@ const ChangeEmailAddress = ({navigation}) => {
 
     const mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const sendVerifyEmail = () => {
+        alert("Code sent");
         // setIsCodeSent(true);
         //   axios
         //     .post('/send-verification-code', {
@@ -61,7 +61,7 @@ const ChangeEmailAddress = ({navigation}) => {
     }
 
     const handleGetCodePressed = () => {
-        
+        setIsEmailError(false);
         if(emailAddressInput === ""){
             setIsEmailError(true);
             setEmailErrorMessage("Enter an email address");
@@ -70,11 +70,12 @@ const ChangeEmailAddress = ({navigation}) => {
             setIsEmailError(true);
             setEmailErrorMessage("Enter a valid email address");
         }
-        else if(emailAddressInput.toLowerCase() !== emailAddress){
-            setIsEmailError(true);
-            setEmailErrorMessage("Enter your current email address");
-        }
+        // else if(emailAddressInput.toLowerCase() !== emailAddress){
+        //     setIsEmailError(true);
+        //     setEmailErrorMessage("Enter your current email address");
+        // }
         else{
+            setIsCodeSent(true);
             sendVerifyEmail();
         }
     }
@@ -95,6 +96,14 @@ const ChangeEmailAddress = ({navigation}) => {
             if(codeInput === ""){
                 setIsCodeError(true);
                 setCodeErrorMessage("Enter the code");
+            }
+            else if(!(Number(codeInput))){
+                setIsCodeError(true);
+                setCodeErrorMessage("Enter digits only");
+            }
+            else if(codeInput.length != 5){
+                setIsCodeError(true);
+                setCodeErrorMessage("Code is 5 digits");
             }
             else{
                 navigation.navigate('TrainerSettings');
@@ -125,6 +134,10 @@ const ChangeEmailAddress = ({navigation}) => {
                 //     alert(error)
                 // })
             }
+        }
+        else{
+            setIsEmailError(true);
+            setEmailErrorMessage("Get code first");
         }
     }
 
@@ -189,7 +202,7 @@ const ChangeEmailAddress = ({navigation}) => {
             </View>
         </SafeAreaView>
     )
-}   
+} 
 
 const styles = StyleSheet.create({
     safeArea: {

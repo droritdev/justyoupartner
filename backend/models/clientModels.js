@@ -40,49 +40,17 @@ const clientProfileSchema = new Schema(
            required: true,
            trim: true
        },
-       permissions: {
-           location: {
-               type: Boolean,
-               required: true,
-           },
-           push: {
-               type: Boolean,
-               required: true
-           }
-       },
-       image: {
-           type: String
-       },
-       creditCard: {
-           number: {
-               type: Number,
-               required: true,
-               trim: true
-           },
-           cvv: {
-               type: Number,
-               required: true,
-               trim: true
-           },
-           expire: {
-               month: {
-                   type: Number,
-                   required: true
-               },
-               year: {
-                   type: Number,
-                   required: true
-               }
-           }
-       },
+    //    image: {
+    //        type: String
+    //    },
        phone: {
            areaCode: {
-               type: Number,
+               type: String,
                required: true,
                trim: true
            },
            phoneNumber: {
-               type: Number,
+               type: String,
                required: true,
                trim: true
            }
