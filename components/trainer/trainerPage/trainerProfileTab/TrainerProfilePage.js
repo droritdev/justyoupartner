@@ -478,12 +478,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     singleText: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
     singleTextLabeld: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
@@ -507,23 +507,23 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     coupleText: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
     coupleTextLabeld: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
     priceTextsContainer: {
-        marginTop: 10,
+        marginTop: Dimensions.get('window').height * .011,
         justifyContent: 'space-between',
-        height: 80
+        height: Dimensions.get('window').height * .088
     },
     priceTexts: {
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     },
     priceSideNote: {
         color: 'grey'
@@ -533,25 +533,25 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .95,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
     whyUsButton: {
         borderRadius: 10,
         backgroundColor: 'deepskyblue',
-        height: 60,
+        height: Dimensions.get('window').height * .066,
         width: Dimensions.get('window').width * .305,
         justifyContent: 'center'
     },
     whyUsTitle: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         alignSelf: 'center'
     },
     questionsButton: {
         borderRadius: 10,
         backgroundColor: 'deepskyblue',
-        height: 60,
+        height: Dimensions.get('window').height * .066,
         width: Dimensions.get('window').width * .305,
         justifyContent: 'center'
     },
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
     updatesButton: {
         borderRadius: 10,
         backgroundColor: 'deepskyblue',
-        height: 60,
+        height: Dimensions.get('window').height * .066,
         width: Dimensions.get('window').width * .305,
         justifyContent: 'center'
     },
@@ -577,33 +577,33 @@ const styles = StyleSheet.create({
     socialButtons: {
         flexDirection: 'row',
         width: Dimensions.get('window').width ,
-        marginTop: 10,
+        marginTop: Dimensions.get('window').height * .011,
         alignSelf: 'center'
     },
     facebookButton: {
         width: Dimensions.get('window').width * .5, 
-        height: 60
+        height: Dimensions.get('window').height * .066
     },
     instegramImage: {
         width: Dimensions.get('window').width * .5, 
-        height: 60,
+        height: Dimensions.get('window').height * .066,
     },
     moreContainer: {
-        marginTop: 20,
+        marginTop: Dimensions.get('window').height * .022,
     },
     moreTitle: {
         fontWeight: 'bold',
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     rowContainer: {
-        height: 40,
+        height: Dimensions.get('window').height * .044,
         justifyContent: 'center',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
     },
     arrowImage: {
-        height: 15,
+        height: Dimensions.get('window').height * .018,
         marginTop: 8
     },
     arrowButton: {
@@ -614,8 +614,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     editProfileTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     editProfileButton: {
 
@@ -625,8 +625,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     reviewsTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     reviewsButton: {
 
@@ -636,8 +636,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     customerServicesTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     customerServicesButton: {
 
@@ -647,14 +647,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     settingsTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     settingsButton: {
     },
     deadAreaBottom: {
         backgroundColor: 'whitesmoke',
-        height: 30
+        height: Dimensions.get('window').height * .033
     },
     customerServicePanel: {
         flex: 1,

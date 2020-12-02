@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
     },
     dialogTitle: {
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     dialogContent: {
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     },
     cancelDialog: {
         color: 'black'
@@ -185,32 +185,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowBackButton: {
         alignItems: 'flex-start',
-        marginLeft: 15
+        marginLeft: Dimensions.get('window').width * .047
     },
     settingsTitle: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
-        marginLeft: 20,
-        marginTop: 25,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .0278,
     },
     settingsContainer1: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         borderTopWidth: 2,
         borderTopColor: 'lightgrey'
     },
     arrowImage: {
-        height: 15,
-        marginTop: 8
+        height: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .01
     },
     arrowButton: {
         
@@ -220,12 +220,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     paymentsTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     editProfileButton: {
 
@@ -235,12 +235,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     changeEmailTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     reviewsButton: {
 
@@ -250,12 +250,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     changePhoneTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     customerServicesButton: {
 
@@ -265,18 +265,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     disableTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     customerServicesButton: {
 
     },
     settingsContainer2: {
-        marginTop: 100,
+        marginTop: Dimensions.get('window').height * .111,
         borderTopWidth: 2,
         borderTopColor: 'lightgrey',
     },
@@ -285,36 +285,36 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     policytitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     termsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     termsTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
     signOutRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 35,
+        height: Dimensions.get('window').height * .04,
         alignItems: 'center'
     },
     signOutTitle: {
-        fontSize: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
     },
 
 

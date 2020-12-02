@@ -65,7 +65,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator 
           screenOptions={{headerShown: false}}
-          initialRouteName='TrainerContainer'
+          initialRouteName='WelcomePopUp'
         >
           <Stack.Screen name='WelcomePopUp' component={WelcomePopUp} />
           <Stack.Screen name='GetStarted' component={GetStarted} />

@@ -214,22 +214,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowBackButton: {
         alignItems: 'flex-start',
-        marginLeft: 15
+        marginLeft: Dimensions.get('window').width * .047
     },
     changeEmailTitle: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
-        marginLeft: 20,
+        marginLeft: Dimensions.get('window').width * .0483,
         marginTop: Dimensions.get('window').height * .03,
     },
     emailAndErrorContainer: {
@@ -240,26 +240,26 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       borderWidth: 3,
       height: Dimensions.get('window').height * .085,
-      marginRight: 20,
-      marginTop: 40,
+      marginRight: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .044,
       justifyContent: 'center',
-      marginLeft: 20,
+      marginLeft: Dimensions.get('window').width * .0483,
     },
     emailErrorMessage: {
         color: 'red',
         textAlign: 'center',
-        marginTop: 3
+        marginTop: Dimensions.get('window').height * .0033
     },
     codeExplination: {
         color: 'grey',
-        fontSize: 15,
+        fontSize: Dimensions.get('window').height * .017,
         width: Dimensions.get('window').width * .6,
         alignSelf: 'center',
         textAlign: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     getCodeButtonContainer: {
-        marginTop: 40
+        marginTop: Dimensions.get('window').height * .044
     },
     getCodeButton: {
         width: Dimensions.get('window').width * .9,
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     getcodeButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },
@@ -283,23 +283,23 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 3,
         height: Dimensions.get('window').height * .085,
-        marginRight: 20,
-        marginTop: 80,
+        marginRight: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .088,
         justifyContent: 'center',
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     codeErrorMessage: {
         color: 'red',
         textAlign: 'center',
-        marginTop: 3
+        marginTop: Dimensions.get('window').height * .0033
     },
     codeExplination2: {
         color: 'grey',
-        fontSize: 15,
+        fontSize: Dimensions.get('window').height * .017,
         width: Dimensions.get('window').width * .7,
         alignSelf: 'center',
         textAlign: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     approveCodeButtonContainer: {
         flex: 1,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     approveButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },

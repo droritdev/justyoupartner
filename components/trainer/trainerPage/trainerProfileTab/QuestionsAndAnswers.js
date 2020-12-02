@@ -103,22 +103,22 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
     },
     arrowImage: {
-        marginLeft: 20,
-        marginTop: 20
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .022
     },
     headerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
     justYouTitle: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: Dimensions.get('window').height * .033
     },
     qA: {
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .0278
     },
     acordionContainer: {
         flex: 1,
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     block: {
-        height: 300,
+        height: Dimensions.get('window').height * .335,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
 });
 

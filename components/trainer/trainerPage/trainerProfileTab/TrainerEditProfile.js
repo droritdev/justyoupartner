@@ -690,22 +690,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowImage: {
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     editProfileTitle: {
         fontWeight: 'bold',
-        fontSize: 30,
-        marginLeft: 20,
-        marginTop: 20
+        fontSize: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .022
     },
     namesAndErrorContainer: {
         height: Dimensions.get('window').height * .11,
@@ -717,14 +717,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },  
     namesInput: {
-        marginTop: 20,
+        marginTop: Dimensions.get('window').height * .022,
         borderColor: 'deepskyblue',
         borderRadius: 17,
         borderWidth: 3,
         height: Dimensions.get('window').height * .065,
         width: Dimensions.get('window').width * .34,
         justifyContent: 'center',
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     },
     profileImage: {
         width: Dimensions.get('window').width * .225,
@@ -733,23 +733,23 @@ const styles = StyleSheet.create({
     },
     nameErrorMessage: {
         color: 'red',
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },  
     nameExplination: {
         color: 'grey',
         textAlign: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     birthdayText: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
-        fontSize: 25,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .0278,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     birthdayContainer: {
-        height: 65,
+        height: Dimensions.get('window').height * .066,
         alignItems: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     birthdayBoxContainer: {
         height: Dimensions.get('window').height * .065,
@@ -769,13 +769,13 @@ const styles = StyleSheet.create({
     birthdayUnPicked: {
         textAlign: 'center',
         color: 'grey',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: '300',
         marginLeft: Dimensions.get('window').width * .3
     },
     birthdayPicked: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         marginLeft: Dimensions.get('window').width * .3,
         color: 'lightgrey'
     },
@@ -784,25 +784,25 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').height * .04,
     },
     birthdayErrorMessage: {
-        marginLeft: 20,
+        marginLeft: Dimensions.get('window').width * .0483,
         color: 'red',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },  
     datePicker: {
-        marginTop: 10,
+        marginTop: Dimensions.get('window').height * .011,
         width: Dimensions.get('window').width * .9,
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     categoryTitle: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
-        fontSize: 25,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .0278,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     categoryContainer: {
-        height: 65,
+        height: Dimensions.get('window').height * .066,
         alignItems: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     categoryBoxContainer: {
         height: Dimensions.get('window').height * .065,
@@ -822,13 +822,13 @@ const styles = StyleSheet.create({
     categoryUnPicked: {
         textAlign: 'center',
         color: 'grey',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: '300',
         marginLeft: Dimensions.get('window').width * .3
     },
     categoryPicked: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         marginLeft: Dimensions.get('window').width * .3,
         color: 'lightgrey'
     },
@@ -839,52 +839,51 @@ const styles = StyleSheet.create({
     categoryErrorMessage: {
         color: 'red',
         alignSelf: 'center',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },
     sliderContainer: {
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },  
     maxDistanceText: {
-        fontSize: 20,
-        marginTop: 20,
-        marginLeft: 20,
+        fontSize: Dimensions.get('window').height * .022,
+        marginTop: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
         fontWeight: 'bold'
     },  
     sliderValueTitle: {
-        //alignSelf: 'center',
-        fontSize: 17,
-        marginTop: 20,
-        marginLeft: 25
+        fontSize: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .049
     },
     slider: {
         width: Dimensions.get('window').width * .9,
         alignSelf: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .022
     },
     trainingSiteContainer: {
         width: Dimensions.get('window').width * .95,
         height: Dimensions.get('window').height * .220,
         alignSelf: 'center',
-        marginTop: 35
+        marginTop: Dimensions.get('window').height * .038
     },
     trainingSiteText: {
-        fontSize: 20,
-        marginLeft: 10,
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0241,
         fontWeight: 'bold'
     },
     trainingSiteInput: {
-        marginTop: 20,
+        marginTop: Dimensions.get('window').height * .022,
         borderWidth: 3,
         borderColor: 'deepskyblue',
         borderRadius: 17,
         height: Dimensions.get('window').height * .065,
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         textAlign: 'center'
     },
     inputsContainer: {
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .3,
-        marginTop: 40
+        marginTop: Dimensions.get('window').height * .044
     },
     aboutMeContainer: {
         borderColor: 'deepskyblue',
@@ -904,25 +903,25 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     aboutMeTitle: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
     },
     aboutMeText: {
-        marginTop: 10,
-        marginLeft: 10,
-        fontSize: 18,
+        marginTop: Dimensions.get('window').height * .011,
+        marginLeft: Dimensions.get('window').width * .0241,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'lightgrey'
     },
     pencilButtonAboutMe: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginRight: 5,
-        marginBottom: 5
+        marginRight: Dimensions.get('window').width * .012,
+        marginBottom: Dimensions.get('window').height * .0055
     },
     pencilButtonCertifications: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginRight: 5,
-        marginBottom: 5
+        marginRight: Dimensions.get('window').width * .012,
+        marginBottom: Dimensions.get('window').height * .0055
     },
     certificationsContainer: {
         borderColor: 'deepskyblue',
@@ -942,25 +941,25 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     certificationsTitle: {
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     },
     certificationsText: {
-        marginTop: 10,
-        marginLeft: 10,
-        fontSize: 18,
+        marginTop: Dimensions.get('window').height * .011,
+        marginLeft: Dimensions.get('window').width * .0241,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'lightgrey'
     },
     priceSectionContainer: {
-        marginTop: 30,
-        marginLeft: 20,
-        height: 175
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483,
+        height: Dimensions.get('window').height * .195
     },
     pricingTitle: {
-        fontSize: 20 
+        fontSize: Dimensions.get('window').height * .022 
     },
     pricingLabels: {
-        marginTop: 15,
-        marginBottom: 15,
+        marginTop: Dimensions.get('window').height * .018,
+        marginBottom: Dimensions.get('window').height * .018,
         flexDirection: 'row'
     },  
     singlePricing: {
@@ -984,12 +983,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     singleText: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
     singleTextLabeld: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
@@ -1013,12 +1012,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     coupleText: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
     coupleTextLabeld: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
@@ -1039,10 +1038,10 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .17,
         height: Dimensions.get('window').height * .04,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     atTrainerSiteText: {
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     outDoor: {
         flexDirection: 'row',
@@ -1056,20 +1055,20 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .17,
         height: Dimensions.get('window').height * .04,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     outDoorText: {
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     priceErrorMessage: {
         color: 'red',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },
     nextButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 20,
-        marginTop: 60,
+        marginBottom: Dimensions.get('window').height * .022,
+        marginTop: Dimensions.get('window').height * .066,
         alignItems: 'center'
     },
     nextButton: {
@@ -1082,16 +1081,16 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     nextButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },
     dialogTitle: {
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     dialogContent: {
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     }
 });
 

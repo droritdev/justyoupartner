@@ -81,29 +81,29 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width
     },
     arrowImage: {
-        marginLeft: 20,
-        marginTop: 20
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .022
     },
     headerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },
     headerTitle: {
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .0278
     },
     juustYouTitle: {
         fontWeight: 'bold',
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         color: 'deepskyblue'
     },
     reasonsPreview: {
-        fontSize: 16,
-        marginTop: 10
+        fontSize: Dimensions.get('window').height * .019,
+        marginTop: Dimensions.get('window').height * .011
     },
     reasonsContainer: {
-        marginTop: 20,
+        marginTop: Dimensions.get('window').height * .022,
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .275,
         justifyContent: 'space-between',
@@ -116,10 +116,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     viImage: {
-        marginRight: 30
+        marginRight: Dimensions.get('window').width * .0724
     },
     reasonText: {
-        fontSize: 15,
+        fontSize: Dimensions.get('window').height * .018,
         width: Dimensions.get('window').width * .8
     }
 });

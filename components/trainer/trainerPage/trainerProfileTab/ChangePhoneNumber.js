@@ -192,7 +192,7 @@ const ChangePhoneNumber = ({navigation}) => {
             </View>
             <View style={styles.codelInput}>
                 <TextInput
-                    style={{fontSize: 25}}
+                    style={{fontSize: Dimensions.get('window').height * .0278}}
                     textAlign='center'
                     placeholder='Enter your code'
                     onChangeText={text => handleOnCodeInputChange(text)}
@@ -232,22 +232,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowBackButton: {
         alignItems: 'flex-start',
-        marginLeft: 15
+        marginLeft: Dimensions.get('window').width * .047
     },
     changePhoneTitle: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
-        marginLeft: 20,
+        marginLeft: Dimensions.get('window').width * .0483,
         marginTop: Dimensions.get('window').height * .05,
     },
     phoneAndError: {
@@ -257,17 +257,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderColor: 'deepskyblue',
         justifyContent: 'center',
-        fontSize: 24,
-        marginTop: 15
+        fontSize: Dimensions.get('window').height * .0278,
+        marginTop: Dimensions.get('window').height * .018
     },
     areaCodeInput: {
         borderRadius: 20,
-        marginRight: 10,
+        marginRight: Dimensions.get('window').width * .0241,
         borderColor: 'deepskyblue',
         borderWidth: 3,
         height: Dimensions.get('window').height * .06,
         width: Dimensions.get('window').width * .3,
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .0278
     },
     phoneNumberInput: {
         borderRadius: 20,
@@ -275,24 +275,24 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         height: Dimensions.get('window').height * .06,
         width: Dimensions.get('window').width * .6,
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .0278
     },
     phoneErrorMessage: {
         color: 'red',
-        marginLeft: 25
+        marginLeft: Dimensions.get('window').width * .06
     },
     verifyExplenationContainer: {
         width: Dimensions.get('window').width * .8,
         alignSelf: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .011
     },
     verifyExplenationText: {
         textAlign:'center',
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .019,
         color: 'grey'
     },
     verifyButtonContainer: {
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
     verifyButton: {
         width: Dimensions.get('window').width * .9,
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     verifyButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },
@@ -313,23 +313,23 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 3,
         height: Dimensions.get('window').height * .06,
-        marginRight: 20,
-        marginTop: 80,
+        marginRight: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .088,
         justifyContent: 'center',
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     sendAgainButton: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         width: Dimensions.get('window').width * .55,
         height: Dimensions.get('window').height * .04,
         backgroundColor: 'lightgrey',
         borderRadius: 5,
         justifyContent: 'center',
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     resendCodeText: {
         color: 'deepskyblue', 
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: '600',
         alignSelf: 'center'
     },
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     doneErrorMessage: {
         color: 'red',
         textAlign: 'center',
-        marginBottom: 10
+        marginBottom: Dimensions.get('window').height * .011
     },
     doneButton: {
         width: Dimensions.get('window').width * .9,
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     doneButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },

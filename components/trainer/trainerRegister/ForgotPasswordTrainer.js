@@ -16,51 +16,49 @@ const ForgotPassword = ({navigation}) => {
     }
     
     return(
-        <SafeAreaView>
-            <View style={styles.container}>
-                <View style={styles.upperContainer}>
-                    <TouchableOpacity
-                    onPress={handleArrowButton}
-                    >
-                    <Image
-                        source={require('../../../images/arrowBack.png')}
-                        style={styles.arrowImage}
-                    />
-                    </TouchableOpacity>
-                    <View style={styles.justYouHeader}>
-                        <Text style={styles.justYouText}>Just You</Text>
-                        <Text style={styles.partnerText}>Partner</Text>
-                    </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.upperContainer}>
+                <TouchableOpacity
+                onPress={handleArrowButton}
+                >
+                <Image
+                    source={require('../../../images/arrowBack.png')}
+                    style={styles.arrowImage}
+                />
+                </TouchableOpacity>
+                <View style={styles.justYouHeader}>
+                    <Text style={styles.justYouText}>Just You</Text>
+                    <Text style={styles.partnerText}>Partner</Text>
                 </View>
-                <Text style={styles.resetTitle}>Re-Set Your Password</Text>
-                <View style={styles.sendVerifyContainer}>
-                    <TextInput
-                        style={styles.phoneEmailInput}
-                        placeholder='Phone number or Email'
-                    />
-                    <TouchableOpacity
-                        style={styles.verifyButton}
-                        //onPress={handleVerifyCode}
-                    >
-                        <Text style={styles.verifyButtonText}>Verify</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.verifyExplination}>A code will be sent to you to verify and re-set your password</Text>
-                </View> 
-                <View style={styles.codeContainer}>
-                    <Text style={styles.enterCodeText}>Enter Code</Text>
-                    <TextInput
-                        style={styles.codeInput}
-                        placeholder=""
-                    />
-                </View>
-                <View style={styles.nextButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.nextButton}
-                        onPress={handleNext}
-                    >
-                        <Text style={styles.nextButtonText}>Next</Text>
-                    </TouchableOpacity>
-                </View>
+            </View>
+            <Text style={styles.resetTitle}>Re-Set Your Password</Text>
+            <View style={styles.sendVerifyContainer}>
+                <TextInput
+                    style={styles.phoneEmailInput}
+                    placeholder='Phone number or Email'
+                />
+                <TouchableOpacity
+                    style={styles.verifyButton}
+                    //onPress={handleVerifyCode}
+                >
+                    <Text style={styles.verifyButtonText}>Verify</Text>
+                </TouchableOpacity>
+                <Text style={styles.verifyExplination}>A code will be sent to you to verify and re-set your password</Text>
+            </View> 
+            <View style={styles.codeContainer}>
+                <Text style={styles.enterCodeText}>Enter Code</Text>
+                <TextInput
+                    style={styles.codeInput}
+                    placeholder=""
+                />
+            </View>
+            <View style={styles.nextButtonContainer}>
+                <TouchableOpacity
+                    style={styles.nextButton}
+                    onPress={handleNext}
+                >
+                    <Text style={styles.nextButtonText}>Next</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -69,17 +67,17 @@ const ForgotPassword = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        height: Dimensions.get('window').height * .95,
+        height: Dimensions.get('window').height,
         backgroundColor: 'white'
     },
     upperContainer: {
         flexDirection: 'row',
         width: Dimensions.get('window').width,
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022,
 
     },
     arrowImage: {
-        marginLeft: 15
+        marginLeft: Dimensions.get('window').width * .0362
     },
     justYouHeader: {
         justifyContent: 'center',
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     },
     justYouText: {
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .029
     },
     partnerText: {
         fontWeight: 'bold',
@@ -96,12 +94,12 @@ const styles = StyleSheet.create({
     },
     resetTitle: {
         alignSelf: 'center',
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: Dimensions.get('window').height * .033
     },
     sendVerifyContainer: {
-        marginTop: 60,
+        marginTop: Dimensions.get('window').height * .066,
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .065,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     verifyButton: {
         width: Dimensions.get('window').width * .3,
@@ -126,22 +124,22 @@ const styles = StyleSheet.create({
         borderRadius: 10
       },
       verifyButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
       },
       verifyExplination: {
-          fontSize: 20,
+          fontSize: Dimensions.get('window').height * .02,
           fontWeight: '300',
           textAlign: 'center',
           width: Dimensions.get('window').width * .65,
       },
       codeContainer: {
         alignItems: 'center',
-        marginTop: 60
+        marginTop: Dimensions.get('window').height * .066
       },
       enterCodeText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: '300'
       },
       codeInput: {
@@ -151,12 +149,11 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .065,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
       },
       nextButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 40,
         alignItems: 'center'
       },
       nextButton: {
@@ -169,7 +166,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
       },
       nextButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
       },

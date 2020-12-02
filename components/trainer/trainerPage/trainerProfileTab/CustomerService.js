@@ -147,17 +147,17 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height 
     },
     cancelButton: {
-        marginLeft: 20,
-        marginTop: 15
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .018
     },
     cancelButtonText: {
         color: 'deepskyblue',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     titleAndButtonContainer: {
         width: Dimensions.get('window').width * .9 ,
         alignSelf: 'center',
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
     titleAndButtonRow: {
         flexDirection: 'row',
@@ -167,46 +167,46 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .0278
     },
     emailHeaders: {
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
     headerContainer: {
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: 45,
+        height: Dimensions.get('window').height * .05,
         justifyContent: 'center'
     },
     headerRow: {
         flexDirection: 'row',
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     emailHeader: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: 'bold'
     },
     companyEmail: {
         color: 'deepskyblue',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     headerInput: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
     },
     emailContentContainer: {
-        marginLeft: 20,
-        marginTop: 20,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .022,
         width: Dimensions.get('window').width * .9
     },  
     emailContentInput: {
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     dialogTitle: {
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     dialogContent: {
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     }
 });
 

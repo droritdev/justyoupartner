@@ -36,60 +36,58 @@ const LogInTrainer = ({navigation}) => {
     }
 
     return(
-        <SafeAreaView>
-            <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <TouchableOpacity
+                onPress={handleArrowButton}
+            >
+                <Image
+                    source={require('../../../images/arrowBack.png')}
+                    style={styles.arrowImage}
+                />
+            </TouchableOpacity>
+            <View style={styles.headerContainer}>
+                <Text style={styles.justYouTitle}>Just You</Text>
+                <Text style={styles.partnerText}>Partner</Text>
+            </View>
+            <View style={styles.inputsContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder='Phone number or Email'
+                    placeholderTextColor='grey'
+                    onChangeText={(value) => handleOnChangePhoneEmail(value)}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='Password'
+                    placeholderTextColor='grey'
+                />
+                <View>
+                    {isPasswordErrorMessage ?
+                        <Text>Passwords not matched</Text>
+                    :null}
+                </View>
+            </View>
+            <TouchableOpacity
+                onPress={handleForgotPasswordButton}
+            >
+                <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <View style={styles.logInButtonContainer}>
                 <TouchableOpacity
-                    onPress={handleArrowButton}
+                    style={styles.logInButton}
+                    onPress={handleLogInButton}
                 >
-                    <Image
-                        source={require('../../../images/arrowBack.png')}
-                        style={styles.arrowImage}
-                    />
+                    <Text style={styles.logInButtonText}>Log In</Text>
                 </TouchableOpacity>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.justYouTitle}>Just You</Text>
-                    <Text style={styles.partnerText}>Partner</Text>
-                </View>
-                <View style={styles.inputsContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder='Phone number or Email'
-                        placeholderTextColor='grey'
-                        onChangeText={(value) => handleOnChangePhoneEmail(value)}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder='Password'
-                        placeholderTextColor='grey'
-                    />
-                    <View>
-                        {isPasswordErrorMessage ?
-                            <Text>Passwords not matched</Text>
-                        :null}
-                    </View>
-                </View>
-                <TouchableOpacity
-                    onPress={handleForgotPasswordButton}
-                >
-                    <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                </TouchableOpacity>
-                <View style={styles.logInButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.logInButton}
-                        onPress={handleLogInButton}
-                    >
-                        <Text style={styles.logInButtonText}>Log In</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.footerContainer}>
-                    <View style={styles.alreadyHaveAccountContainer}>
-                        <Text style={styles.alreadyHaveAnAccountText}>Don't have an account? </Text>
-                            <TouchableOpacity
-                            onPress={handleSignUpButton}
-                            >
-                            <Text style={styles.signInText}>Sign Up</Text> 
-                            </TouchableOpacity>
-                    </View>
+            </View>
+            <View style={styles.footerContainer}>
+                <View style={styles.alreadyHaveAccountContainer}>
+                    <Text style={styles.alreadyHaveAnAccountText}>Don't have an account? </Text>
+                        <TouchableOpacity
+                        onPress={handleSignUpButton}
+                        >
+                        <Text style={styles.signInText}>Sign Up</Text> 
+                        </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>
@@ -99,12 +97,12 @@ const LogInTrainer = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        height: Dimensions.get('window').height * .95,
+        height: Dimensions.get('window').height,
         backgroundColor: 'white'
     },
     arrowImage: {
-        marginTop: 20,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     headerContainer: {
         alignSelf: 'center',
@@ -112,15 +110,15 @@ const styles = StyleSheet.create({
     },
     justYouTitle: {
         fontWeight: 'bold',
-        fontSize: 45,
+        fontSize: Dimensions.get('window').height * .05,
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: Dimensions.get('window').height * .033
     },
     inputsContainer: {
-        marginTop: 50,
+        marginTop: Dimensions.get('window').height * .055,
         flexDirection: 'column',
         //height: Dimensions.get('window').height * .2,
     },
@@ -131,20 +129,20 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .075,
         alignSelf: 'center',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         textAlign: 'center',
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
     forgotPassword: {
         alignSelf: 'center',
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 15,
-        marginTop: 30
+        fontSize: Dimensions.get('window').height * .018,
+        marginTop: Dimensions.get('window').height * .033
     },
     logInButtonContainer: {
         alignItems: 'center',
-        marginTop: 80
+        marginTop: Dimensions.get('window').height * .088
     },
     logInButton: {
         width: Dimensions.get('window').width * .9,
@@ -156,19 +154,18 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     logInButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .028,
         fontWeight: 'bold',
         color: 'white'
     },
     footerContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        alignSelf: 'center',
-        marginBottom: 40
+        alignSelf: 'center'
     },  
     alreadyHaveAccountContainer: {
         flexDirection: 'row',
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
     alreadyHaveAnAccountText: {
         color: 'grey'

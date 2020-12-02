@@ -56,47 +56,45 @@ const ResetPasswordTrainer = ({navigation}) => {
     }
   
     return(
-      <SafeAreaView>
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.justYouHeader}>Just You</Text>
-            <Text style={styles.partnerText}>Partner</Text>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.justYouHeader}>Just You</Text>
+          <Text style={styles.partnerText}>Partner</Text>
+        </View>
+        <View style={styles.passwordContainer}>
+          <Text style={styles.createPasswordText}>CREATE PASSWORD</Text>
+          <View style={styles.passwordInput}>
+            <TextInput
+              value={passwordInput}
+              secureTextEntry={true}
+              style={{fontSize: 20}}
+              textAlign='center'
+              placeholder='PASSWORD'
+              onChangeText={text => handleOnChangePassword(text)}
+            />
           </View>
-          <View style={styles.passwordContainer}>
-            <Text style={styles.createPasswordText}>CREATE PASSWORD</Text>
-            <View style={styles.passwordInput}>
-              <TextInput
-                value={passwordInput}
-                secureTextEntry={true}
-                style={{fontSize: 20}}
-                textAlign='center'
-                placeholder='PASSWORD'
-                onChangeText={text => handleOnChangePassword(text)}
-              />
-            </View>
-            <View style={styles.confirmedPasswordInput}>
-              <TextInput
-                value={confirmedPassword}
-                secureTextEntry={true}
-                style={{fontSize: 20}}
-                textAlign='center'
-                placeholder='CONFIRM PASSWORD'
-                onChangeText={
-                  text => handleOnChangeConfirmedPassword(text)}
-              />
-            </View>
+          <View style={styles.confirmedPasswordInput}>
+            <TextInput
+              value={confirmedPassword}
+              secureTextEntry={true}
+              style={{fontSize: 20}}
+              textAlign='center'
+              placeholder='CONFIRM PASSWORD'
+              onChangeText={
+                text => handleOnChangeConfirmedPassword(text)}
+            />
           </View>
-          {isPasswordsNotMatch ?
-          <Text style={styles.passwordsErrorText}>{passwordErrorText}</Text>
-          :null}
-          <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-              style={styles.nextButton}
-              onPress={handleNext}
-            >
-              <Text style={styles.nextButtonText}>NEXT</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
+        {isPasswordsNotMatch ?
+        <Text style={styles.passwordsErrorText}>{passwordErrorText}</Text>
+        :null}
+        <View style={styles.nextButtonContainer}>
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={handleNext}
+          >
+            <Text style={styles.nextButtonText}>NEXT</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -104,7 +102,7 @@ const ResetPasswordTrainer = ({navigation}) => {
   
   const styles = StyleSheet.create({
     container: {
-      height: Dimensions.get('window').height * .95,
+      height: Dimensions.get('window').height,
       flexDirection: 'column',
       alignItems: 'center',
       backgroundColor: 'white'
@@ -113,23 +111,23 @@ const ResetPasswordTrainer = ({navigation}) => {
       alignItems: 'center'
     },
     justYouHeader: {
-      marginTop: 20,
-      fontSize: 30,
+      marginTop: Dimensions.get('window').height * .022,
+      fontSize: Dimensions.get('window').height * .033,
       fontWeight: 'bold'
     },
     partnerText: {
       marginTop: 5,
       color: 'deepskyblue',
       fontWeight: 'bold',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     passwordContainer: {
       width: Dimensions.get('window').width,
       alignItems: 'center',
-      marginTop: 50
+      marginTop: Dimensions.get('window').height * .055
     },
     createPasswordText: {
-      fontSize: 35,
+      fontSize: Dimensions.get('window').height * .038,
       fontWeight: 'bold'
     },
     passwordInput: {
@@ -138,7 +136,7 @@ const ResetPasswordTrainer = ({navigation}) => {
       borderWidth: 3,
       height: Dimensions.get('window').height * .09,
       width: Dimensions.get('window').width * .7,
-      marginTop: 80,
+      marginTop: Dimensions.get('window').height * .088,
       justifyContent: 'center'
     },
     confirmedPasswordInput: {
@@ -147,18 +145,17 @@ const ResetPasswordTrainer = ({navigation}) => {
       borderWidth: 3,
       height: Dimensions.get('window').height * .09,
       width: Dimensions.get('window').width * .7,
-      marginTop: 40,
+      marginTop: Dimensions.get('window').height * .044,
       justifyContent: 'center'
     },
     passwordsErrorText: {
         textAlign:'center',
         color: 'red',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -171,7 +168,7 @@ const ResetPasswordTrainer = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },
