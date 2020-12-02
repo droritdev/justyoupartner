@@ -55,8 +55,7 @@ const CreatePasswordTrainer = ({navigation}) => {
     }
   
     return(
-      <SafeAreaView>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <View style={styles.headerContainer}>
             <Text style={styles.justYouHeader}>Just You</Text>
             <Text style={styles.partnerText}>Partner</Text>
@@ -96,14 +95,13 @@ const CreatePasswordTrainer = ({navigation}) => {
               <Text style={styles.nextButtonText}>NEXT</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
     );
   }
   
   const styles = StyleSheet.create({
     container: {
-      height: Dimensions.get('window').height * .95,
+      height: Dimensions.get('window').height,
       flexDirection: 'column',
       alignItems: 'center',
       backgroundColor: 'white'
@@ -112,23 +110,23 @@ const CreatePasswordTrainer = ({navigation}) => {
       alignItems: 'center'
     },
     justYouHeader: {
-      marginTop: 20,
-      fontSize: 30,
+      marginTop: Dimensions.get('window').height * .022,
+      fontSize: Dimensions.get('window').height * .033,
       fontWeight: 'bold'
     },
     partnerText: {
-      marginTop: 5,
+      marginTop: Dimensions.get('window').height * .0055,
       color: 'deepskyblue',
       fontWeight: 'bold',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     passwordContainer: {
       width: Dimensions.get('window').width,
       alignItems: 'center',
-      marginTop: 50
+      marginTop: Dimensions.get('window').height * .055
     },
     createPasswordText: {
-      fontSize: 35,
+      fontSize: Dimensions.get('window').height * .0375,
       fontWeight: 'bold'
     },
     passwordInput: {
@@ -137,7 +135,7 @@ const CreatePasswordTrainer = ({navigation}) => {
       borderWidth: 3,
       height: Dimensions.get('window').height * .09,
       width: Dimensions.get('window').width * .7,
-      marginTop: 80,
+      marginTop: Dimensions.get('window').height * .088,
       justifyContent: 'center'
     },
     confirmedPasswordInput: {
@@ -146,18 +144,17 @@ const CreatePasswordTrainer = ({navigation}) => {
       borderWidth: 3,
       height: Dimensions.get('window').height * .09,
       width: Dimensions.get('window').width * .7,
-      marginTop: 40,
+      marginTop: Dimensions.get('window').height * .044,
       justifyContent: 'center'
     },
     passwordsErrorText: {
         textAlign:'center',
         color: 'red',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -170,7 +167,7 @@ const CreatePasswordTrainer = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },

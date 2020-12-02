@@ -1,13 +1,32 @@
-import React, { useContext } from 'react'
-import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
+import React, { useContext, useState } from 'react'
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //Page where the place verifies his phone/email before re-sets his password
 const ForgotPasswordPlace = ({navigation}) => {
+    
+    const [phoneEmailInput, setPhoneEmailInput] = useState("");
+    const [codeInput, setCodeInput] = useState("");
+
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
 
     //Navigates back to the LogInPlace page
     const handleArrowButton = () => {
         navigation.navigate('LogInPlace');
+    }
+
+    //Handle when phone/email input changes
+    const handleOnPhoneEmailChange = (value) => {
+        setIsError(false);
+        setPhoneEmailInput(value);
+    }
+
+    //Handle when code input changes
+    const handleOnCodeInputChange = (value) => {
+        setIsError(false);
+        setCodeInput(value);
     }
 
     //Navigates to the ResetPasswordPlace page
@@ -16,7 +35,7 @@ const ForgotPasswordPlace = ({navigation}) => {
     }
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.upperContainer}>
                 <TouchableOpacity
                 onPress={handleArrowButton}
@@ -36,6 +55,7 @@ const ForgotPasswordPlace = ({navigation}) => {
                 <TextInput
                     style={styles.phoneEmailInput}
                     placeholder='Phone number or Email'
+                    onChangeText={(value) => handleOnPhoneEmailChange(value)}
                 />
                 <TouchableOpacity
                     style={styles.verifyButton}
@@ -50,6 +70,7 @@ const ForgotPasswordPlace = ({navigation}) => {
                 <TextInput
                     style={styles.codeInput}
                     placeholder=""
+                    onChangeText={(value) => handleOnCodeInputChange(value)}
                 />
             </View>
             <View style={styles.nextButtonContainer}>
@@ -60,19 +81,20 @@ const ForgotPasswordPlace = ({navigation}) => {
                     <Text style={styles.nextButtonText}>Next</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        height: '100%'
+        height: Dimensions.get('window').height,
+        backgroundColor: 'white'
     },
     upperContainer: {
         flexDirection: 'row',
         width: Dimensions.get('window').width,
-        marginTop: 60
+        marginTop: 20
 
     },
     arrowImage: {
@@ -106,7 +128,7 @@ const styles = StyleSheet.create({
     },
     phoneEmailInput: {
         borderWidth: 2,
-        borderColor: 'grey',
+        borderColor: 'deepskyblue',
         borderRadius: 10,
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .065,
@@ -143,7 +165,7 @@ const styles = StyleSheet.create({
       },
       codeInput: {
         borderWidth: 2,
-        borderColor: 'grey',
+        borderColor: 'deepskyblue',
         borderRadius: 10,
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .065,
@@ -153,7 +175,6 @@ const styles = StyleSheet.create({
       nextButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 40,
         alignItems: 'center'
       },
       nextButton: {

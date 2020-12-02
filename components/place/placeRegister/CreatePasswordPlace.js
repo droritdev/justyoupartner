@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PasswordContext} from '../../../context/placeContextes/PasswordContext';
@@ -56,10 +56,10 @@ const CreatePasswordPlace = ({navigation}) => {
     }
   
     return(
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.justYouHeader}>Just You</Text>
-          <Text style={styles.clientText}>Partner</Text>
+          <Text style={styles.partnertText}>Partner</Text>
         </View>
         <View style={styles.passwordContainer}>
           <Text style={styles.createPasswordText}>CREATE PASSWORD</Text>
@@ -96,7 +96,7 @@ const CreatePasswordPlace = ({navigation}) => {
             <Text style={styles.nextButtonText}>NEXT</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
   
@@ -104,58 +104,57 @@ const CreatePasswordPlace = ({navigation}) => {
     container: {
       height: Dimensions.get('window').height,
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: 'white'
     },
     headerContainer: {
       alignItems: 'center'
     },
     justYouHeader: {
-      marginTop: 70,
-      fontSize: 30,
+      fontSize: Dimensions.get('window').height * .033,
       fontWeight: 'bold'
     },
-    clientText: {
-      marginTop: 5,
+    partnertText: {
+      marginTop: Dimensions.get('window').height * .0055,
       color: 'deepskyblue',
       fontWeight: 'bold',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     passwordContainer: {
       width: Dimensions.get('window').width,
       alignItems: 'center',
-      marginTop: '30%'
+      marginTop: Dimensions.get('window').height * .13
     },
     createPasswordText: {
-      fontSize: 35,
+      fontSize: Dimensions.get('window').height * .039,
       fontWeight: 'bold'
     },
     passwordInput: {
       borderColor: 'deepskyblue',
       borderRadius: 10,
       borderWidth: 3,
-      height: 80,
-      width: '70%',
-      marginTop: 80,
+      height: Dimensions.get('window').height * .0892,
+      width: Dimensions.get('window').width * .7,
+      marginTop: Dimensions.get('window').height * .0892,
       justifyContent: 'center'
     },
     confirmedPasswordInput: {
       borderColor: 'deepskyblue',
       borderRadius: 10,
       borderWidth: 3,
-      height: 80,
-      width: '70%',
-      marginTop: '15%',
+      height: Dimensions.get('window').height * .0892,
+      width: Dimensions.get('window').width * .7,
+      marginTop: Dimensions.get('window').height * .065,
       justifyContent: 'center'
     },
     passwordsErrorText: {
         textAlign:'center',
         color: 'red',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022,
     },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -168,7 +167,7 @@ const CreatePasswordPlace = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .028,
       fontWeight: 'bold',
       color: 'white'
     },

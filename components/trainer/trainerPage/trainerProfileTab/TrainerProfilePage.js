@@ -49,103 +49,103 @@ const TrainerProfilePage = ({navigation}) => {
     };
 
     //Calculate the trainers age according to the his birthday
-    useEffect(() => {
-        axios
-            .get('/trainers/omer@hotmail.com',
-            config
-        )
-        .then((doc) => {
-            if(doc){
-                dispatchEmail({
-                    type: 'SET_EMAIL_ADDRESS',
-                    emailAddress: doc.data[0].email   
-                });
+    // useEffect(() => {
+    //     axios
+    //         .get('/trainers/omer@hotmail.com',
+    //         config
+    //     )
+    //     .then((doc) => {
+    //         if(doc){
+    //             dispatchEmail({
+    //                 type: 'SET_EMAIL_ADDRESS',
+    //                 emailAddress: doc.data[0].email   
+    //             });
 
-                dispatchFirst({
-                    type: 'SET_FIRST_NAME',
-                    firstName: doc.data[0].name.first
-                });
+    //             dispatchFirst({
+    //                 type: 'SET_FIRST_NAME',
+    //                 firstName: doc.data[0].name.first
+    //             });
 
-                dispatchLast({
-                    type: 'SET_LAST_NAME',
-                    lastName: doc.data[0].name.last
-                })
+    //             dispatchLast({
+    //                 type: 'SET_LAST_NAME',
+    //                 lastName: doc.data[0].name.last
+    //             })
 
-                dispatchBirthday({
-                    type: 'SET_BIRTHDAY',
-                    birthday: doc.data[0].birthday
-                })
+    //             dispatchBirthday({
+    //                 type: 'SET_BIRTHDAY',
+    //                 birthday: doc.data[0].birthday
+    //             })
 
-                let array = doc.data[0].birthday.split('/');
-                let today = new Date();
-                let year = today.getFullYear();
-                let month = today.getMonth();
-                let todayDay = today.getDate();
-                let age = year - (Number(array[2]));
-                if(month < (Number(array[0]))){
-                    age--;
-                }
-                if((Number(array[0])) === month && todayDay < (Number(array[1]))){
-                    age--
-                }
-                setAge(age);
+    //             let array = doc.data[0].birthday.split('/');
+    //             let today = new Date();
+    //             let year = today.getFullYear();
+    //             let month = today.getMonth();
+    //             let todayDay = today.getDate();
+    //             let age = year - (Number(array[2]));
+    //             if(month < (Number(array[0]))){
+    //                 age--;
+    //             }
+    //             if((Number(array[0])) === month && todayDay < (Number(array[1]))){
+    //                 age--
+    //             }
+    //             setAge(age);
 
-                dispatchCategories({
-                    type: 'SET_CATEGORIES',
-                    categories: doc.data[0].categories
-                })
+    //             dispatchCategories({
+    //                 type: 'SET_CATEGORIES',
+    //                 categories: doc.data[0].categories
+    //             })
 
-                dispatchMaximumDistance({
-                    type: 'SET_MAXIMUM_DISTANCE',
-                    maximumDistnace: doc.data[0].maximumDistance
-                })
+    //             dispatchMaximumDistance({
+    //                 type: 'SET_MAXIMUM_DISTANCE',
+    //                 maximumDistnace: doc.data[0].maximumDistance
+    //             })
 
-                dispatchTrainingSite1({
-                    type: 'SET_TRAINING_SITE_1',
-                    trainingSite1: doc.data[0].trainingSite1
-                })
+    //             dispatchTrainingSite1({
+    //                 type: 'SET_TRAINING_SITE_1',
+    //                 trainingSite1: doc.data[0].trainingSite1
+    //             })
 
-                dispatchTrainingSite2({
-                    type: 'SET_TRAINING_SITE_2',
-                    trainingSite2: doc.data[0].trainingSite2
-                })
+    //             dispatchTrainingSite2({
+    //                 type: 'SET_TRAINING_SITE_2',
+    //                 trainingSite2: doc.data[0].trainingSite2
+    //             })
 
-                dispatchAboutMe({
-                    type: 'SET_ABOUT_ME',
-                    aboutMe: doc.data[0].about_me
-                })
+    //             dispatchAboutMe({
+    //                 type: 'SET_ABOUT_ME',
+    //                 aboutMe: doc.data[0].about_me
+    //             })
 
-                dispatchCertifications({
-                    type: 'SET_CERTIFICATIONS',
-                    certifications: doc.data[0].certifications
-                })
+    //             dispatchCertifications({
+    //                 type: 'SET_CERTIFICATIONS',
+    //                 certifications: doc.data[0].certifications
+    //             })
 
-                dispatchSingleAtTrainer({
-                    type: 'SET_SINGLE_AT_TRAINER',
-                    singleAtTrainer: doc.data[0].prices.single.singleAtTrainer
-                })
+    //             dispatchSingleAtTrainer({
+    //                 type: 'SET_SINGLE_AT_TRAINER',
+    //                 singleAtTrainer: doc.data[0].prices.single.singleAtTrainer
+    //             })
 
-                dispatchSingleOutdoor({
-                    type: 'SET_SINGLE_OUTDOOR',
-                    singleOutdoor: doc.data[0].prices.single.singleOutdoor
-                })
+    //             dispatchSingleOutdoor({
+    //                 type: 'SET_SINGLE_OUTDOOR',
+    //                 singleOutdoor: doc.data[0].prices.single.singleOutdoor
+    //             })
 
-                dispatchCoupleAtTrainer({
-                    type: 'SET_COUPLE_AT_TRAINER',
-                    coupleAtTrainer: doc.data[0].prices.couple.coupleAtTrainer
-                })
+    //             dispatchCoupleAtTrainer({
+    //                 type: 'SET_COUPLE_AT_TRAINER',
+    //                 coupleAtTrainer: doc.data[0].prices.couple.coupleAtTrainer
+    //             })
 
-                dispatchCoupleOutdoor({
-                    type: 'SET_COUPLE_OUTDOOR',
-                    coupleOutdoor: doc.data[0].prices.couple.coupleOutdoor
-                })
-            }
-            else{
-                alert("No trainer");
-            }
-        })
-        .catch((err) => alert(err));
-    }, [])
+    //             dispatchCoupleOutdoor({
+    //                 type: 'SET_COUPLE_OUTDOOR',
+    //                 coupleOutdoor: doc.data[0].prices.couple.coupleOutdoor
+    //             })
+    //         }
+    //         else{
+    //             alert("No trainer");
+    //         }
+    //     })
+    //     .catch((err) => alert(err));
+    // }, [])
 
     //Sets the single/couple flipToggle value
     const handleFlipToggle = () => {
@@ -356,59 +356,59 @@ const styles = StyleSheet.create({
         alignItems: 'center'
       },
     justYouHeader: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: Dimensions.get('window').height * .018
     },
     imageAndDetailsContainer: {
         flexDirection: 'row',
-        height: 110,
-        marginLeft: 20,
-        marginTop: 15
+        height: Dimensions.get('window').height * .1227,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .02
     },
     profileImage: {
-        height: 110,
-        width: 110,
+        height: Dimensions.get('window').width * .265,
+        width: Dimensions.get('window').width * .265,
         borderWidth: 2,
         borderRadius: 20,
         borderColor: 'grey'
     },
     nameRatingAgeContainer: {
         justifyContent: 'center',
-        marginLeft: 20,
+        marginLeft: Dimensions.get('window').width * .0483,
         justifyContent: 'space-between',
-        height: 100
+        height: Dimensions.get('window').height * .111
     },
     nameText: {
         fontWeight: 'bold',
-        fontSize: 33
+        fontSize: Dimensions.get('window').height * .033
     },
     personalTrainerText: {
         fontWeight: 'bold',
-        fontSize: 22,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'deepskyblue'
     },
     ratingAndAge: {
         flexDirection: 'row',
-        height: 20
+        height: Dimensions.get('window').height * .022
     },
     ratingText: {
-        fontSize: 17
+        fontSize: Dimensions.get('window').height * .02
     },
     startIcon: {
-        height: 20,
-        width: 20
+        height: Dimensions.get('window').height * .022,
+        width: Dimensions.get('window').height * .022
     },
     ageText: {
-        fontSize: 17
+        fontSize: Dimensions.get('window').height * .02
     },
     categoryCertSitesAbout: {
-        marginLeft: 20,
-        marginTop: 30,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .033,
         width: Dimensions.get('window').width * .9
     },
     categoriesRow: {
@@ -416,43 +416,43 @@ const styles = StyleSheet.create({
     },
     categoriesTitle: {
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: Dimensions.get('window').height * .02
     },
     categoriesText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '400'
     },
     certificationsTitle: {
         fontWeight: 'bold',
-        fontSize: 18,
-        marginTop: 5
+        fontSize: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .0055
     },
     certificationsText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '400'
     },
     trainingSiteTitle: {
         fontWeight: 'bold',
-        fontSize: 18,
-        marginTop: 5
+        fontSize: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .0055
     },
     trainingSiteText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '400'
     },
     aboutMeTitle: {
         fontWeight: 'bold',
-        fontSize: 18,
-        marginTop: 5
+        fontSize: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .0055
     },
     aboutMeText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '400',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },
     pricingContainer: {
-        marginTop: 30,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     pricingLabels: {
         flexDirection: 'row'

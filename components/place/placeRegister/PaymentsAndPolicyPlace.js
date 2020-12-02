@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
 import Dialog from "react-native-dialog";
@@ -75,7 +75,7 @@ const PaymentsAndPolicyPlace = ({navigation}) => {
     }
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View>
                 <Dialog.Container visible={visible}>
                     <Dialog.Title>Attention</Dialog.Title>
@@ -174,14 +174,15 @@ const PaymentsAndPolicyPlace = ({navigation}) => {
                     <Text style={styles.nextButtonText}>APPROVE</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').height,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: 'white'
     },
     paymentsAndPolicyContainer: {
         justifyContent: 'space-between',
@@ -191,23 +192,23 @@ const styles = StyleSheet.create({
 
     },
     arrowImage: {
-      marginTop: 60,
-      marginLeft: 20
+      marginTop: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     profileDetailesText: {
-      marginTop: 30,
+      marginTop: Dimensions.get('window').height * .033,
       fontWeight: 'bold',
-      fontSize: 38,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0425,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     paymentFormContainer:{
         justifyContent: 'space-between',
-        marginTop: 50,
+        marginTop: Dimensions.get('window').height * .055,
         height: Dimensions.get('window').height * .275
     },
     paymentTitle: {
-        fontSize: 17,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .019,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     cardInput: {
         width: Dimensions.get('window').width * .95,
@@ -216,15 +217,15 @@ const styles = StyleSheet.create({
         borderColor: 'deepskyblue',
         borderRadius: 30,
         alignSelf: 'center',
-        fontSize: 15
+        fontSize: Dimensions.get('window').height * .015
     },
     paymentFormErrorText: {
         color: 'red',
         alignSelf: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     policyContainer: {
-        marginLeft: 10,
+        marginLeft: Dimensions.get('window').width * .02415,
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .19,
     },
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     policyText: {
         width: Dimensions.get('window').width * .77,
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     flipToggle: {
         flexDirection: 'column',
@@ -247,14 +248,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: Dimensions.get('window').width * .325,
-        marginLeft: 10        
+        marginLeft: Dimensions.get('window').width * .02415        
     },
     readMoreText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         alignSelf: 'flex-end',
-        marginTop: 2.5
+        marginTop: Dimensions.get('window').height * .0022
     },
     moreInformationImage: {
         height: Dimensions.get('window').height * .0325,
@@ -263,8 +264,7 @@ const styles = StyleSheet.create({
     nextButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 40,
-        marginTop: 40,
+        marginTop: Dimensions.get('window').height * .044,
         alignItems: 'center'
     },
     nextButton: {
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     nextButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     }

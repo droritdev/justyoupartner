@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center', 
         width: Dimensions.get('window').width * .95, 
         alignItems: 'center',
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
     image: {
-        height: 60, 
-        width: 60 
+        height: Dimensions.get('window').height * .066, 
+        width: Dimensions.get('window').height * .066 
     }
 });
 

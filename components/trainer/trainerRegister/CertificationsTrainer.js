@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import {CertificationsContext} from '../../../context/trainerContextes/CertificationsContext';
@@ -50,7 +50,7 @@ const CertificationsTrainer = ({navigation}) => {
     }
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                 onPress={() => handleArrowButton()}
@@ -74,7 +74,7 @@ const CertificationsTrainer = ({navigation}) => {
                     />
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -86,23 +86,23 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height * .16,
-        marginTop: 60,
+        marginTop: Dimensions.get('window').height * .022,
         borderBottomWidth: 1,
         borderBottomColor: 'deepskyblue'
     },
     arrowImage: {
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     profileDetailesText: {
-        marginTop: 25,
-        marginLeft: 20,
+        marginTop: Dimensions.get('window').height * .0278,
+        marginLeft: Dimensions.get('window').width * .0483,
         fontWeight: 'bold',
-        fontSize: 38
+        fontSize: Dimensions.get('window').height * .042
     },
     shareYourCertifications: {
-        marginTop: 10,
-        marginLeft: 20,
-        fontSize: 20,
+        marginTop: Dimensions.get('window').height * .011,
+        marginLeft: Dimensions.get('window').width * .0483,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: '500',
     },
     textConatiner: {
@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * .5
     },  
     textInputContainer: {
-        marginLeft: 20,
-        marginTop: 30,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .033,
         width: Dimensions.get('window').width * .9
     },
     textInput: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
     }
 
 });

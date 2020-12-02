@@ -5,55 +5,45 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 //import ImagePicker from 'react-native-image-picker'
-import MultiSelect from 'react-native-multiple-select';
-import SearchableDropdown from 'react-native-searchable-dropdown';
 
 import {EmailContext} from '../../../context/placeContextes/EmailContext';
 import {CompanyNameContext} from '../../../context/placeContextes/CompanyNameContext';
+import {CompanyNumberContext} from '../../../context/placeContextes/CompanyNumberContext';
 import {AddressContext} from '../../../context/placeContextes/AddressContext';
 import {AboutThePlaceContext} from '../../../context/placeContextes/AboutThePlaceContext';
 import {CategoryContext} from '../../../context/placeContextes/CategoryContext';
+import {TrainingPriceContext} from '../../../context/placeContextes/TrainingPriceContext';
 
 //Here the place enters his: name, number, address, categories and images/videos
 const ProfileDetailsPage2Place = ({navigation}) => {
     const {emailAddress} = useContext(EmailContext);
     const {dispatchName} = useContext(CompanyNameContext);
-    const {dispatcAddress} = useContext(AddressContext);
+    const {dispatchCompanyNumber} = useContext(CompanyNumberContext);
+    const {dispatchAddress} = useContext(AddressContext);
     const {aboutThePlace} = useContext(AboutThePlaceContext);
-    const {categories, dispatchCategories} = useContext(CategoryContext);
+    const {categories} = useContext(CategoryContext);
+    const {dispatchSingle} = useContext(TrainingPriceContext);
+    const {dispatchCouple} = useContext(TrainingPriceContext);
 
     const [companyNameInput, setCompanyNameInput] = useState("");
     const [companyNumberInput, setCompanyNumberInput] = useState("");
     const [addressInput, setAddressInput] = useState("");
-    const [selectedItems, setSelectedItems] = useState([]);
     //const [profileImageSource, setProfileImageSource] = useState("");
-    const [addressNumber, setAddressNumber] = useState("");
-    const [addressStreet, setAddressStreet] = useState("");
-    const [addressCity, setAddressCity] = useState("");
-    const [addressState, setAddressState] = useState("");
-    const [addressZipCode, setAddressZipCode] = useState("");
-    const [isSingle, setIsSingle] = useState(true);
+    const [singlePriceInput, setSinglePriceInput] = useState("");
+    const [couplePriceInput, setCouplePriceInput] = useState("");
+
+    const [isNameError, setIsNameError] = useState(false);
+    const [nameErrorMessage, setIsNameErrorMessage] = useState("Enter your company name");
+    const [isNumberError, setIsNumberError] = useState(false);
+    const [numberErrorMessage, setNumberErrorMessage] = useState("Enter your company number");
+    const [isAddressError, setIsAddressError] = useState(false);
+    const [addressErrorMessage, setAddressErrorMessage] = useState("Enter your company address");
+    const [isCategoryError, setIsCategoryError] = useState(false);
+    const [categoryErrorMessage, setCategoryErrorMessage] = useState("Pick at least 1 category");
+    const [isPriceError, setIsPriceError] = useState(false);
+    const [priceErrorMessage, setPriceErrorMessage] = useState("Enter at least 1 pricing");
 
     const charsLimit = 150;
-
-    let categoryItems = [
-      {
-        id: '1',
-        name: 'Trx'
-      },
-      {
-        id: '2',
-        name: 'Yoga'
-      },
-      {
-        id: '3',
-        name: 'Running'
-      },
-      {
-        id: '4',
-        name: 'Gym'
-      }
-    ];
     
     //Navigates back to the profile details page
     const handleArrowButton = () => {
@@ -62,33 +52,33 @@ const ProfileDetailsPage2Place = ({navigation}) => {
 
     //Sets the company name to the value
     const handleOnCompanyNameChange = (text) => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
       setCompanyNameInput(text);
     }
 
     //Sets the company number to the value
     const handleOnCompanyNumberChange = (text) => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
       setCompanyNumberInput(text);
     }
 
     //Sets the company address to the value
     const handleOnAddressChange = (text) => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
       setAddressInput(text);
     }
-    
-    const handleItemSelected = (item) => {
-      let selectedTemp = [...selectedItems];
-      selectedTemp[selectedTemp.length] = item;
-      setSelectedItems(selectedTemp);
-    }
-  
-    const handleRemoveItem = (item, index) => {
-      setSelectedItems(selectedItems.filter((sitem) => sitem.name !== item.name));
-    }
-
-    //Sets the category array to the selected items
-    const onSelectedItemsChange = (selectedItems) => {
-      setSelectedItems(selectedItems);
-    };
 
     const handleProfileImage = () => {
       alert("Image");
@@ -110,27 +100,97 @@ const ProfileDetailsPage2Place = ({navigation}) => {
       // })
     }
 
+    //Navigates to the category picker page
     const handleOnCategoryPressed = () => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
       navigation.navigate('PickCategoryPlace');
     }
 
     //Navigates to the AboutThePlace page
     const handleOnaboutThePlacePress = () => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
       navigation.navigate('AboutThePlace');
+    }
+
+    const handleOnSinglePriceChange = (value) => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
+      setSinglePriceInput(value);
+    }
+
+    const handleOnCouplePriceChange = (value) => {
+      setIsAddressError(false);
+      setIsCategoryError(false);
+      setIsNameError(false);
+      setIsNumberError(false);
+      setIsPriceError(false);
+      setCouplePriceInput(value);
     }
 
     //Handles the next button, if ok - navigates to the payments page
     const handleNext = () => {
-      //selectedItems.map((item) => alert(item.name));
+      if(companyNameInput === ""){
+        setIsNameError(true);
+      }
+      else if(companyNumberInput === ""){
+        setIsNumberError(true);
+        setNumberErrorMessage("Enter your company number")
+      }
+      else if(!Number(companyNumberInput)){
+        setIsNumberError(true);
+        setNumberErrorMessage("Enter digits only");
+      }
+      else if(addressInput === ""){
+        setIsAddressError(true);
+      }
+      else if(categories.length < 1){
+        setIsCategoryError(true);
+      }
+      else if(singlePriceInput == "" && couplePriceInput == ""){
+        setIsPriceError(true);
+      }
+      else{
+        dispatchName({
+          type: 'SET_COMPANY_NAME',
+          companyName: companyNameInput
+        });
 
-      dispatchName({
-        type: 'SET_COMPANY_NAME',
-        companyName: companyNameInput
-      });
+        dispatchCompanyNumber({
+          type: 'SET_COMPANY_NUMBER',
+          companyNumber: companyNumberInput
+        });
 
-      navigation.navigate('PaymentsAndPolicyPlace');
+        dispatchAddress({
+          type: 'SET_ADDRESS',
+          address: addressInput
+        });
+
+        dispatchSingle({
+          type: 'SET_SINGLE_PRICE',
+          singlePrice: singlePriceInput
+        });
+
+        dispatchCouple({
+          type: 'SET_COUPLE_PRICE',
+          couplePrice: couplePriceInput
+        });
+
+        navigation.navigate('PaymentsAndPolicyPlace');
+      }
     }
     return(
+      <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.container} keyboardShouldPersistTaps={"true"}>
             <View style={styles.headerContainer}>
                 <TouchableOpacity
@@ -152,6 +212,9 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                   placeholderTextColor='darkgrey'
                   onChangeText={value => handleOnCompanyNameChange(value)}
                   />
+                  {isNameError ? 
+                    <Text style={styles.nameNumberAddressCategoryErrorMessage}>{nameErrorMessage}</Text>
+                  : null}
               </View>
               <View style={styles.nameContanier}>
                   <Text style={styles.nameText}>Company Number</Text>
@@ -161,6 +224,9 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                   placeholderTextColor='darkgrey'
                   onChangeText={value => handleOnCompanyNumberChange(value)}
                   />
+                  {isNumberError ? 
+                    <Text style={styles.nameNumberAddressCategoryErrorMessage}>{numberErrorMessage}</Text>
+                  : null}
               </View>
               <View style={styles.addressContainer}>
                   <Text style={styles.addressText}>ADDRESS</Text>
@@ -169,7 +235,10 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                   title='address'
                   placeholder='Number/Street/City/State/Zip Code'
                   onChangeText={(value) => handleOnAddressChange(value)}
-                  />                                                        
+                  />       
+                  {isAddressError ? 
+                    <Text style={styles.nameNumberAddressCategoryErrorMessage}>{addressErrorMessage}</Text>
+                  : null}                                                 
               </View>
             </View>
             <View style={styles.emailAddressContainer}>
@@ -201,9 +270,9 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              {/* {isCategoryError ? 
-                    <Text style={styles.categoryErrorMessage}>{categoryMessageError}</Text>
-              : null} */}
+              {isCategoryError ? 
+                    <Text style={styles.nameNumberAddressCategoryErrorMessage}>{categoryErrorMessage}</Text>
+              : null}
             </View>
             <View style={styles.aboutAndPhotosContainer}>
               <View style={styles.aboutMeContainer}>
@@ -243,6 +312,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                       title='$$$'
                       placeholder='$$$'
                       placeholderTextColor='black'
+                      onChangeText={(value) => handleOnSinglePriceChange(value)}
                   />
                   </View>
                   <View style={styles.personal2Clients}>
@@ -252,9 +322,13 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                       title='$$$'
                       placeholder='$$$'
                       placeholderTextColor='black'
+                      onChangeText={(value) => handleOnCouplePriceChange(value)}
                   />
                   </View>
               </View>
+              {isPriceError ? 
+                <Text style={styles.nameNumberAddressCategoryErrorMessage}>{priceErrorMessage}</Text>
+              : null}
             </View>
             <View style={styles.nextButtonContainer}>
                 <TouchableOpacity
@@ -265,32 +339,37 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                 </TouchableOpacity>
             </View>
        </ScrollView> 
+      </SafeAreaView>
     );
   }
   
   const styles = StyleSheet.create({
+    safeArea: {
+        backgroundColor: 'white' 
+    },
     container: {
-        height: Dimensions.get('window').height,
-        flexDirection: 'column'
+        //height: Dimensions.get('window').height,
+        flexDirection: 'column',
+        backgroundColor: 'white'
       },
       headerContainer: {
 
       },
       arrowImage: {
-        marginTop: 60,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483
       },
       profileDetailesText: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
-        fontSize: 38,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .0424,
+        marginLeft: Dimensions.get('window').width * .0483
       },
       nameAndAddressContainer: {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: 300,
-        marginTop: 30
+        height: Dimensions.get('window').height * .334,
+        marginTop: Dimensions.get('window').height * .033
       },
       nameContanier: {
         width: Dimensions.get('window').width * .93,
@@ -300,16 +379,20 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         alignSelf: 'center'
       },
       nameText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .0189,
       },
       nameInput: {
         borderWidth: 3,
         borderColor: 'deepskyblue',
         borderRadius: 20,
         height: Dimensions.get('window').height * .055,
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         textAlign: 'center',
         marginTop: 10
+      },
+      nameNumberAddressCategoryErrorMessage: {
+        color: 'red',
+        textAlign: 'center'
       },
       addressContainer: {
         width: Dimensions.get('window').width * .93,
@@ -319,15 +402,16 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         alignSelf: 'center'
       },
       addressText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .0189,
       },
       addressInput: {
         borderWidth: 3,
         borderColor: 'deepskyblue',
         borderRadius: 20,
         height: Dimensions.get('window').height * .055,
-        fontSize: 20,
-        textAlign: 'center'
+        fontSize: Dimensions.get('window').height * .022,
+        textAlign: 'center',
+        marginTop: 10
       },
       emailAddressContainer: {
         width: Dimensions.get('window').width * .93,
@@ -335,10 +419,10 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignSelf: 'center',
-        marginTop: 40
+        marginTop: Dimensions.get('window').height * .044
       },
       emailAddressText: {
-        fontSize: 17
+        fontSize: Dimensions.get('window').height * .0189
       },
       emailAddressInput: {
         borderColor: 'deepskyblue',
@@ -348,7 +432,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width * .93,
         justifyContent: 'center',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: 'bold',
         textAlign: 'center',
       },
@@ -356,15 +440,15 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         textAlign: 'center'
       },
       categoryTitle: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
-        fontSize: 25,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .0278,
+        marginLeft: Dimensions.get('window').width * .0483
       },
       categoryContainer: {
-        height: 65,
+        height: Dimensions.get('window').height * .0725,
         alignItems: 'center',
-        marginTop: 10
+        marginTop: Dimensions.get('window').height * .01
       },
       categoryBoxContainer: {
         height: Dimensions.get('window').height * .055,
@@ -384,13 +468,13 @@ const ProfileDetailsPage2Place = ({navigation}) => {
       categoryUnPicked: {
         textAlign: 'center',
         color: 'grey',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: '300',
         marginLeft: Dimensions.get('window').width * .3
       },
       categoryPicked: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: 'bold',
         marginLeft: Dimensions.get('window').width * .3
       },
@@ -401,12 +485,12 @@ const ProfileDetailsPage2Place = ({navigation}) => {
       categoryErrorMessage: {
         color: 'red',
         alignSelf: 'center',
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
       }, 
       aboutAndPhotosContainer: {
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .3,
-        marginTop: 40
+        marginTop: Dimensions.get('window').height * .044
       },
       aboutMeContainer: {
         borderColor: 'deepskyblue',
@@ -427,18 +511,18 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         alignSelf: 'flex-start',
       },
       aboutMeTitle: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
       },
       aboutMeText: {
-        marginTop: 10,
-        marginLeft: 10,
-        fontSize: 18
+        marginTop: Dimensions.get('window').height * .01,
+        marginLeft: Dimensions.get('window').width * .024,
+        fontSize: Dimensions.get('window').height * .02
       },
       pencilButtonAboutMe: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginRight: 5,
-        marginBottom: 5
+        marginRight: Dimensions.get('window').width * .012,
+        marginBottom: Dimensions.get('window').height * .0055
       },
       imagesContainer: {
         alignItems: 'center',
@@ -446,7 +530,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         borderWidth: 3,
         width: Dimensions.get('window').width * .9,
         borderColor: 'deepskyblue',
-        height: 120,
+        height: Dimensions.get('window').height * .134,
         alignSelf: 'center',
         justifyContent: 'center'
       },
@@ -454,21 +538,21 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         borderRadius: 40
       },
       photosText: {
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'black'
       },
       accessText: {
         color: 'black',
-        fontSize: 13
+        fontSize: Dimensions.get('window').height * .015
       },
       priceSectionContainer: {
-        marginTop: 30,
-        marginLeft: 15,
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0362,
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .14
       },
       pricingTitle: {
-        fontSize: 22,
+        fontSize: Dimensions.get('window').height * .022,
         fontWeight: 'bold' 
       }, 
       pricingContainer: {
@@ -480,7 +564,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: Dimensions.get('window').width * .925,
-        height: 45,
+        height: Dimensions.get('window').height * .045,
         alignItems: 'center'
       },
       personal1ClientInput: {
@@ -489,10 +573,10 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         width: Dimensions.get('window').width * .17,
         height: Dimensions.get('window').height * .04,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
       },
       personal1ClientText: {
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
       },
       personal2Clients: {
         flexDirection: 'row',
@@ -506,16 +590,15 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         width: Dimensions.get('window').width * .17,
         height: Dimensions.get('window').height * .04,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
       },
       personal2ClientsText: {
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
       },
       nextButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 40,
-        marginTop: 40,
+        marginTop: Dimensions.get('window').height * .044,
         alignItems: 'center',
       },
       nextButton: {
@@ -528,7 +611,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
         borderRadius: 20
       },
       nextButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
       },

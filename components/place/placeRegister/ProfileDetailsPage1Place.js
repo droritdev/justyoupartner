@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
@@ -95,7 +95,7 @@ const ProfileDetailsPage1Place = ({navigation}) => {
     }
   
     return(
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <TouchableOpacity
           onPress={handleArrowButton}
         >
@@ -180,74 +180,74 @@ const ProfileDetailsPage1Place = ({navigation}) => {
             <Text style={styles.nextButtonText}>NEXT</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
   
   const styles = StyleSheet.create({
     container: {
       height: Dimensions.get('window').height,
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: 'white'
     },
     arrowImage: {
-      marginTop: 60,
-      marginLeft: 20
+      marginTop: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     upperContainer: {
-      marginTop: 30,
+      marginTop: Dimensions.get('window').height * .033,
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .275,
     },
     profileDetailesText: {
       fontWeight: 'bold',
-      fontSize: 38,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0424,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     fillTheFieldsText: {
-      fontSize: 23,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     countryContainer: {
       height: Dimensions.get('window').height * .11,
     },
     countryTitle: {
       fontWeight: 'bold',
-      fontSize: 24,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     countryErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 15,
-      marginTop: 5
+      fontSize: Dimensions.get('window').height * .0167,
+      marginTop: Dimensions.get('window').height * .0055
     },
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
       marginTop: 70,
-      marginLeft: 20
+      marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {
       fontWeight: 'bold',
-      fontSize: 27
+      fontSize: Dimensions.get('window').height * .0278
     },
     permissionsSection: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .03,
-      marginRight: 25,
-      marginTop: 20
+      marginRight: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .022
     },
     permissionsErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 15,
-      marginTop: 25
+      fontSize: Dimensions.get('window').height * .0167,
+      marginTop: Dimensions.get('window').height * .0278
     }, 
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -260,7 +260,7 @@ const ProfileDetailsPage1Place = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },

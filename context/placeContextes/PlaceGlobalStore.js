@@ -4,6 +4,7 @@ import EmailContextProvider from './EmailContext';
 import CountryContextProvider from './CountryContext';
 import PasswordContextProvider from './PasswordContext';
 import CompanyNameContextProvider from './CompanyNameContext';
+import CompanyNumberContextProvider from './CompanyNumberContext';
 import PhoneContextProvider from './PhoneContext';
 import AboutThePlaceContextProvider from './AboutThePlaceContext';
 import MediaContextProvider from './MediaContext';
@@ -19,21 +20,23 @@ const PlaceGlobalStore = ({children}) => {
             <CountryContextProvider>
                 <PasswordContextProvider>
                     <CompanyNameContextProvider>
-                        <AddressContextProvider>
-                            <CategoryContextProvider>
-                                <TrainingPriceContextProvider>
-                                    <AboutThePlaceContextProvider>
-                                        <MediaContextProvider>
-                                            <ProfileImageContextProvider>
-                                                <PhoneContextProvider>
-                                                    {children}  
-                                                </PhoneContextProvider>
-                                            </ProfileImageContextProvider>
-                                        </MediaContextProvider>
-                                    </AboutThePlaceContextProvider>
-                                </TrainingPriceContextProvider>
-                            </CategoryContextProvider>
-                        </AddressContextProvider>
+                        <CompanyNumberContextProvider>
+                            <AddressContextProvider>
+                                <CategoryContextProvider>
+                                    <TrainingPriceContextProvider>
+                                        <AboutThePlaceContextProvider>
+                                            <MediaContextProvider>
+                                                <ProfileImageContextProvider>
+                                                    <PhoneContextProvider>
+                                                        {children}  
+                                                    </PhoneContextProvider>
+                                                </ProfileImageContextProvider>
+                                            </MediaContextProvider>
+                                        </AboutThePlaceContextProvider>
+                                    </TrainingPriceContextProvider>
+                                </CategoryContextProvider>
+                            </AddressContextProvider>
+                        </CompanyNumberContextProvider>
                     </CompanyNameContextProvider>
                 </PasswordContextProvider>
             </CountryContextProvider>

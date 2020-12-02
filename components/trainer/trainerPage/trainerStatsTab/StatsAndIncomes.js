@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
-//The trainer's order page - pennding + approved
+//The trainer's order page - pennding + stats
 const StatsAndIncomes = ({navigation}) => {
 
     const [isIncome, setIsIncome] = useState(true);
@@ -19,18 +19,18 @@ const StatsAndIncomes = ({navigation}) => {
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>
                 </View>
-                <View style={ styles.pendingOrApprovedContainer}>
+                <View style={ styles.incomeOrStatsContainer}>
                 <TouchableOpacity 
-                    style={isIncome ? styles.pendingLabeld : styles.pendingNotLabeld}
+                    style={isIncome ? styles.incomeLabeld : styles.incomeNotLabeld}
                     onPress={() => handleFlipToggle()}
                 >
-                    <Text style={isIncome ? styles.pendingTextLabeld : styles.pendingTextNotLabeld}>INCOME</Text>
+                    <Text style={isIncome ? styles.incomeTextLabeld : styles.incomeTextNotLabeld}>INCOME</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
-                    style={isIncome ? styles.approvedLabeld : styles.approvedNotLabeld}
+                    style={isIncome ? styles.statsLabeld : styles.statsNotLabeld}
                     onPress={() => handleFlipToggle()}
                 >
-                    <Text style={isIncome ? styles.approvedTextNotLabeld : styles.approvedTextLabeld}>STATS</Text>
+                    <Text style={isIncome ? styles.statsTextNotLabeld : styles.statsTextLabeld}>STATS</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.timeArrows}>
@@ -119,20 +119,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .025,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: Dimensions.get('window').height * .018
     },
-    pendingOrApprovedContainer:{
+    incomeOrStatsContainer:{
         flexDirection: 'row',
-        marginTop: 30,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483
     },
-    pendingLabeld: {
+    incomeLabeld: {
         width: Dimensions.get('window').width * .275,
         height: Dimensions.get('window').height * .04,
         borderWidth: 3,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'deepskyblue',
         justifyContent: 'center'
     },
-    pendingNotLabeld: {
+    incomeNotLabeld: {
         width: Dimensions.get('window').width * .275,
         height: Dimensions.get('window').height * .04,
         borderWidth: 3,
@@ -154,17 +154,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center'
     },
-    pendingTextLabeld: {
-        fontSize: 18,
+    incomeTextLabeld: {
+        fontSize: Dimensions.get('window').height * .02,
         color: 'white',
         fontWeight: 'bold'
     },
-    pendingTextNotLabeld: {
-        fontSize: 18,
+    incomeTextNotLabeld: {
+        fontSize: Dimensions.get('window').height * .02,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
-    approvedLabeld: {
+    statsLabeld: {
         width: Dimensions.get('window').width * .275,
         height: Dimensions.get('window').height * .04,
         borderWidth: 3,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    approvedNotLabeld: {
+    statsNotLabeld: {
         width: Dimensions.get('window').width * .275,
         height: Dimensions.get('window').height * .04,
         borderWidth: 3,
@@ -185,13 +185,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    approvedTextNotLabeld: {
-        fontSize: 18,
+    statsTextNotLabeld: {
+        fontSize: Dimensions.get('window').height * .02,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
-    approvedTextLabeld: {
-        fontSize: 18,
+    statsTextLabeld: {
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
@@ -202,18 +202,18 @@ const styles = StyleSheet.create({
     },
     timeArrowsRow: {
         flexDirection: 'row',
-        marginLeft: 30,
-        marginTop: 40,
+        marginLeft: Dimensions.get('window').width * .0724,
+        marginTop: Dimensions.get('window').height * .044,
         width: Dimensions.get('window').width * .45,
         justifyContent: 'space-between',
         alignItems: 'center'
     },
     arrow: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold'
     },
     timeText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold'
     },
     tableHeaders: {
@@ -230,9 +230,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     headerTitle: {
-        fontSize: 12,
+        fontSize: Dimensions.get('window').height * .0134,
         fontWeight: 'bold',
-        width: 60,
+        width: Dimensions.get('window').width * .145,
         textAlign: 'center'
     },
     incomesTableContainer: {
@@ -256,8 +256,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     rowInformation: {
-        fontSize: 12,
-        width: 60,
+        fontSize: Dimensions.get('window').height * .0134,
+        width: Dimensions.get('window').width * .145,
         textAlign: 'center',
         alignSelf: 'center'
     }

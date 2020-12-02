@@ -151,42 +151,42 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   arrowImage: {
-    marginTop: 20,
-    marginLeft: 20
+    marginTop: Dimensions.get('window').height * .022,
+    marginLeft: Dimensions.get('window').width * .0483
   },
   justYouHeader: {
     color: 'deepskyblue',
     fontWeight: 'bold',
-    fontSize: 30,
-    marginTop: 30,
-    marginLeft: 20,
+    fontSize: Dimensions.get('window').height * .033,
+    marginTop: Dimensions.get('window').height * .033,
+    marginLeft: Dimensions.get('window').width * .0483,
   },
   signUpText: {
-    fontSize: 40,
+    fontSize: Dimensions.get('window').height * .044,
     fontWeight: 'bold',
     width: Dimensions.get('window').width * .8,
-    marginTop: 20,
-    marginLeft: 20,
+    marginTop: Dimensions.get('window').height * .022,
+    marginLeft: Dimensions.get('window').width * .0483,
   },
   inputTitle: {
-    marginTop: 60,
-    fontSize: 20,
-    marginLeft: 20,
+    marginTop: Dimensions.get('window').height * .066,
+    fontSize: Dimensions.get('window').height * .022,
+    marginLeft: Dimensions.get('window').width * .0483,
   },
   textInput: {
     borderColor: 'deepskyblue',
     borderRadius: 20,
     borderWidth: 3,
     height: Dimensions.get('window').height * .08,
-    marginRight: 20,
-    marginTop: 8,
+    marginRight: Dimensions.get('window').width * .0483,
+    marginTop: Dimensions.get('window').height * .0088,
     justifyContent: 'center',
-    marginLeft: 20,
+    marginLeft: Dimensions.get('window').width * .0483,
   },
   emailErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
   },
   fotterContainer: {
     flex: 1,
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   nextButtonText: {
-    fontSize: 25,
+    fontSize: Dimensions.get('window').height * .0278,
     fontWeight: 'bold',
     color: 'white'
   },
   alreadyHaveAccountContainer: {
     flexDirection: 'row',
-    marginTop: 20
+    marginTop: Dimensions.get('window').height * .022
   },
   alreadyHaveAnAccountText: {
     color: 'grey'

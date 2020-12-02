@@ -150,59 +150,60 @@ const SignUpPlace = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
       height: Dimensions.get('window').height,
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: 'white'
     },
     arrowImage: {
-      marginTop: 70,
-      marginLeft: 20
+      marginTop: Dimensions.get('window').height * .0781,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     headerContainer: {
-      marginLeft: 20,
-      marginTop: 30,
-      width: 123
+      marginLeft: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .033,
+      width: Dimensions.get('window').width * .297
     },
     justYouHeader: {
       fontWeight: 'bold',
-      fontSize: 30
+      fontSize: Dimensions.get('window').height * .033
     },
     PartnerText: {
-      marginTop: 5,
+      marginTop: Dimensions.get('window').height * .0055,
       color: 'deepskyblue',
       fontWeight: 'bold',
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       textAlign: 'center'
     },
     signUpText: {
-      fontSize: 40,
+      fontSize: Dimensions.get('window').height * .044,
       fontWeight: 'bold',
       width: Dimensions.get('window').width * .8,
-      marginTop: 30,
-      marginLeft: 20,
+      marginTop: Dimensions.get('window').height * .033,
+      marginLeft: Dimensions.get('window').width * .0483,
     },
     inputTitle: {
-      marginTop: 60,
-      fontSize: 20,
-      marginLeft: 20,
+      marginTop: Dimensions.get('window').height * .066,
+      fontSize: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483,
     },
     textInput: {
       borderColor: 'deepskyblue',
       borderRadius: 20,
       borderWidth: 3,
       height: Dimensions.get('window').height * .08,
-      marginRight: 20,
-      marginTop: 8,
+      marginRight: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .00892,
       justifyContent: 'center',
-      marginLeft: 20,
+      marginLeft: Dimensions.get('window').width * .0483,
     },
     emailErrorText: {
         textAlign:'center',
         color: 'red',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     fotterContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
+      marginBottom: Dimensions.get('window').height * .044,
       alignItems: 'center'
     },
     nextButton: {
@@ -215,13 +216,13 @@ const styles = StyleSheet.create({
       borderRadius: 20
   },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .028,
       fontWeight: 'bold',
       color: 'white'
   },
   alreadyHaveAccountContainer: {
     flexDirection: 'row',
-    marginTop: 20
+    marginTop: Dimensions.get('window').height * .022
   },
     alreadyHaveAnAccountText: {
       color: 'grey'

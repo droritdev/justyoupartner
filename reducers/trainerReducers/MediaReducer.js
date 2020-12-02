@@ -8,9 +8,6 @@ const MediaReducer = (state, action) => {
             return {
                 ...state, media: action.image
             }
-
-        // case 'ADD_VIDEO':
-        //     return action.lastName;
             
         default:
             return state;

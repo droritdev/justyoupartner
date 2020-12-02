@@ -18,11 +18,12 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').height,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     registeringText: {
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: Dimensions.get('window').height * .033
     }
 });
 

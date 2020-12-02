@@ -61,12 +61,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     headerContainer: {
-        marginLeft: 20,
-        width: 123
+        marginLeft: Dimensions.get('window').width * .0483,
+        width: Dimensions.get('window').width * .297
     },
     justYouHeader: {
-        marginTop: 30,
-        fontSize: 30,
+        marginTop: Dimensions.get('window').height * .033,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold',
         textAlign: 'center'
     },
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
         marginTop: 5,
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         textAlign: 'center'
     },
     signUpAsTitle: {
-        marginLeft: 20,
-        marginTop: 40,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .044,
         fontWeight: 'bold',
-        fontSize: 40
+        fontSize: Dimensions.get('window').height * .044
     },
     buttonsContainer: {
         height: Dimensions.get('window').height * .5,
@@ -98,10 +98,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: 'deepskyblue',
         borderRadius: 15,
-        marginTop: 25
+        marginTop: Dimensions.get('window').height * .028
     },
     buttonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .028,
         fontWeight: 'bold',
         color: 'white'
     },

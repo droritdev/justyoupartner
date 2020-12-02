@@ -114,18 +114,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .025,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: Dimensions.get('window').height * .018
     },
     pendingOrApprovedContainer:{
         flexDirection: 'row',
-        marginTop: 30,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     pendingLabeld: {
         width: Dimensions.get('window').width * .275,
@@ -150,12 +150,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     pendingTextLabeld: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'white',
         fontWeight: 'bold'
     },
     pendingTextNotLabeld: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
@@ -181,17 +181,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     approvedTextNotLabeld: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'deepskyblue',
         fontWeight: 'bold'
     },
     approvedTextLabeld: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         color: 'white',
         fontWeight: 'bold'
     },
     pendingContainer: {
-        marginTop: 30,
+        marginTop: Dimensions.get('window').height * .033,
         borderBottomWidth: 2,
         borderBottomColor: 'lightgrey',
     },
@@ -201,15 +201,15 @@ const styles = StyleSheet.create({
     },
     pendingOrder: {
         flexDirection: 'row',
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: Dimensions.get('window').height * .011,
+        marginBottom: Dimensions.get('window').height * .011,
         width: Dimensions.get('window').width * .95,
         alignSelf: 'center',
         justifyContent: 'space-between',
     },
     image: {
-        height: 60,
-        width: 60,
+        height: Dimensions.get('window').height * .066,
+        width: Dimensions.get('window').height * .066,
         backgroundColor: 'gainsboro',
         borderRadius: 30
     },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .375
     },
     nameText: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '500'
     },
     dateBox: {
@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .275
     },
     dateText: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
         fontWeight: '500'
     },
     arrowImage: {
-        marginTop: 5
+        marginTop: Dimensions.get('window').height * .0055
     },
     arrowButton: {
     },

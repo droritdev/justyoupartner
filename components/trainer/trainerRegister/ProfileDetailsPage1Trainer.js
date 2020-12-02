@@ -84,8 +84,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     }
   
     return(
-      <SafeAreaView>
-        <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
           <TouchableOpacity
             onPress={handleArrowButton}
           >
@@ -170,75 +169,73 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
               <Text style={styles.nextButtonText}>NEXT</Text>
             </TouchableOpacity>
           </View>
-        </View>
       </SafeAreaView>
     )
   }
   
   const styles = StyleSheet.create({
     container: {
-      height: Dimensions.get('window').height * .95,
+      height: Dimensions.get('window').height,
       flexDirection: 'column',
       backgroundColor: 'white'
     },
     arrowImage: {
-      marginTop: 20,
-      marginLeft: 20
+      marginTop: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     upperContainer: {
-      marginTop: 25,
+      marginTop: Dimensions.get('window').height * .0278,
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .275,
     },
     profileDetailesText: {
       fontWeight: 'bold',
-      fontSize: 38,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .042,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     fillTheFieldsText: {
-      fontSize: 23,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .025,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     countryContainer: {
       height: Dimensions.get('window').height * .11,
     },
     countryTitle: {
       fontWeight: 'bold',
-      fontSize: 24,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     countryErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 15
+      fontSize: Dimensions.get('window').height * .019
     },
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
-      marginTop: 70,
-      marginLeft: 20
+      marginTop: Dimensions.get('window').height * .077,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {
       fontWeight: 'bold',
-      fontSize: 27
+      fontSize: Dimensions.get('window').height * .029
     },
     permissionsSection: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .03,
-      marginRight: 25,
-      marginTop: 20
+      marginRight: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .022
     },
     permissionsErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 15,
-      marginTop: 25
+      fontSize: Dimensions.get('window').height * .018,
+      marginTop: Dimensions.get('window').height * .0278
     }, 
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -251,7 +248,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },

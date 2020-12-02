@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -119,7 +119,7 @@ const EmailVerificationPlace = ({navigation}) => {
     }
 
     return(
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <TouchableOpacity
           onPress={handleArrowButton}
         >
@@ -158,31 +158,32 @@ const EmailVerificationPlace = ({navigation}) => {
                 <Text style={styles.nextButtonText}>Next</Text>
             </TouchableOpacity>
         </View>
-     </View>
+     </SafeAreaView>
     )
   }
   
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'column',
-      height: '100%'
+      height: Dimensions.get('window').height,
+      backgroundColor: 'white'
     },
     arrowImage: {
-        marginTop: 70,
-        marginLeft: 20
+        marginTop: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     verifyEmailTitle: {
         fontWeight: 'bold',
-        fontSize: 40,
-        marginLeft: 20,
-        marginTop: 30
+        fontSize: Dimensions.get('window').height * .044,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .033
     },
     verifyEmailText: {
         width: Dimensions.get('window').width * .875,
         fontWeight: 'bold',
-        fontSize: 25,
-        marginTop: 30,
-        marginLeft: 20
+        fontSize: Dimensions.get('window').height * .028,
+        marginTop: Dimensions.get('window').height * .033,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     textInputContainer: {
       height: Dimensions.get('window').height * .25
@@ -192,33 +193,33 @@ const EmailVerificationPlace = ({navigation}) => {
         borderRadius: 20,
         borderWidth: 3,
         height: Dimensions.get('window').height * .08,
-        marginRight: 20,
-        marginTop: 60,
+        marginRight: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .066,
         justifyContent: 'center',
-        fontSize: 24,
-        marginLeft: 20,
-        fontSize: 33
+        fontSize: Dimensions.get('window').height * .0267,
+        marginLeft: Dimensions.get('window').width * .0483,
+        fontSize: Dimensions.get('window').height * .033
     },
     codeErrorText: {
       textAlign:'center',
       color: 'red',
-      fontSize: 20,
-      marginTop: 5
+      fontSize: Dimensions.get('window').height * .022,
+      marginTop: Dimensions.get('window').height * .0055
     },
     fotterContainer: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'flex-end',
-      marginLeft: 20,
+      marginLeft: Dimensions.get('window').width * .0483,
 
     },
     didntGetEmailText: {
       width: Dimensions.get('window').width * .9,
       fontWeight: 'bold',
-      fontSize: 25
+      fontSize: Dimensions.get('window').height * .028
     },
     sendAgainButton: {
-      marginTop: 20,
+      marginTop: Dimensions.get('window').height * .022,
       width: Dimensions.get('window').width * .35,
       height: Dimensions.get('window').height * .035,
       backgroundColor: 'lightgrey',
@@ -227,14 +228,13 @@ const EmailVerificationPlace = ({navigation}) => {
     },
     sendAgainButtonText: {
       color: 'deepskyblue', 
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: '600',
       alignSelf: 'center'
     },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -247,7 +247,7 @@ const EmailVerificationPlace = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .028,
       fontWeight: 'bold',
       color: 'white'
     },

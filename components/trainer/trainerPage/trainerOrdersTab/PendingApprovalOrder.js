@@ -116,22 +116,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .027,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: Dimensions.get('window').height * .018
     },
     arrowImage: {
-        marginLeft: 15
+        marginLeft: Dimensions.get('window').width * .025
     },
     pendingTitle: {
         fontWeight: 'bold',
-        fontSize: 20,
-        marginLeft: 20,
-        marginTop: 15
+        fontSize: Dimensions.get('window').height * .022,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .018
     },
     imageNameApproveRowContainer: {
         height: Dimensions.get('window').height * .15,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .925,
         justifyContent: 'space-between',
         alignSelf: 'center',
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
     profileImage: {
         backgroundColor: 'gainsboro',
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         
     },
     nameTitle: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         width: Dimensions.get('window').width * .4
     },
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     },
     buttonsRow: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: Dimensions.get('window').height * .011,
         justifyContent: 'space-between'
     },
     buttonAndTitle: {
@@ -173,10 +173,10 @@ const styles = StyleSheet.create({
     },
     buttonTitle: {
         textAlign: 'center',
-        fontSize: 10
+        fontSize: Dimensions.get('window').height * .011
     },  
     approveButton: {
-        height: 50,
+        height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width * .275,
         backgroundColor: 'deepskyblue',
         justifyContent: 'center',
@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
 
     },
     approveButtonText: {
-        fontSize: 20,
+        fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
     orderInformationContainer: {
-        marginTop: 50,
+        marginTop: Dimensions.get('window').height * .055,
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .275
     },
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize: 22,
+        fontSize: Dimensions.get('window').height * .022,
     },
     informationView: {
         backgroundColor: 'gainsboro',
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     informationText: {
-        fontSize: 18,
+        fontSize: Dimensions.get('window').height * .02,
     }
 
 });

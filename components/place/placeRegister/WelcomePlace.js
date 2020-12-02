@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').height,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     textContainer: {
         justifyContent: 'space-between',
@@ -31,13 +32,13 @@ const styles = StyleSheet.create({
     justYouText: {
         fontWeight: 'bold',
         color: 'deepskyblue',
-        fontSize: 80
+        fontSize: Dimensions.get('window').height * .088
     },
     welcomeUserText: {
-        marginTop: 20,
+        marginTop: Dimensions.get('window').height * .022,
         fontWeight: 'bold',
         color: 'steelblue',
-        fontSize: 40,
+        fontSize: Dimensions.get('window').height * .044,
         textAlign: 'center'
     }
 });

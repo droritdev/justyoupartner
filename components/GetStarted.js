@@ -45,24 +45,24 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     welcomeToText: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     justYouText: {
-        fontSize: 60,
+        fontSize: Dimensions.get('window').height * .066,
         fontWeight: 'bold',
         color: 'black'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: Dimensions.get('window').height * .033
     },
     previewText: {
         fontSize: 25,
         textAlign: 'center',
         width: Dimensions.get('window').width * .85,
-        marginTop: 20
+        marginTop: Dimensions.get('window').height * .022
     },
     getStartedContainer: {
         flex: 1,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
       },
       getStartedText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .028,
         fontWeight: 'bold',
         color: 'white'
       }

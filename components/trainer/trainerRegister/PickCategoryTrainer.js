@@ -101,21 +101,21 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowImage: {
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     categoryTitle: {
-        fontSize: 25,
-        marginLeft: 20,
-        marginTop: 20,
+        fontSize: Dimensions.get('window').height * .0278,
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginTop: Dimensions.get('window').height * .022,
         fontWeight: 'bold'
     },
     searchContainer: {
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .06,
         alignSelf: 'center',
-        marginTop: 15,
+        marginTop: Dimensions.get('window').height * .018,
         justifyContent: 'center'
     },
     serachRow: {
@@ -136,11 +136,11 @@ const styles = StyleSheet.create({
     searchIcon: {
         height: Dimensions.get('window').height * .04,
         width: Dimensions.get('window').width * .09,
-        marginLeft: 10,
+        marginLeft: Dimensions.get('window').width * .0241,
     },
     textInputStyle: {
-        marginLeft: 15,
-        fontSize: 20,
+        marginLeft: Dimensions.get('window').width * .0362,
+        fontSize: Dimensions.get('window').height * .022,
         justifyContent: 'center'
     },
     categoryPickerContainer: {
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     },
     categorySelect: {
         width: Dimensions.get('window').width * .9,
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
 });
 

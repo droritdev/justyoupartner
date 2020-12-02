@@ -21,13 +21,14 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').height,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     registeringText: {
         fontWeight: 'bold',
-        fontSize: 40,
+        fontSize: Dimensions.get('window').height * .044,
         textAlign: 'center',
-        marginBottom: 30
+        marginBottom: Dimensions.get('window').height * .033
     }
 });
 

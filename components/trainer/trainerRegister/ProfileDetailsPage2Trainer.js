@@ -537,40 +537,39 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       backgroundColor: 'white'
     },
     container: {
-      height: Dimensions.get('window').height * .95,
       flexDirection: 'column',
       backgroundColor: 'white'
     },
     arrowImage: {
-      marginLeft: 20
+      marginLeft: Dimensions.get('window').width * .0483
     },
     profileDetailesText: {
-      marginLeft: 20,
-      marginTop: 25,
+      marginLeft: Dimensions.get('window').width * .0483,
+      marginTop: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
-      fontSize: 38
+      fontSize: Dimensions.get('window').height * .04
     },
     upperContainer: {
       flexDirection: 'column',
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .14,
-      marginTop: 20
+      marginTop: Dimensions.get('window').height * .022
     },
     nameAndImageContanier: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: Dimensions.get('screen').width * .95,
-      marginLeft: 15
+      marginLeft: Dimensions.get('window').width * .045
     },
     textInput: {
-      marginTop: 20,
+      marginTop: Dimensions.get('window').height * .022,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       borderWidth: 3,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .34,
       justifyContent: 'center',
-      fontSize: 18
+      fontSize: Dimensions.get('window').height * .02
     },
     profileImage: {
       width: Dimensions.get('window').width * .225,
@@ -578,25 +577,25 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderRadius: 20
     },
     nameErrorMessage: {
-      marginLeft: 20,
+      marginLeft: Dimensions.get('window').width * .0483,
       color: 'red'
     },
     nameExplenation: {
       color: 'darkgrey',
       width: Dimensions.get('window').width,
       textAlign: 'center',
-      fontSize: 15
+      fontSize: Dimensions.get('window').height * .018
     },
     birthdayText: {
-      marginTop: 30,
+      marginTop: Dimensions.get('window').height * .033,
       fontWeight: 'bold',
-      fontSize: 25,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     birthdayContainer: {
-      height: 65,
+      height: Dimensions.get('window').height * .072,
       alignItems: 'center',
-      marginTop: 10
+      marginTop: Dimensions.get('window').height * .01
     },
     birthdayBoxContainer: {
       height: Dimensions.get('window').height * .065,
@@ -616,7 +615,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     birthdayUnPicked: {
       textAlign: 'center',
       color: 'grey',
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: '300',
       marginLeft: Dimensions.get('window').width * .3
     },
@@ -631,23 +630,23 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       width: Dimensions.get('window').height * .04,
     },
     birthdayErrorMessage: {
-      marginLeft: 20,
+      marginLeft: Dimensions.get('window').width * .0483,
       color: 'red',
-      marginTop: 5
+      marginTop: Dimensions.get('window').height * .0055
     },  
     datePicker: {
       marginTop: 10,
       width: Dimensions.get('window').width * .9,
-      marginLeft: 20
+      marginLeft: Dimensions.get('window').width * .0483
     },
     emailAddressText: {
-      marginTop: 40,
+      marginTop: Dimensions.get('window').height * .044,
       fontWeight: 'bold',
-      fontSize: 25,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     emailAddressButton: {
-      marginTop: 10,
+      marginTop: Dimensions.get('window').height * .011,
       borderColor: 'deepskyblue',
       backgroundColor: 'lightgrey',
       borderRadius: 17,
@@ -655,13 +654,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
       justifyContent: 'center',
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: 'bold',
       textAlign: 'center',
       alignSelf: 'center'
     },
     emailExplinationText: {
-      marginTop: 10,
+      marginTop: Dimensions.get('window').height * .011,
       textAlign: 'center'
     },
     BirthdaySlidePanel: {
@@ -669,15 +668,15 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       height: Dimensions.get('window').height * .4
     },
     categoryTitle: {
-      marginTop: 30,
+      marginTop: Dimensions.get('window').height * .033,
       fontWeight: 'bold',
-      fontSize: 25,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .0278,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     categoryContainer: {
-      height: 65,
+      height: Dimensions.get('window').height * .072,
       alignItems: 'center',
-      marginTop: 10
+      marginTop: Dimensions.get('window').height * .011
     },
     categoryBoxContainer: {
       height: Dimensions.get('window').height * .065,
@@ -697,13 +696,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     categoryUnPicked: {
       textAlign: 'center',
       color: 'grey',
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: '300',
       marginLeft: Dimensions.get('window').width * .3
     },
     categoryPicked: {
       textAlign: 'center',
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: 'bold',
       marginLeft: Dimensions.get('window').width * .3
     },
@@ -714,12 +713,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     categoryErrorMessage: {
       color: 'red',
       alignSelf: 'center',
-      marginTop: 5
+      marginTop: Dimensions.get('window').height * .0055
     }, 
     inputsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .3,
-      marginTop: 40
+      marginTop: Dimensions.get('window').height * .044
     },
     aboutMeContainer: {
       borderColor: 'deepskyblue',
@@ -740,24 +739,24 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignSelf: 'flex-start',
     },
     aboutMeTitle: {
-      fontSize: 18,
+      fontSize: Dimensions.get('window').height * .02,
     },
     aboutMeText: {
-      marginTop: 10,
-      marginLeft: 10,
-      fontSize: 18
+      marginTop: Dimensions.get('window').height * .011,
+      marginLeft: Dimensions.get('window').width * .0241,
+      fontSize: Dimensions.get('window').height * .02
     },
     pencilButtonAboutMe: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginRight: 5,
-      marginBottom: 5
+      marginRight: Dimensions.get('window').width * .012,
+      marginBottom: Dimensions.get('window').height * .0055
     },
     pencilButtonCertifications: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginRight: 5,
-      marginBottom: 5
+      marginRight: Dimensions.get('window').width * .012,
+      marginBottom: Dimensions.get('window').height * .0055
     },
     certificationsContainer: {
       borderColor: 'deepskyblue',
@@ -778,69 +777,68 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignSelf: 'flex-start',
     },
     certificationsTitle: {
-      fontSize: 18
+      fontSize: Dimensions.get('window').height * .02
     },
     certificationsText: {
-      marginTop: 10,
-      marginLeft: 10,
-      fontSize: 18
+      marginTop: Dimensions.get('window').height * .011,
+      marginLeft: Dimensions.get('window').width * .0241,
+      fontSize: Dimensions.get('window').height * .02
     },
     sliderContainer: {
-      marginTop: 20
+      marginTop: Dimensions.get('window').height * .022
     },  
     maxDistanceText: {
-      fontSize: 20,
-      marginTop: 20,
-      marginLeft: 20,
+      fontSize: Dimensions.get('window').height * .022,
+      marginTop: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483,
       fontWeight: 'bold'
     },  
     sliderValueTitle: {
-      //alignSelf: 'center',
-      fontSize: 17,
-      marginTop: 20,
-      marginLeft: 25
+      fontSize: Dimensions.get('window').height * .019,
+      marginTop: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .05
     },
     slider: {
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
-      marginTop: 10
+      marginTop: Dimensions.get('window').height * .011
     },
     trainingSiteContainer: {
       width: Dimensions.get('window').width * .95,
       height: Dimensions.get('window').height * .220,
       alignSelf: 'center',
-      marginTop: 35
+      marginTop: Dimensions.get('window').height * .04
     },
     trainingSiteText: {
-      fontSize: 20,
-      marginLeft: 10,
+      fontSize: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0241,
       fontWeight: 'bold'
     },
     trainingSiteInput: {
-      marginTop: 20,
+      marginTop: Dimensions.get('window').height * .022,
       borderWidth: 3,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       textAlign: 'center'
     },
     trainingSiteErrorText: {
-      marginTop: 10,
+      marginTop: Dimensions.get('window').height * .011,
       color: 'red',
       alignSelf: 'center'
     },
     priceSectionContainer: {
-      marginTop: 30,
-      marginLeft: 20,
-      height: 175
+      marginTop: Dimensions.get('window').height * .033,
+      marginLeft: Dimensions.get('window').width * .0483,
+      height: Dimensions.get('window').height * .195
     },
     pricingTitle: {
-      fontSize: 20 
+      fontSize: Dimensions.get('window').height * .022 
     },
     pricingLabels: {
-      marginTop: 15,
-      marginBottom: 15,
+      marginTop: Dimensions.get('window').height * .019,
+      marginBottom: Dimensions.get('window').height * .019,
       flexDirection: 'row'
     },  
     singlePricing: {
@@ -864,12 +862,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       backgroundColor: 'white'
     },
     singleText: {
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       color: 'white',
       fontWeight: 'bold'
     },
     singleTextLabeld: {
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       color: 'deepskyblue',
       fontWeight: 'bold'
     },
@@ -893,12 +891,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center'
     },
     coupleText: {
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       color: 'deepskyblue',
       fontWeight: 'bold'
     },
     coupleTextLabeld: {
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       color: 'white',
       fontWeight: 'bold'
     },
@@ -919,10 +917,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .04,
       textAlign: 'center',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     atTrainerSiteText: {
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     outDoor: {
       flexDirection: 'row',
@@ -936,20 +934,19 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .04,
       textAlign: 'center',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     outDoorText: {
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     priceErrorMessage: {
       color: 'red',
-      marginTop: 5
+      marginTop: Dimensions.get('window').height * .0055
     },  
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
-      marginTop: 60,
+      marginTop: Dimensions.get('window').height * .066,
       alignItems: 'center'
     },
     nextButton: {
@@ -962,7 +959,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },

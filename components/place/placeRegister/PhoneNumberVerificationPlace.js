@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -121,6 +121,10 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
         setNextErrorMessage("Enter your code to continue");
         setIsNextError(true);
       }
+      else if(!Number(code)){
+        setNextErrorMessage("Enter only digits");
+        setIsNextError(true);
+      }
       else if(code.length !== 5){
         setNextErrorMessage("Code should be 5 digits");
         setIsNextError(true);
@@ -165,7 +169,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
     }
   
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
               <Text style={styles.justYouHeader}>Just You</Text>
               <Text style={styles.partnerHeader}>Partner</Text>
@@ -203,7 +207,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
             </View>
             <View style={styles.codeTextInput}>
               <TextInput
-                  style={{fontSize: 33}}
+                  style={{fontSize: Dimensions.get('window').height * .025}}
                   placeholder='Enter your code'
                   textAlign='center'
                   onChangeText={text => handleOnChangeCode(text)}
@@ -228,7 +232,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
                     <Text style={styles.nextButtonText}>Next</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -236,47 +240,46 @@ const styles = StyleSheet.create({
     container: {
       height: Dimensions.get('window').height,
       flexDirection: 'column',
-      //backgroundColor: 'white'
+      backgroundColor: 'white'
     },
     headerContainer: {
       flexDirection: 'column',
       alignItems: 'center',
-      marginTop: 45
     },
     justYouHeader: {
       color: 'black',
       fontWeight: 'bold',
-      fontSize: 30
+      fontSize: Dimensions.get('window').height * .033
     },
     partnerHeader: {
       color: 'deepskyblue',
       fontWeight: 'bold',
-      fontSize: 20
+      fontSize: Dimensions.get('window').height * .022
     },
     phoneContainer: {
       flexDirection: 'column',
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .19,
-      marginTop: 40
+      marginTop: Dimensions.get('window').height * .044
     },
     inputTitle: {
-      fontSize: 20,
-      marginLeft: 20
+      fontSize: Dimensions.get('window').height * .022,
+      marginLeft: Dimensions.get('window').width * .0483
     },
     phoneTextInput: {
       flexDirection: 'row',
       borderColor: 'deepskyblue',
       justifyContent: 'center',
-      fontSize: 24
+      fontSize: Dimensions.get('window').height * .025
     },
     areaCodeInput: {
         borderRadius: 20,
-        marginRight: 10,
+        marginRight: Dimensions.get('window').width * .0241,
         borderColor: 'deepskyblue',
         borderWidth: 3,
         height: Dimensions.get('window').height * .06,
         width: Dimensions.get('window').width * .3,
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .025
     },
     phoneNumberInput: {
         borderRadius: 20,
@@ -284,11 +287,11 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         height: Dimensions.get('window').height * .06,
         width: Dimensions.get('window').width * .6,
-        fontSize: 25
+        fontSize: Dimensions.get('window').height * .025
     },
     phoneErrorMessage: {
-      color: 'red',
-      marginLeft: 25
+        color: 'red',
+        marginLeft: Dimensions.get('window').width * .0483
     },
     verifyExplenationContainer: {
         width: Dimensions.get('window').width * .8,
@@ -296,10 +299,10 @@ const styles = StyleSheet.create({
     },
     verifyExplenationText: {
         textAlign:'center',
-        fontSize: 17,
+        fontSize: Dimensions.get('window').height * .0189,
     },
     verifyButton: {
-        marginTop: 40,
+        marginTop: Dimensions.get('window').height * .044,
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .065,
         alignItems: 'center',
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     verifyButtonText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
         color: 'white'
     },
@@ -319,30 +322,29 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         height: Dimensions.get('window').height * .07,
         width: Dimensions.get('window').width * .9,
-        marginTop: 70,
+        marginTop: Dimensions.get('window').height * .077,
         justifyContent: 'center',
-        fontSize: 24,
+        fontSize: Dimensions.get('window').height * .025,
         alignSelf: 'center'
     },
     sendAgainButton: {
-      marginTop: 60,
+      marginTop: Dimensions.get('window').height * .066,
       width: Dimensions.get('window').width * .55,
       height: Dimensions.get('window').height * .04,
       backgroundColor: 'lightgrey',
       borderRadius: 5,
       justifyContent: 'center',
-      marginLeft: 20
+      marginLeft: Dimensions.get('window').width * .0483
     },
     resendCodeText: {
       color: 'deepskyblue', 
-      fontSize: 20,
+      fontSize: Dimensions.get('window').height * .022,
       fontWeight: '600',
       alignSelf: 'center'
     },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: 40,
       alignItems: 'center'
     },
     nextButton: {
@@ -355,14 +357,14 @@ const styles = StyleSheet.create({
       borderRadius: 20
     },
     nextButtonText: {
-      fontSize: 25,
+      fontSize: Dimensions.get('window').height * .0278,
       fontWeight: 'bold',
       color: 'white'
     },
     nextErrorMessage: {
         color: 'red',
-        marginLeft: 25,
-        marginBottom: 20
+        marginLeft: Dimensions.get('window').width * .0483,
+        marginBottom: Dimensions.get('window').height * .022
     }
 });
 
