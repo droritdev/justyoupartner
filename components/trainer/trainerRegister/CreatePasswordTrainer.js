@@ -33,7 +33,7 @@ const CreatePasswordTrainer = ({navigation}) => {
           setIsPasswordsNotMatch(true);
         }
         else if(passwordInput.length < 6){
-          setPasswordErrorText("Valid password is at least 6 charecters")
+          setPasswordErrorText("Valid password is at least 6 characters")
           setIsPasswordsNotMatch(true);
         }
         else{

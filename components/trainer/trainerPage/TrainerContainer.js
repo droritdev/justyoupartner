@@ -21,20 +21,20 @@ const TrainerContainer = () => {
             }}
         >
             <Tab.Screen 
-                name="TrainerStatsPageStack" 
-                component={TrainerStatsPageStack}
+                name="TrainerProfilePageStack" 
+                component={TrainerProfilePageStack}
                 options={{
                     tabBarIcon: ({ focused,tintColor }) => (
                         !focused ? <Image
-                            source={require('../../../images/statsIcon.png')}
-                            style={[styles.statsIcon, {tintColor: tintColor}]}
+                            source={require('../../../images/profilePageIcon.png')}
+                            style={[styles.profileIcon, {tintColor: tintColor}]}
                           />
                           :
                           <Image
-                            source={require('../../../images/statsFocusedIcon.png')}
-                            style={[styles.statsFocusedIcon, {tintColor: tintColor}]}
+                            source={require('../../../images/profilePageIconFocused.png')}
+                            style={[styles.profileFocusedIcon, {tintColor: tintColor}]}
                           />
-                    ),
+                    )
                 }}
             />
             <Tab.Screen 
@@ -55,20 +55,20 @@ const TrainerContainer = () => {
                 }}
             />
             <Tab.Screen 
-                name="TrainerProfilePageStack" 
-                component={TrainerProfilePageStack}
+                name="TrainerStatsPageStack" 
+                component={TrainerStatsPageStack}
                 options={{
                     tabBarIcon: ({ focused,tintColor }) => (
                         !focused ? <Image
-                            source={require('../../../images/profilePageIcon.png')}
-                            style={[styles.profileIcon, {tintColor: tintColor}]}
+                            source={require('../../../images/statsIcon.png')}
+                            style={[styles.statsIcon, {tintColor: tintColor}]}
                           />
                           :
                           <Image
-                            source={require('../../../images/profilePageIconFocused.png')}
-                            style={[styles.profileFocusedIcon, {tintColor: tintColor}]}
+                            source={require('../../../images/statsFocusedIcon.png')}
+                            style={[styles.statsFocusedIcon, {tintColor: tintColor}]}
                           />
-                    )
+                    ),
                 }}
             />
         </Tab.Navigator>

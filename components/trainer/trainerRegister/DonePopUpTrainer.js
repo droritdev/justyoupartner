@@ -45,7 +45,6 @@ const DonePopUpTrainer = ({navigation}) => {
     };
 
     const registerTrainer = () => {
-
         axios  
         .post('/trainers/register', {
             name: {

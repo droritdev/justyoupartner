@@ -19,16 +19,27 @@ const categoriesData = [
 
 const PickCategory = ({navigation}) => {
     const {categories, dispatchCategories} = useContext(CategoryContext);
+    const [isError, setIsError] = useState(false); 
+    const [errorMessage ,setErrorMessage] = useState("");
 
     const [selectedItems, setSelectedItems] = useState([]);
     const [items, setItems] = useState(categoriesData);
 
     const handleArrowButton = () => {
-        dispatchCategories({
-            type: 'SET_CATEGORIES',
-            categories: selectedItems
-        });
         navigation.navigate('ProfileDetailsPage2Trainer');
+    }
+
+    const handleSubmit = () => {
+        if (selectedItems.length == 0) {
+            setIsError(true);
+            setErrorMessage('Select at least one category');
+        } else {
+            dispatchCategories({
+                type: 'SET_CATEGORIES',
+                categories: selectedItems
+            });
+            navigation.navigate('ProfileDetailsPage2Trainer');
+        }
     }
 
     //When the user chooses category it whill be displayed on the input bellow
@@ -39,6 +50,7 @@ const PickCategory = ({navigation}) => {
           setSelectedItems(selectedItems.filter(element => element !== item.label));
         }
         else{
+          setIsError(false);
           setSelectedItems(selectedItems => [...selectedItems, item.label]);
         }
     }
@@ -74,7 +86,7 @@ const PickCategory = ({navigation}) => {
                     style={styles.searchIcon}
                 />
                 <TextInput
-                    placeholder="Search category"
+                    placeholder="Search by category"
                     style={styles.textInputStyle}
                     onChangeText={(text) => handleOnInputChange(text)}
                 />
@@ -88,6 +100,17 @@ const PickCategory = ({navigation}) => {
                 />
             </View>
         </View>
+        {isError ?
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+              : null}
+        <View style={styles.submitButtonContainer}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
       </SafeAreaView>
     );
 }
@@ -151,6 +174,30 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         marginTop: Dimensions.get('window').height * .033
     },
+    submitButtonContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginTop: Dimensions.get('window').height * .066,
+        alignItems: 'center'
+      },
+    submitButton: {
+        width: Dimensions.get('window').width * .9,
+        height: Dimensions.get('window').height * .065,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'deepskyblue',
+        borderRadius: 20
+      },
+      submitButtonText: {
+        fontSize: Dimensions.get('window').height * .0278,
+        fontWeight: 'bold',
+        color: 'white'
+      },
+      errorMessage: {
+        marginLeft: Dimensions.get('window').width * .0483,
+        color: 'red'
+      },
 });
 
 export default PickCategory;

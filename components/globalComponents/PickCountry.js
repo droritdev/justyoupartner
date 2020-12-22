@@ -9,10 +9,10 @@ const PickCountry = (props) => {
     let index = 0;
     const categories = [
         { key: index++, section: true, label: 'Countries' },
-        { key: index++, label: 'Israel' },
+        // { key: index++, label: 'Israel' },
         { key: index++, label: 'United States' },
-        { key: index++, label: 'France', accessibilityLabel: 'Tap here for cranberries' },
-        { key: index++, label: 'Italy', customKey: 'Not a fruit' }
+        // { key: index++, label: 'France', accessibilityLabel: 'Tap here for cranberries' },
+        // { key: index++, label: 'Italy', customKey: 'Not a fruit' }
     ];
 
     return (
@@ -27,7 +27,8 @@ const PickCountry = (props) => {
                   height: 60,
                   justifyContent: 'center',
                   borderColor: 'deepskyblue',
-                  borderRadius: 20,
+                  borderRadius: 17,
+                  borderWidth: 2
                 }}
                 selectTextStyle={{
                   color: 'red'

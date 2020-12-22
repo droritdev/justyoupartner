@@ -5,8 +5,7 @@ const trainerProfileModel = require('../models/trainerModels');
 exports.getTrainersByCategory = (req, res) => {
     trainerProfileModel.find(
         {
-            categories: {$in: [req.body.category]},
-            visibility: true,
+            categories: {$in: [req.body.category]}
         },
     )
     .then((doc) => res.send(doc))

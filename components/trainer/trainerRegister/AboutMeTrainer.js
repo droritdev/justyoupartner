@@ -11,41 +11,75 @@ const AboutMeTrainer = ({navigation}) => {
     const [isLimit, setIsLimit] = useState(false);
     const [charsLength, setCharsLength] = useState(0);
 
-    const charLimit = 501;
+    const [isError, setIsError] = useState(false); 
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const [oldText, setOldText] = useState(aboutMe);
+    
+    const charLimit = 500;
+    
 
     //Sets the display text to blank if nothing was writen. If written, the details will be displayed
     useEffect(() => {
-        if(aboutMe === 'ABOUT ME'){
+        if(aboutMe === "Write about yourself..."){
             dispatchAboutMe({
                 type: 'SET_ABOUT_ME',
                 aboutMe: ""
             })
+            setIsLimit(true);
+            setErrorMessage('Please enter at least 20 characters');
+        } else {
+            setCharsLength(aboutMe.length);
         }
     }, [])
 
-    //Navigates back to the profile details page
-    const handleArrowButton = () => {
-        if(aboutMe === ""){
+    //Check if user has enterd at least 20 characters
+    const handleSubmit = () => {
+        if(isLimit) {
+            setIsError(true);
+        } else {
             dispatchAboutMe({
                 type: 'SET_ABOUT_ME',
-                aboutMe: "ABOUT ME"
+                aboutMe: aboutMe
             })
+            navigation.navigate('ProfileDetailsPage2Trainer')
         }
+    }
+    
+
+    //Navigates back to the profile details page
+    const handleArrowButton = () => {
+        dispatchAboutMe({
+            type: 'SET_ABOUT_ME',
+            aboutMe: oldText
+        })
         navigation.navigate('ProfileDetailsPage2Trainer')
     }
     
     //Sets the deatils object to the value
     const handleOnInputChange = (value) => {
-        if(value.length === charLimit){
+        setIsError(false);
+        setIsLimit(false);
+
+        if (value.length < 20) {
             setIsLimit(true);
+            setErrorMessage('Please enter at least 20 characters');
+        }
+        
+        if(value.length > charLimit){
+            setIsError(true);
+            setErrorMessage('The maximum number of characters is 500');
+            dispatchAboutMe({
+                type: 'SET_ABOUT_ME',
+                aboutMe: value.slice(0, charLimit)
+            })
         }
         else{
-            setCharsLength(value.length);
-            setIsLimit(false)
             dispatchAboutMe({
                 type: 'SET_ABOUT_ME',
                 aboutMe: value
             })
+            setCharsLength(value.length);
         }
     }
 
@@ -60,12 +94,12 @@ const AboutMeTrainer = ({navigation}) => {
                     style={styles.arrowImage}
                 />
                 </TouchableOpacity>
-                <Text style={styles.profileDetailesText}>Profile Details</Text>
+                <Text style={styles.profileDetailesText}>About Me</Text>
             </View>
-            <Text style={styles.writeAboutYourselfTitle}>Write about yourself (up to {charLimit-1} chars):  {charsLength}</Text>
+            <Text style={styles.writeAboutYourselfTitle}>Write about yourself (up to {charLimit} chars):  {charsLength}</Text>
             <View style={styles.textConatiner}>
                 <View style={styles.textInputContainer}>
-                    <TextInput
+                    <TextInput 
                         value={aboutMe}
                         multiline={true}
                         style={styles.textInput}
@@ -74,6 +108,19 @@ const AboutMeTrainer = ({navigation}) => {
                     />
                 </View>
             </View>
+
+            {isError ?
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+              : null}
+
+            <View style={styles.submitButtonContainer}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
     );
 }
@@ -101,22 +148,52 @@ const styles = StyleSheet.create({
     },
     writeAboutYourselfTitle: {
         marginTop: Dimensions.get('window').height * .011,
-        marginLeft: Dimensions.get('window').width * .0483,
-        fontSize: Dimensions.get('window').height * .022,
+        fontSize: Dimensions.get('window').height * .020,
+        alignSelf: 'center',
         fontWeight: '500',
     },
     textConatiner: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height * .5
+        marginTop: Dimensions.get('window').height * .020,
+        width: Dimensions.get('window').width * .95,
+        height: Dimensions.get('window').height * .5,
+        borderColor: 'deepskyblue',
+        borderRadius: 17,
+        borderWidth: 3,
+        alignSelf: 'center'
     },  
     textInputContainer: {
         marginLeft: Dimensions.get('window').width * .0483,
         marginTop: Dimensions.get('window').height * .033,
-        width: Dimensions.get('window').width * .9
+        width: Dimensions.get('window').width * .8,
     },
     textInput: {
         fontSize: Dimensions.get('window').height * .022,
-    }
+    },
+    errorMessage: {
+        marginTop: Dimensions.get('window').height * .015,
+        marginLeft: Dimensions.get('window').width * .0483,
+        color: 'red'
+      },
+    submitButtonContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginTop: Dimensions.get('window').height * .066,
+        alignItems: 'center'
+      },
+    submitButton: {
+        width: Dimensions.get('window').width * .9,
+        height: Dimensions.get('window').height * .065,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'deepskyblue',
+        borderRadius: 20
+      },
+      submitButtonText: {
+        fontSize: Dimensions.get('window').height * .0278,
+        fontWeight: 'bold',
+        color: 'white'
+      },
 });
 
 export default AboutMeTrainer;

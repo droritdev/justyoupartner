@@ -1,16 +1,19 @@
-import React, {useState, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PhoneContext} from '../../../context/trainerContextes/PhoneContext';
+import {CountryContext} from '../../../context/trainerContextes/CountryContext';
  
 //Here the user enters his full phone number (area code and phone number) and verify it with a code sent to his phone
 const PhoneNumberVerificationTrainer = ({navigation}) => {
+    const {country, dispatchCountry} = useContext(CountryContext);
     const {dispatchArea} = useContext(PhoneContext);
     const {dispatchNumber} = useContext(PhoneContext);
     const [areaCodeInput, setAreaCodeInput] = useState("");
     const [phoneNumberInput, setPhoneNumberInput] = useState("");
+    const [isCodeSent,setIsCodeSent] = useState("none");
     const [fullPhoneNumber, setFullPhoneNumber] = useState("");
     const [code, setCode] = useState("");
     const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
@@ -26,24 +29,65 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
       },
     };
 
+    
+    useEffect (() => {
+      getAreaCode();
+    }, []);
+
+
+    //Get area code by country picked
+    const getAreaCode = () => {
+      switch(country){
+        case "United States":
+          setAreaCodeInput("001");
+      }
+    }
+
+  
+
+
+  //Send GET request to mongodb using axios, to check if phone is already used
+  const checkPhoneIsUsed = () => {
+    axios  
+    .get('/trainers/phone/'+areaCodeInput+phoneNumberInput, config)
+    .then((doc) => {
+      if (doc.data[0].phone.areaCode === areaCodeInput && doc.data[0].phone.phoneNumber === phoneNumberInput) {
+        setPhoneErrorMessage("Phone is already used");
+        setIsPhoneError(true);
+      }
+    })
+    .catch((err) =>  {
+      setIsPhoneError(false);
+      setIsNextError(false);
+      setFullPhoneNumber("+"+(areaCodeInput.concat(phoneNumberInput)));
+      sendVerificationCode();
+    });
+  }
+
     //Sets the areaCode object to the value
     const handleOnChangeAreaCode = (value) => {
+      if (value.length > 3) {
+        value = value.slice(0, 3);
+      }
       setIsNextError(false);
-      setPhoneErrorMessage(false);
+      setIsPhoneError(false);
       setAreaCodeInput(value);
     }
 
     //Sets the phoneNumebr object to the value
     const handleOnChangePhoneNumber = (value) => {
+      if (value.length > 7) {
+        value = value.slice(0, 7);
+      }
       setIsNextError(false);
-      setPhoneErrorMessage(false);
+      setIsPhoneError(false);
       setPhoneNumberInput(value);
     }
 
     //Sets the code object to the value
     const handleOnChangeCode = (value) => {
       setIsNextError(false);
-      setPhoneErrorMessage(false);
+      setIsPhoneError(false);
       setCode(value);
     }
 
@@ -52,8 +96,18 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
       let areaCodeTemp = Number(areaCodeInput);
       let phoneNumberTemp = Number(phoneNumberInput);
 
-      if(areaCodeInput === "" || phoneNumberInput == ""){
+      if(areaCodeInput === "" && phoneNumberInput === ""){
         setPhoneErrorMessage("Both fields are required");
+        setIsPhoneError(true);
+        setIsNextError(true);
+      }
+      else if(areaCodeInput === "" ){
+        setPhoneErrorMessage("Area code is required");
+        setIsPhoneError(true);
+        setIsNextError(true);
+      }
+      else if(phoneNumberInput === "" ){
+        setPhoneErrorMessage("Phone Number is required");
         setIsPhoneError(true);
         setIsNextError(true);
       }
@@ -68,10 +122,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setIsNextError(true);
       }
       else{
-        setIsPhoneError(false);
-        setIsNextError(false);
-        setFullPhoneNumber("+972"+(areaCodeInput.concat(phoneNumberInput)));
-        // sendVerificationCode();
+        checkPhoneIsUsed();
       }
     }
 
@@ -82,7 +133,8 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setIsNextError(true);
       }
       else{
-        alert("ok");
+        setIsCodeSent('flex');
+        alert("Code sent");
         // alert(fullPhoneNumber)
         // axios
         //   .post('/send-verification-code', {
@@ -156,7 +208,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         //           type: 'SET_PHONE_NUMBER',
         //           phoneNumber: phoneNumberInput
         //         })
-        //         navigation.navigate('DonePopUp');
+        //         navigation.navigate('DonePopUpTrainer');
         //       }
         //       else{
         //         alert("Error 1");
@@ -180,19 +232,23 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
               <Text style={styles.partnerHeader}>Partner</Text>
             </View>
             <View style={styles.phoneContainer}>
-              <Text style={styles.inputTitle}>PHONE NUMBER</Text>
+              <Text style={styles.inputTitle}>Phone Number</Text>
               <View style={styles.phoneTextInput}>
-                <TextInput
-                    style={styles.areaCodeInput}
-                    textAlign='center'
-                    placeholder='+001'
-                    onChangeText={text => handleOnChangeAreaCode(text)}
-                />
+              <TextInput
+                      style={styles.areaCodeInput}
+                      textAlign='center'
+                      placeholder='+001'
+                      keyboardType='numeric'
+                      value = {areaCodeInput}
+                      onChangeText={value => handleOnChangeAreaCode(value)}>
+              </TextInput>
                 <TextInput
                     style={styles.phoneNumberInput}
                     textAlign='center'
+                    keyboardType='numeric'
                     placeholder='00000000000'
-                    onChangeText={text => handleOnChangePhoneNumber(text)}
+                    value = {phoneNumberInput}
+                    onChangeText={value => handleOnChangePhoneNumber(value)}
                 />
               </View>
               {isPhoneError ?
@@ -205,12 +261,12 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
             <View>
                 <TouchableOpacity
                     style={styles.verifyButton}
-                    onPress={handleVerify}
+                    onPress={() => handleVerify()}
                 >
                     <Text style={styles.verifyButtonText}>Verify</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.codeTextInput}>
+            <View display={isCodeSent} style={styles.codeTextInput}>
               <TextInput
                   style={{fontSize: 33}}
                   placeholder='Enter your code'
@@ -218,21 +274,22 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                   onChangeText={text => handleOnChangeCode(text)}
               />
             </View>
-            <View>
+            <View display={isCodeSent}>
+
                 <TouchableOpacity 
                   style={styles.sendAgainButton}
-                  onPress={sendVerificationCode}
+                  onPress={() => sendVerificationCode()}
                 >
                   <Text style={styles.resendCodeText}>No SMS? Tap to resend</Text> 
                 </TouchableOpacity>
             </View>
-            <View style={styles.nextButtonContainer}>
+            <View display={isCodeSent} style={styles.nextButtonContainer}>
               {isNextError ?
               <Text style={styles.nextErrorMessage}>{nextErrorMessage}</Text>
               :null}
                 <TouchableOpacity
                     style={styles.nextButton}
-                    onPress={handleNext}
+                    onPress={() => handleNext()}
                 >
                     <Text style={styles.nextButtonText}>Next</Text>
                 </TouchableOpacity>
@@ -268,7 +325,8 @@ const styles = StyleSheet.create({
     marginTop: Dimensions.get('window').height * .044
   },
   inputTitle: {
-    fontSize: Dimensions.get('window').height * .022,
+    fontWeight: 'bold',
+    fontSize: Dimensions.get('window').height * .025,
     marginLeft: Dimensions.get('window').width * .0483
   },
   phoneTextInput: {

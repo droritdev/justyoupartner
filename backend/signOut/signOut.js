@@ -7,7 +7,6 @@ const clientProfileModel = require('../models/clientModels');
 exports.signOut = (req, res) => {
     trainerProfileModel.findByIdAndUpdate(
         {_id: req.body.id},
-        {connected: req.body.connected}
     )
     .then(() => res.send("Okay"))
     .catch((err) => res.send(err))

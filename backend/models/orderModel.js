@@ -46,10 +46,6 @@ const orderSchema = new Schema(
             trim: true,
             default: ""
         },
-        site: {
-            type: String,
-            trim: true
-        },
         address: {
             type: String,
             trim: true

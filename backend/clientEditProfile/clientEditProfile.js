@@ -11,11 +11,7 @@ exports.editProfile = (req, res) => {
                 first: req.body.name.first,
                 last: req.body.name.last
             },
-            birthday: req.body.birthday,
-            permissions: {
-                location: req.body.permissions.locationPermission,
-                push: req.body.permissions.pushPermission
-            }  
+            birthday: req.body.birthday  
         }
     )
     .then(() => res.send("Client updated"))

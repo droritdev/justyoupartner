@@ -25,6 +25,7 @@ exports.sendVerificationCode = (req, res) => {
 
 //Cheking the verification code by: to --> phone number/email address, channel --> sms/email 
 exports.verifyCode = (req, res) => {
+    console.log("shahar");
     client
         .verify
         .services(process.env.TWILIO_SERVICE_SID)
@@ -35,5 +36,8 @@ exports.verifyCode = (req, res) => {
         })
         .then((data) => {
             res.status(200).send(data);
-        });
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }

@@ -7,10 +7,6 @@ const Schema = mongoose.Schema;
 //Create new "trainer profile" schema
 const trainerProfileSchema = new Schema(
     {
-    //    trainerId: {
-    //        type: Schema.Types.ObjectId, 
-    //        required: true,
-    //    },
        name: {
            first: {
                type: String,
@@ -156,18 +152,6 @@ const trainerProfileSchema = new Schema(
                     }
                }
            ]
-       },
-       profileViews: {
-           type: Number,
-           default: 0
-       },
-       connected: {
-           type: Boolean,
-           default: true
-       },
-       visibility: {
-           type: Boolean,
-           default: true
        },
        location: {
            type: {

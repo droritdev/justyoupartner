@@ -234,7 +234,7 @@ const TrainerProfilePage = ({navigation}) => {
                     <View style={styles.priceTextsContainer}>
                         <Text style={styles.priceTexts}>Training cost at trainer site: {isSingle ? singlePriceAtTrainer+"$" : couplePriceAtTrainer+"$"}</Text>
                         <Text style={styles.priceTexts}>Training cost outdoor: {isSingle ? singlePriceOutdoor+"$" : couplePriceOutdoor+"$"}</Text>
-                        <Text style={styles.priceSideNote}>Training cost at site without payment arrangment: {isSingle ? singlePriceAtTrainer+"$" : couplePriceAtTrainer+"$"}</Text>
+                    
                     </View>
                 </View>
                 <View style={styles.whyUsQaUpdatesContainer}>
@@ -517,9 +517,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     priceTextsContainer: {
-        marginTop: Dimensions.get('window').height * .011,
+        marginTop: Dimensions.get('window').height * .020,
         justifyContent: 'space-between',
-        height: Dimensions.get('window').height * .088
+        height: Dimensions.get('window').height * .058
     },
     priceTexts: {
         fontWeight: 'bold',
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .95,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        marginTop: Dimensions.get('window').height * .033
+        marginTop: Dimensions.get('window').height * .050
     },
     whyUsButton: {
         borderRadius: 10,

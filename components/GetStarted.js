@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .033
     },
     previewText: {
-        fontSize: 25,
+        fontSize: Dimensions.get('window').height * .0278,
         textAlign: 'center',
         width: Dimensions.get('window').width * .85,
         marginTop: Dimensions.get('window').height * .022

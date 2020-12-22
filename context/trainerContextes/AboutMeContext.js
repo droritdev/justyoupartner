@@ -5,7 +5,7 @@ import AboutMeReducer from '../../reducers/trainerReducers/AboutMeReducer';
 export const AboutMeContext = React.createContext();
 
 const AboutMeContextProvider = ({children}) => {
-    const [aboutMe, dispatchAboutMe] = useReducer(AboutMeReducer, "ABOUT ME");
+    const [aboutMe, dispatchAboutMe] = useReducer(AboutMeReducer, "Write about yourself...");
 
     return(
         <AboutMeContext.Provider value={{aboutMe, dispatchAboutMe}}>

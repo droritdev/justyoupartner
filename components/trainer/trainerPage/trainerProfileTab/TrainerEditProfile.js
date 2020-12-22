@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .011,
         marginLeft: Dimensions.get('window').width * .0241,
         fontSize: Dimensions.get('window').height * .02,
-        color: 'lightgrey'
+        color: 'black'
     },
     pencilButtonAboutMe: {
         flex: 1,
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .011,
         marginLeft: Dimensions.get('window').width * .0241,
         fontSize: Dimensions.get('window').height * .02,
-        color: 'lightgrey'
+        color: 'black'
     },
     priceSectionContainer: {
         marginTop: Dimensions.get('window').height * .033,

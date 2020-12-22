@@ -4,12 +4,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const db = mongoose.connection;
 
         //**Trainer imports**//
 const trainerRegister = require('./register/trainerRegister');
 const changeVisibility = require('./changeVisibility/changeVisibility');
 const trainerEditProfile = require('./trainerEditProfile/trainerEditProfile');
 const findTrainerByEmail = require('./findTrainerByEmail/findTrainerByEmail');
+const findTrainerByPhone = require('./findTrainerByPhone/findTrainerByPhone');
+
 
         //**Client imports**//
 const findTrainerByCategory = require('./findTrainersByCategory/findTrainersByCategory');
@@ -107,7 +110,10 @@ app.put('/settings/visibility', changeVisibility.changeVisibility);
 //End point for confirming the registration and add a new trainer to the dataBase
 app.post('/trainers/register', trainerRegister.register);
 
+//End point to get trainer by email
 app.get('/trainers/:email', findTrainerByEmail.getTrainerByEmail);
+
+app.get('/trainers/phone/:phone', findTrainerByPhone.getTrainerByPhone);
 
 //End point for editing the trainer profile
 app.put('/trainers/settings/edit-profile/:email', trainerEditProfile.editProfile);

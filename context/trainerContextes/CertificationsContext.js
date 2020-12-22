@@ -5,7 +5,7 @@ import CertificationsReducer from '../../reducers/trainerReducers/Certifications
 export const CertificationsContext = React.createContext();
 
 const CertificationsContextProvider = ({children}) => {
-    const [certifications, dispatchCertifications] = useReducer(CertificationsReducer, "CERTIFICATIONS");
+    const [certifications, dispatchCertifications] = useReducer(CertificationsReducer, "Write your certifications...");
 
     return(
         <CertificationsContext.Provider value={{certifications, dispatchCertifications}}>

@@ -62,10 +62,6 @@ const clientProfileSchema = new Schema(
        likes: {
            type: [Object]
        },
-       connected: {
-           type: Boolean,
-           default: true
-       },
        location: {
            type: {
                type: String,

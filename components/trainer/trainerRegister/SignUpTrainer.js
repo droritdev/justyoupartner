@@ -44,7 +44,7 @@ const SignUpTrainer = ({navigation}) => {
         // .then((res) => {
         //   if(res !== null) {
         //     if(res.data.status === 'pending'){
-        //       navigation.navigate('VerifyEmailExplenation')
+        //       navigation.navigate('EmailVerificationTrainer')
         //     }
         //     else{
         //       alert(res.data);
@@ -74,14 +74,33 @@ const SignUpTrainer = ({navigation}) => {
       }
     }
 
-    //Handle the next button press to send the verify code
-    const handleNext = () => {
-      if(inputIsValid){
+
+  //Send GET request to mongodb using axios, to check if email is already used
+  const checkEmailIsUsed = () => {
+      axios  
+      .get('/trainers/'+emailAddressInput.toLowerCase(), config)
+      .then((doc) => {
+          if(doc) {
+            if(doc.data[0].email!=null) {
+              setEmailErrorMessage("Email address is already used");
+              setEmailIsValidate(false);
+            }
+          }
+      })
+      .catch((err) =>  {
+        //email is not used
         dispatchEmail({
           type: 'SET_EMAIL_ADDRESS',
           emailAddress: emailAddressInput.toLowerCase()
-        });
-        sendVerifyEmail();
+         });
+         sendVerifyEmail();
+      });
+  }
+
+    //Handle the next button press to send the verify code
+    const handleNext = () => {
+      if(inputIsValid){
+        checkEmailIsUsed();
       }
       else if(emailAddressInput === ""){
         setEmailErrorMessage("Email address is required");
@@ -127,14 +146,14 @@ const SignUpTrainer = ({navigation}) => {
           <View style={styles.fotterContainer}>
               <TouchableOpacity
                   style={styles.nextButton}
-                  onPress={handleNext}
+                  onPress={() => handleNext()}
               >
                   <Text style={styles.nextButtonText}>Next</Text>
               </TouchableOpacity>
             <View style={styles.alreadyHaveAccountContainer}>
               <Text style={styles.alreadyHaveAnAccountText}>Already have an account? </Text>
               <TouchableOpacity
-                onPress={handleSignIn}
+                onPress={() => handleSignIn()}
               >
               <Text style={styles.signInText}>Sign In</Text> 
               </TouchableOpacity>

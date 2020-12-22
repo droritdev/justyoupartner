@@ -1,28 +1,118 @@
-import React, {useContext, useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {StyleSheet, View, Text, Dimensions, Image, SafeAreaView} from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import auth from '@react-native-firebase/auth';
 
+import {EmailContext} from '../../../context/trainerContextes/EmailContext';
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 
 //The log in page for exsisting users
 const LogInTrainer = ({navigation}) => {
-    const {dispatchPasswrod} = useContext(PasswordContext);
-    const [isPasswordErrorMessage, setIsPasswordErrorMessage] = useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+    const {emailAddress, dispatchEmail} = useContext(EmailContext);
+    const {password, dispatchPassword} = useContext(PasswordContext);
+
+    const [isErrorMessage, setIsErrorMessage] = useState(false);
+    
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const [emailAddressInput, setEmailAddressInput] = useState("");
+    const [passwordInput, setPasswordInput] = useState("");
+
+    const [isEmailValid, setIsEmailValid] = useState(false);
+
+    // Set an initializing state whilst Firebase connects
+    const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState();
+
 
     //Navigates back to the SignUpTrainer page
     const handleArrowButton = () => {
         navigation.navigate('SignUpTrainer');
     }
 
-    //Handle when user enters his phone/email address
-    const handleOnChangePhoneEmail = () => {
 
+    // Handle user state changes
+    function onAuthStateChanged(user) {
+        setUser(user);
+        if (initializing) setInitializing(false);
     }
+
+
+    useEffect(() => {
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return subscriber; // unsubscribe on unmount
+      }, []);
+    
+      if (initializing) return null;
+
+
+
+    //Auth user with Firebase after validation and login button click
+    //After auth is complete, navigate to welcome page
+    const authUser = () => {
+        auth()
+        .signInWithEmailAndPassword(emailAddressInput, passwordInput)
+        .then(() => {
+            dispatchEmail({
+                type: 'SET_EMAIL_ADDRESS',
+                emailAddress: emailAddressInput
+              });
+              dispatchPassword({
+                type: 'SET_PASSWORD',
+                password: passwordInput
+              });
+            navigation.navigate('WelcomeTrainer');
+        })
+        .catch(error => {
+            alert("The user doesn't exist");
+        });
+    }
+
+
+    //Handle when user enters his email address
+    const handleOnChangePhoneEmail = (text) => {
+        setEmailAddressInput(text);
+        setIsErrorMessage(false);
+        let mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if(mailformat.test(text)){
+            setIsEmailValid(true);
+        } else {
+            setIsEmailValid(false);
+        }
+    }
+
+    //Handle when user enters his password
+    const handleOnChangePassword = (text) => {
+        setPasswordInput(text);
+        setIsErrorMessage(false);
+    }
+
 
     //Handle when user presses the log in button to try and log in to his user
     const handleLogInButton = () => {
-        navigation.navigate('WelcomeTrainer');
+        if(emailAddressInput == "" && passwordInput == "") {
+            setErrorMessage("Both fields are required");
+            setIsErrorMessage(true);
+        }
+        else if(emailAddressInput == "") { 
+            setErrorMessage("Email address is required");
+            setIsErrorMessage(true);
+        }
+
+        else if(passwordInput == "") {
+                setErrorMessage("Password is required");
+                setIsErrorMessage(true);
+        } 
+        else if (isEmailValid && passwordInput != "") {
+            authUser();
+        }
+        else if (!isEmailValid) {
+            setErrorMessage("Email is not valid");
+            setIsErrorMessage(true);
+        }
+        else {
+            setIsErrorMessage(true);
+        }
     }
 
     //Navigates back to the SignUp page
@@ -52,21 +142,22 @@ const LogInTrainer = ({navigation}) => {
             <View style={styles.inputsContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder='Phone number or Email'
+                    placeholder='Email address'
                     placeholderTextColor='grey'
                     onChangeText={(value) => handleOnChangePhoneEmail(value)}
+                    value={emailAddressInput}
                 />
                 <TextInput
                     style={styles.input}
+                    secureTextEntry={true}
                     placeholder='Password'
                     placeholderTextColor='grey'
+                    onChangeText={(value) => handleOnChangePassword(value)}
+                    value={passwordInput}
                 />
-                <View>
-                    {isPasswordErrorMessage ?
-                        <Text>Passwords not matched</Text>
-                    :null}
-                </View>
             </View>
+            {!isErrorMessage ? null:
+              <Text style={styles.errorText}>{errorMessage}</Text>}   
             <TouchableOpacity
                 onPress={handleForgotPasswordButton}
             >
@@ -132,6 +223,12 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .022,
         textAlign: 'center',
         marginTop: Dimensions.get('window').height * .033
+    },
+    errorText: {
+        marginTop: Dimensions.get('window').height * .010,
+        textAlign:'center',
+        color: 'red',
+        fontSize: Dimensions.get('window').height * .022
     },
     forgotPassword: {
         alignSelf: 'center',

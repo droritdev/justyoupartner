@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
+import React, {useRef, useState, useEffect, useCallback, useContext} from 'react';
 import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button} from 'react-native';
 import axios from 'axios';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,6 +8,10 @@ import Icon from 'react-native-vector-icons';
 import Slider from '@react-native-community/slider';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+import { utils } from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+const storageRef = storage().ref('/images/');
 
 import PickCategories from '../../globalComponents/PickCategories';
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
@@ -41,7 +45,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     const [firstNameInput, setFirstNameInput] = useState("");
     const [lastNameInput, setLastNameInput] = useState("");
-    //const [profileImageSource, setProfileImageSource] = useState(require('../../images/profilePic.png'));
+    // const [profileImageSource, setProfileImageSource] = useState(require('../../images/profileImage.jpeg'));
     const [minimumDate, setMinimumDate] = useState("");
     const [maximumDate, setMaximumDate] = useState("");
     const [birthdaySelected, setBirthdaySelected] = useState("Set your birthday");
@@ -60,16 +64,47 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     const [isNamesError, setIsNamesError] = useState(false); 
     const [nameErrorMessage ,setNameErrorMessage] = useState("");
+    const [isFirstNamesError, setIsFirstNamesError] = useState(false);
+    const [firstNamesErrorMessage, setFirstNameErrorMessage] = useState("");
+    const [isLastNamesError, setIsLastNamesError] = useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = useState("");
     const [isBirthdayErrorMessage, setIsBirthdayErrorMessage] = useState(false);
     const [isBirthdaySelected, setIsBirthdaySelected] = useState(false);
     const [birthdayErrorMessage, setBirthdayErrorMessage] = useState("");
     const [isCategoryError, setIsCategoryError] = useState(false);
     const [categoryMessageError,setCategoryMessageError] = useState("");
+    const [isAboutMeError, setIsAboutMeError] = useState(false);
+    const [aboutMeMessageError,setAboutMeErrorMessage] = useState("");
+    const [isCertificationError, setIsCertificationError] = useState(false);
+    const [certificationMessageError, setCertificationMessageError] = useState("");
     const [datePickerVisible, setDatePickerVisible] = useState(false);
     const [isTrainingSiteError, setIsTrainingSiteError] = useState(false);
     const [trainingSiteErrorMessage, setTrainingSiteErrorMessage] = useState("");
     const [isPriceError, setIsPriceError] = useState(false);
     const [priceErrorMessage, setPriceErrorMessage] = useState("");
+
+    
+    const scrollRef = useRef();
+
+    //Scroll the user UI to specific position
+    const scrollTo = (where) => {
+      y = 0;
+
+      switch (where) {
+        case "aboutMe":
+          y = Dimensions.get('window').height * 0.80;
+          break;
+        case "certifications":
+          y = Dimensions.get('window').height * 0.80;
+          break;
+      }
+      scrollRef.current?.scrollTo({
+          y: y,
+          animated: true
+      });
+    }
+
+
 
     const charsLimit = 130;
 
@@ -80,7 +115,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       let currentYear = new Date().getFullYear();
       let currentMonth = new Date().getMonth();
       let currentDay = new Date().getDate();
-      date.setFullYear(currentYear - 70, currentMonth, currentDay)
+      date.setFullYear(currentYear - 120, currentMonth, currentDay)
       date2.setFullYear(currentYear - 18, currentMonth, currentDay)
       setMinimumDate(date);
       setMaximumDate(date2);
@@ -94,8 +129,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     //Sets the firstName input to the value
     const handleOnChangeFirstName = (text) => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setFirstNameInput(text);
@@ -104,8 +143,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     //Sets the lastName input to the value
     const handleOnChangeLasttName = (text) => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setLastNameInput(text);
@@ -126,22 +169,39 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     //Shows the date picker when user press the button
     const handleDateInputPressed = () => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setDatePickerVisible(!datePickerVisible);
     }
 
     const handleOnCategoryPressed = () => {
+      setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
+      setIsBirthdayErrorMessage(false);
+      setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
+      setIsTrainingSiteError(false);
+      setIsPriceError(false);
       navigation.navigate('PickCategoryTrainer');
     }
 
     //Sets the slider value to the value
     const handleSliderValueChange = (value) => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setSliderValue(value+" MILE");
@@ -151,8 +211,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     //Sets the first address to the value
     const handleOnChangeAddress1 = (text) => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setAddress1(text);
@@ -161,8 +225,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     //Sets the second address to the value
     const handleOnChangeAddress2 = (text) => {
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       setAddress2(text);
@@ -170,9 +238,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //sets the training at the trainer price to the value - by the type of: single/couple
     const handleAtTrainerPriceChange = (value) => {
+      if (value.length > 4) {
+        value = value.slice(0, 4);
+      }
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       if(isSingle){
@@ -185,9 +260,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //sets the training at outdoor price to the value - by the type of: single/couple
     const handleOutdoorPriceChange = (value) => {
+      if (value.length > 4) {
+        value = value.slice(0, 4);
+      }
       setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
       setIsBirthdayErrorMessage(false);
       setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
       setIsTrainingSiteError(false);
       setIsPriceError(false);
       if(isSingle){
@@ -205,11 +287,29 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Navigates to the AboutMeTrainer page for the user to write about himself
     const handleOnAboutMePress = () => {
+      setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
+      setIsBirthdayErrorMessage(false);
+      setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
+      setIsTrainingSiteError(false);
+      setIsPriceError(false);
       navigation.navigate('AboutMeTrainer');
     }
 
     //Navigates to the CertificationsTrainer page for the user to write his certifications
     const handleCertificationsPress = () => {
+      setIsNamesError(false);
+      setIsFirstNamesError(false);
+      setIsLastNamesError(false);
+      setIsBirthdayErrorMessage(false);
+      setIsCategoryError(false);
+      setIsAboutMeError(false);
+      setIsCertificationError(false);
+      setIsTrainingSiteError(false);
+      setIsPriceError(false);
       navigation.navigate('CertificationsTrainer');
     }
 
@@ -220,17 +320,40 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Handle the next button press, if ok - saves all values states and navigates to the PaymentsAndPolicyTrainer page
     const handleNext = () => {
-      if(firstNameInput === "" || lastNameInput === ""){
+      if(firstNameInput === "" && lastNameInput === ""){
         setIsNamesError(true);
-        setNameErrorMessage('Fill all the name fields');
+        setNameErrorMessage('First and Last name are required');
+        scrollTo("name");
+      }
+      else if(firstNameInput === "") {
+        setFirstNameErrorMessage("First name field is required");
+        setIsFirstNamesError(true);
+        scrollTo("name");
+      }
+      else if(lastNameInput === "") {
+        setLastNameErrorMessage("Last name field is required");
+        setIsLastNamesError(true);
+        scrollTo("name");
       }
       else if(birthdaySelected === "Set your birthday"){
         setBirthdayErrorMessage("Select birthday");
         setIsBirthdayErrorMessage(true);
+        scrollTo("birthday");
       }
       else if(categories.length === 0){
         setCategoryMessageError("Pick at least one category");
         setIsCategoryError(true);
+        scrollTo("categories");
+      } 
+      else if (aboutMe === "Write about yourself...") {
+        setAboutMeErrorMessage("Enter at least 20 characters about yourself.");
+        setIsAboutMeError(true);
+        scrollTo("aboutMe");
+      }
+      else if (certifications === "Write your certifications...") {
+        setCertificationMessageError("Enter at least 20 characters about your certifications.");
+        setIsCertificationError(true);
+        scrollTo("certifications");
       }
       else if(address1 === "" && address2 === ""){
         setTrainingSiteErrorMessage("Enter at least one training site");
@@ -303,9 +426,25 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       }
     }
 
+
+    //show only 3 categories.
+    const showCategories = () => {
+      text = "";
+      for (let i = 0; i<categories.length; i++) {
+        if(i<4) {
+          text += categories[i] + ((i<categories.length-1 && i<3)? ", " : "");
+        } else {
+          text += "..."
+          break;
+        }
+      }
+      return text;
+    }
+
+
     return(
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView style={styles.container}>
+        <ScrollView ref={scrollRef} style={styles.container}>
           <TouchableOpacity
             onPress={handleArrowButton}
           >
@@ -317,6 +456,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           <Text style={styles.profileDetailesText}>Profile Details</Text>
             <View style={styles.upperContainer}>
               <View style={styles.nameAndImageContanier}>
+              <TouchableOpacity 
+                  onPress={handleProfileImage}>
+                  <Image
+                    source={profileImage}
+                    style={styles.profileImage}
+                  />
+                </TouchableOpacity>
                 <TextInput
                   style={styles.textInput}
                   textAlign='center'
@@ -331,18 +477,18 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                   placeholderTextColor='darkgrey'
                   onChangeText={value => handleOnChangeLasttName(value)}
                 />
-                <TouchableOpacity 
-                  onPress={handleProfileImage}>
-                  <Image
-                    source={profileImage}
-                    style={styles.profileImage}
-                  />
-                </TouchableOpacity>
               </View>
               {isNamesError ?
                 <Text style={styles.nameErrorMessage}>{nameErrorMessage}</Text>
               : null}
-              <Text style={styles.nameExplenation}>Your name help the client to identify you</Text>
+              {isFirstNamesError ?
+              <Text style={styles.nameErrorMessage}>{firstNamesErrorMessage}</Text>
+            :null}
+
+            {isLastNamesError?
+            <Text style={styles.nameErrorMessage}>{lastNameErrorMessage}</Text>
+            :null}
+              <Text style={styles.nameExplanation}>Your name and photo help the customer to identify you.</Text>
             </View>
           <Text style={styles.birthdayText}>Birthday</Text>
           <View style={styles.birthdayContainer}>
@@ -376,22 +522,22 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               <Text style={styles.birthdayErrorMessage}>{birthdayErrorMessage}</Text>
             : null}
           </View>
-          <Text style={styles.emailAddressText}>EMAIL ADDRESS</Text>
+          <Text style={styles.emailAddressText}>Email Address</Text>
           <TextInput 
             editable={false}
             placeholder={emailAddress}
             placeholderTextColor='black'
             style={styles.emailAddressButton}
           />
-          <Text style={styles.emailExplinationText}>We use your email to send you receips. your mobile number is required to enhance account security.</Text>
-          <Text style={styles.categoryTitle}>CATEGORY</Text>
+          <Text style={styles.emailExplanationText}>We use your email to send you reciepts.</Text>
+          <Text style={styles.categoryTitle}>Category</Text>
           <View style={styles.categoryContainer}>
             <View style={styles.categoryBoxContainer}>
               <View style={styles.categoryBox}>
                 <TouchableOpacity
                   onPress={() => handleOnCategoryPressed()}
                 >
-                  <Text style={categories.length > 0 ? styles.categoryPicked : styles.categoryUnPicked}>{categories.length > 0 ? categories.length+" Selected" : "Pick categories"}</Text>
+                  <Text style={categories.length > 0 ? styles.categoryPicked : styles.categoryUnPicked}>{categories.length > 0 ? showCategories() : "Pick categories"}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleOnCategoryPressed()}
@@ -408,12 +554,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
             : null}
           </View>
           <View style={styles.inputsContainer}>
+            <Text style={styles.categoryTitle}>About Me</Text>
             <View style={styles.aboutMeContainer}>
-              <View style={aboutMe === "ABOUT ME" ? styles.aboutMeButton : styles.aboutMeButtonWritten}>
+              <View style={aboutMe === "Write about yourself..." ? styles.aboutMeButton : styles.aboutMeButtonWritten}>
                 <TouchableOpacity
                   onPress={() => handleOnAboutMePress()}
                 >
-                  <Text style={aboutMe === "ABOUT ME" ? styles.aboutMeTitle :styles.aboutMeText}>{aboutMe.length > charsLimit ? aboutMe.slice(0,charsLimit)+"..." : aboutMe}</Text>
+                  <Text style={aboutMe === "Write about yourself..." ? styles.aboutMeTitle :styles.aboutMeText}>{aboutMe.length > charsLimit ? aboutMe.slice(0,charsLimit)+"..." : aboutMe}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.pencilButtonAboutMe}>
@@ -426,12 +573,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            {isAboutMeError ?
+                <Text style={styles.aboutMeErrorMessage}>{aboutMeMessageError}</Text>
+              : null}
+            <Text style={styles.categoryTitle}>Certifications</Text>
             <View style={styles.certificationsContainer}>
-              <View style={certifications === "CERTIFICATIONS" ? styles.certificationsButton : styles.certificationsButtonWritten}>
+              <View style={certifications === "Write your certifications..." ? styles.certificationsButton : styles.certificationsButtonWritten}>
                 <TouchableOpacity
                   onPress={() => handleCertificationsPress()}
                 >
-                  <Text style={certifications === "CERTIFICATIONS" ? styles.certificationsTitle : styles.certificationsText}>{certifications.length > charsLimit ? certifications.slice(0,{charsLimit})+"..." : certifications}</Text>
+                  <Text style={certifications === "Write your certifications..." ? styles.certificationsTitle : styles.certificationsText}>{certifications.length > charsLimit ? certifications.slice(0,{charsLimit})+"..." : certifications}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.pencilButtonCertifications}>
@@ -444,9 +595,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            {isCertificationError ?
+                <Text style={styles.certificationErrorMessage}>{certificationMessageError}</Text>
+              : null}
           </View>
           <View style={styles.sliderContainer}>
-            <Text style={styles.maxDistanceText}>MAXIMUM DISTANCE</Text>
+            <Text style={styles.maxDistanceText}>Maximum Distance</Text>
             <Text style={styles.sliderValueTitle}>{sliderValue}</Text>
             <Slider
               style={styles.slider}
@@ -455,22 +609,24 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               minimumTrackTintColor="deepskyblue"
               maximumTrackTintColor="#000000"
               onValueChange={(value) => handleSliderValueChange(value)}
+              tapToSeek={true}
               step={1}
               thumbTintColor='deepskyblue'
             />
+            <Text style={styles.distanceExplanation}>Indicates the distance in which potentional customers can see your profile.</Text>
           </View>
           <View style={styles.trainingSiteContainer}>
-            <Text style={styles.trainingSiteText}>TRAINING SITE</Text>
+            <Text style={styles.trainingSiteText}>Training Site</Text>
             <TextInput
               style={styles.trainingSiteInput}
               title='address'
-              placeholder='Number/Street/City/State/Zip Code'
+              placeholder='Primary Address'
               onChangeText={(text) => handleOnChangeAddress1(text)}
             /> 
             <TextInput
               style={styles.trainingSiteInput}
               title='address'
-              placeholder='Number/Street/City/State/Zip Code'
+              placeholder='Secondary Address'
               onChangeText={(text) => handleOnChangeAddress2(text)}
             /> 
             {isTrainingSiteError ? 
@@ -478,7 +634,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
             : null}                                                          
           </View>
           <View style={styles.priceSectionContainer}>
-            <Text style={styles.pricingTitle}>Please price your training type:</Text>
+            <Text style={styles.pricingTitle}>Training Price</Text>
             <View style={ styles.pricingLabels}>
               <TouchableOpacity 
                 style={isSingle ? styles.singlePricing : styles.singlePricingLabeld}
@@ -496,23 +652,37 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
             <View style={styles.pricingContainer}>
               <View style={styles.atTrainerSite}>
                 <Text style={styles.atTrainerSiteText}>AT TRAINER SITE</Text>
+                <View style={styles.atTrainerSitePrice}>
+                  <Image
+                  source={require('../../../images/dollarSign.jpeg')}
+                  style={styles.dollarImage}
+                  />
                 <TextInput
                   style={styles.atTrainingSiteInput}
                   value={isSingle ? singleAtTrainerInput : coupleAtTrainerInput}
-                  placeholder='$$$'
-                  placeholderTextColor='black'
+                  placeholder='0'
+                  keyboardType='numeric'
+                  placeholderTextColor='grey'
                   onChangeText={(value) => handleAtTrainerPriceChange(value)}
                 />
+                </View>
               </View>
               <View style={styles.outDoor}>
                 <Text style={styles.outDoorText}>OUTDOOR</Text>
+                <View style={styles.outDoorPrice}>
+                <Image
+                  source={require('../../../images/dollarSign.jpeg')}
+                  style={styles.dollarImage}
+                  />
                 <TextInput
                   style={styles.outDoorInput}
-                  placeholder='$$$'
-                  placeholderTextColor='black'
+                  placeholder='0'
+                  keyboardType='numeric'
+                  placeholderTextColor='grey'
                   onChangeText={(value) => handleOutdoorPriceChange(value)}
                   value={isSingle ? singleOutdoorInput: coupleOutdoorInput}
                 />
+                 </View>
               </View>
               {isPriceError ? 
                 <Text style={styles.priceErrorMessage}>{priceErrorMessage}</Text>
@@ -543,6 +713,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     arrowImage: {
       marginLeft: Dimensions.get('window').width * .0483
     },
+    dollarImage: {
+      width: Dimensions.get('window').width * .02,
+      height: Dimensions.get('window').height * .02,
+      marginTop: Dimensions.get('window').height * .01,
+      marginRight: Dimensions.get('window').width * .015,
+    },
     profileDetailesText: {
       marginLeft: Dimensions.get('window').width * .0483,
       marginTop: Dimensions.get('window').height * .0278,
@@ -558,29 +734,32 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     nameAndImageContanier: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: Dimensions.get('screen').width * .95,
+      width: Dimensions.get('window').width * .95,
+      height: Dimensions.get('window').width * .15,
       marginLeft: Dimensions.get('window').width * .045
     },
     textInput: {
-      marginTop: Dimensions.get('window').height * .022,
+      marginTop: Dimensions.get('window').height * .032,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 3,
+      borderWidth: 2,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .34,
-      justifyContent: 'center',
-      fontSize: Dimensions.get('window').height * .02
+      fontSize: Dimensions.get('window').height * .025
     },
     profileImage: {
-      width: Dimensions.get('window').width * .225,
-      height: Dimensions.get('window').height * .1,
-      borderRadius: 20
+      width: Dimensions.get('window').width * .200,
+      height: Dimensions.get('window').height * .11,
+      borderRadius: 5
     },
     nameErrorMessage: {
+      alignSelf: 'center',
+      marginTop: Dimensions.get('window').height * .040,
       marginLeft: Dimensions.get('window').width * .0483,
       color: 'red'
     },
-    nameExplenation: {
+    nameExplanation: {
+      marginTop: Dimensions.get('window').height * .005,
       color: 'darkgrey',
       width: Dimensions.get('window').width,
       textAlign: 'center',
@@ -600,7 +779,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     birthdayBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -650,7 +829,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderColor: 'deepskyblue',
       backgroundColor: 'lightgrey',
       borderRadius: 17,
-      borderWidth: 3,
+      borderWidth: 2,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
       justifyContent: 'center',
@@ -659,9 +838,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       textAlign: 'center',
       alignSelf: 'center'
     },
-    emailExplinationText: {
+    emailExplanationText: {
       marginTop: Dimensions.get('window').height * .011,
-      textAlign: 'center'
+      color: 'darkgrey',
+      width: Dimensions.get('window').width,
+      textAlign: 'center',
+      fontSize: Dimensions.get('window').height * .018
     },
     BirthdaySlidePanel: {
       backgroundColor: 'deepskyblue',
@@ -681,7 +863,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     categoryBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -701,10 +883,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginLeft: Dimensions.get('window').width * .3
     },
     categoryPicked: {
-      textAlign: 'center',
+      textAlign: 'left',
+      marginLeft: Dimensions.get('window').width * .010,
       fontSize: Dimensions.get('window').height * .022,
       fontWeight: 'bold',
-      marginLeft: Dimensions.get('window').width * .3
     },
     categoryIcon: {
       height: Dimensions.get('window').height * .04,
@@ -715,15 +897,26 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignSelf: 'center',
       marginTop: Dimensions.get('window').height * .0055
     }, 
+    aboutMeErrorMessage: {
+      color: 'red',
+      alignSelf: 'center',
+      marginTop: Dimensions.get('window').height * .0055
+    },
+    certificationErrorMessage: {
+      color: 'red',
+      alignSelf: 'center',
+      marginTop: Dimensions.get('window').height * .0055
+    },
     inputsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .3,
       marginTop: Dimensions.get('window').height * .044
     },
     aboutMeContainer: {
+      marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 3,
+      borderWidth: 2,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -733,13 +926,14 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     aboutMeButton: {
       height: Dimensions.get('window').height * .12,
       alignSelf: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     aboutMeButtonWritten: {
       alignSelf: 'flex-start',
     },
     aboutMeTitle: {
       fontSize: Dimensions.get('window').height * .02,
+      color: 'grey'
     },
     aboutMeText: {
       marginTop: Dimensions.get('window').height * .011,
@@ -759,9 +953,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginBottom: Dimensions.get('window').height * .0055
     },
     certificationsContainer: {
+      marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 3,
+      borderWidth: 2,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -777,7 +972,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignSelf: 'flex-start',
     },
     certificationsTitle: {
-      fontSize: Dimensions.get('window').height * .02
+      fontSize: Dimensions.get('window').height * .02,
+      color: 'grey'
     },
     certificationsText: {
       marginTop: Dimensions.get('window').height * .011,
@@ -785,13 +981,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .02
     },
     sliderContainer: {
-      marginTop: Dimensions.get('window').height * .022
+      marginTop: Dimensions.get('window').height * .15
     },  
     maxDistanceText: {
-      fontSize: Dimensions.get('window').height * .022,
+      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .0278,
       marginTop: Dimensions.get('window').height * .022,
       marginLeft: Dimensions.get('window').width * .0483,
-      fontWeight: 'bold'
     },  
     sliderValueTitle: {
       fontSize: Dimensions.get('window').height * .019,
@@ -803,6 +999,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignSelf: 'center',
       marginTop: Dimensions.get('window').height * .011
     },
+    distanceExplanation: {
+      marginTop: Dimensions.get('window').height * .010,
+      color: 'darkgrey',
+      width: Dimensions.get('window').width,
+      textAlign: 'center',
+      fontSize: Dimensions.get('window').height * .018
+    },
     trainingSiteContainer: {
       width: Dimensions.get('window').width * .95,
       height: Dimensions.get('window').height * .220,
@@ -810,13 +1013,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .04
     },
     trainingSiteText: {
-      fontSize: Dimensions.get('window').height * .022,
+      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .0278,
       marginLeft: Dimensions.get('window').width * .0241,
-      fontWeight: 'bold'
     },
     trainingSiteInput: {
       marginTop: Dimensions.get('window').height * .022,
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
@@ -834,7 +1037,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       height: Dimensions.get('window').height * .195
     },
     pricingTitle: {
-      fontSize: Dimensions.get('window').height * .022 
+      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .0278,
     },
     pricingLabels: {
       marginTop: Dimensions.get('window').height * .019,
@@ -844,7 +1048,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     singlePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -854,7 +1058,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     singlePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -874,7 +1078,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     couplePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 3,
+      borderWidth: 2,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -883,7 +1087,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     couplePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 3,
+      borderWidth: 2,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -911,8 +1115,11 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center'
       
     },
+    atTrainerSitePrice: {
+      flexDirection: 'row',
+    },
     atTrainingSiteInput: {
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .04,
@@ -920,7 +1127,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .022
     },
     atTrainerSiteText: {
-      fontSize: Dimensions.get('window').height * .022
+      fontSize: Dimensions.get('window').height * .022,
+      fontWeight: 'bold'
     },
     outDoor: {
       flexDirection: 'row',
@@ -928,8 +1136,11 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       width: Dimensions.get('window').width * .9,
       alignItems: 'center'
     },
+    outDoorPrice: {
+      flexDirection: 'row',
+    },
     outDoorInput: {
-      borderWidth: 3,
+      borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .04,
@@ -937,7 +1148,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .022
     },
     outDoorText: {
-      fontSize: Dimensions.get('window').height * .022
+      fontSize: Dimensions.get('window').height * .022,
+      fontWeight: 'bold'
     },
     priceErrorMessage: {
       color: 'red',

@@ -77,7 +77,7 @@ const EmailVerificationTrainer = ({navigation}) => {
         setCodeErrorMessage("Enter digits only");
         setIsErrorCodeMessage(true);
       }
-      else if(code.length < 5){
+      else if(code.length < 5 || code.length > 5){
         setCodeErrorMessage("Code is 5 digits");
         setIsErrorCodeMessage(true);
       }

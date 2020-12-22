@@ -36,7 +36,7 @@ const SignUpPlace = ({navigation}) => {
       navigation.navigate('EmailVerificationPlace');
         // axios
         //   .post('/send-verification-code', {
-        //     to: emailAddress,
+        //     to: emailAddressInput,
         //     channel: "email"
         //   },
         //   config
@@ -44,7 +44,7 @@ const SignUpPlace = ({navigation}) => {
         // .then((res) => {
         //   if(res !== null) {
         //     if(res.data.status === 'pending'){
-        //       navigation.navigate('VerifyEmailExplenation')
+        //       navigation.navigate('EmailVerificationPlace')
         //     }
         //     else{
         //       alert(res.data);
@@ -130,14 +130,14 @@ const SignUpPlace = ({navigation}) => {
         <View style={styles.fotterContainer}>
             <TouchableOpacity
                 style={styles.nextButton}
-                onPress={handleNext}
+                onPress={() => handleNext()}
             >
                 <Text style={styles.nextButtonText}>Next</Text>
             </TouchableOpacity>
           <View style={styles.alreadyHaveAccountContainer}>
             <Text style={styles.alreadyHaveAnAccountText}>Already have an account? </Text>
             <TouchableOpacity
-              onPress={handleSignIn}
+              onPress={() => handleSignIn()}
             >
             <Text style={styles.signInText}>Sign In</Text> 
             </TouchableOpacity>

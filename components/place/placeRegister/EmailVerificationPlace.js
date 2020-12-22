@@ -77,7 +77,7 @@ const EmailVerificationPlace = ({navigation}) => {
         setCodeErrorMessage("Enter digits only");
         setIsErrorCodeMessage(true);
       }
-      else if(code.length < 5){
+      else if(code.length < 5 || code.length > 5 ){
         setCodeErrorMessage("Code is 5 digits");
         setIsErrorCodeMessage(true);
       }
@@ -94,12 +94,14 @@ const EmailVerificationPlace = ({navigation}) => {
         // .then((res) => {
         //   if(res !== null) {
         //     if(res.data.status === 'approved'){
+        //       alert("ok");
         //       setIsErrorCodeMessage(false);
         //       setCodeErrorMessage("");
         //       navigation.navigate('CreatePasswordPartner');
         //     }
         //     else{
-        //       setCodeErrorMessage("Wrong Code - try again")
+        //       setCodeErrorMessage("Wrong Code - try again");
+        //       alert("error");
         //     }
         //   }
         //   else{
@@ -153,7 +155,7 @@ const EmailVerificationPlace = ({navigation}) => {
         <View style={styles.nextButtonContainer}>
             <TouchableOpacity
                 style={styles.nextButton}
-                onPress={handleNext}
+                onPress={() => handleNext()}
             >
                 <Text style={styles.nextButtonText}>Next</Text>
             </TouchableOpacity>

@@ -229,7 +229,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
                   : null}
               </View>
               <View style={styles.addressContainer}>
-                  <Text style={styles.addressText}>ADDRESS</Text>
+                  <Text style={styles.addressText}>Address</Text>
                   <TextInput
                   style={styles.addressInput}
                   title='address'
@@ -242,7 +242,7 @@ const ProfileDetailsPage2Place = ({navigation}) => {
               </View>
             </View>
             <View style={styles.emailAddressContainer}>
-                <Text style={styles.emailAddressText}>EMAIL ADDRESS</Text>
+                <Text style={styles.emailAddressText}>Email Address</Text>
                 <TextInput 
                     editable={false}
                     placeholder={emailAddress}

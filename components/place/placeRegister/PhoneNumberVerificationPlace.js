@@ -71,7 +71,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
         setIsPhoneError(false);
         setIsNextError(false);
         setFullPhoneNumber("+972"+(areaCodeInput.concat(phoneNumberInput)));
-        // sendVerificationCode();
+        sendVerificationCode();
       }
     }
 
@@ -82,7 +82,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
         setIsNextError(true);
       }
       else{
-        alert("ok");
+        //alert("ok");
         // alert(fullPhoneNumber)
         // axios
         //   .post('/send-verification-code', {
@@ -151,7 +151,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
         //           type: 'SET_PHONE_NUMBER',
         //           phoneNumber: phoneNumberInput
         //         })
-        //         navigation.navigate('DonePopUp');
+        //         navigation.navigate('DonePopUpPlace');
         //       }
         //       else{
         //         alert("Error 1");
@@ -200,7 +200,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
             <View>
                 <TouchableOpacity
                     style={styles.verifyButton}
-                    onPress={handleVerify}
+                    onPress={() => handleVerify()}
                 >
                     <Text style={styles.verifyButtonText}>Verify</Text>
                 </TouchableOpacity>
@@ -216,7 +216,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
             <View>
                 <TouchableOpacity 
                   style={styles.sendAgainButton}
-                  onPress={sendVerificationCode}
+                  onPress={() => sendVerificationCode()}
                 >
                   <Text style={styles.resendCodeText}>No SMS? Tap to resend</Text> 
                 </TouchableOpacity>
@@ -227,7 +227,7 @@ const PhoneNumberVerificationPlace = ({navigation}) => {
               :null}
                 <TouchableOpacity
                     style={styles.nextButton}
-                    onPress={handleNext}
+                    onPress={() => handleNext()}
                 >
                     <Text style={styles.nextButtonText}>Next</Text>
                 </TouchableOpacity>

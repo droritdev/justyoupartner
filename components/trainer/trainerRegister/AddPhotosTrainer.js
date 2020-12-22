@@ -1,10 +1,16 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-picker';
 import Dialog from "react-native-dialog";
 
 import {MediaContext} from '../../../context/trainerContextes/MediaContext';
+
+
+import { utils } from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+const storageRef = storage().ref('/images/lala.png');
+
 
 //Here the traniner add photos and videos to his profile
 const AddPhotosTrainer = ({navigation}) => {
@@ -24,6 +30,15 @@ const AddPhotosTrainer = ({navigation}) => {
     const handleAPencilButton = () => {
         isPencilPressed ? setIsPencilPressed(false) : setIsPencilPressed(true);
     }
+
+
+    const uploadTest = async (uri, i) => {
+      await storage().ref("/alot/test"+i).putFile(uri).then((snapshot) => {
+          console.log(snapsoht);
+        })
+        .catch((e) => alert("fail"));
+    }
+
 
     //Select image from the phone
     const handleImage = (index) => {
@@ -71,8 +86,11 @@ const AddPhotosTrainer = ({navigation}) => {
 
     //Adds 2 more images to pick 
     const handlePlusButton = () => {
-        if(numOfElements === pictures.length){
-            setNumOfElements(numOfElements + 2);
+        // if(numOfElements === pictures.length){
+        //     setNumOfElements(numOfElements + 2);
+        // }
+        for (let i = 0; i < pictures; i++) {
+            uploadTest(pictures[i].uri, i);
         }
     }
 
