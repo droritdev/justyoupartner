@@ -3086,6 +3086,11 @@
   "resolved" "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz"
   "version" "1.1.1"
 
+"eme-encryption-scheme-polyfill@^2.0.1":
+  "integrity" "sha512-Wz+Ro1c0/2Wsx2RLFvTOO0m4LvYn+7cSnq3XOvRvLLBq8jbvUACH/zpU9s0/5+mQa5oaelkU69x+q0z/iWYrFA=="
+  "resolved" "https://registry.npmjs.org/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.0.1.tgz"
+  "version" "2.0.1"
+
 "emitter-listener@^1.0.1", "emitter-listener@^1.1.1":
   "integrity" "sha512-Bt1sBAGFHY9DKY+4/2cV6izcKJUf5T7/gkdmkxzX/qv9CcGH8xSwVRW5mtX03SWJtRTWSOpzCuWN9rBFYZepZQ=="
   "resolved" "https://registry.npmjs.org/emitter-listener/-/emitter-listener-1.1.2.tgz"
@@ -5494,6 +5499,11 @@
     "array-includes" "^3.1.1"
     "object.assign" "^4.1.1"
 
+"keymirror@^0.1.1":
+  "integrity" "sha1-kYiJ6hP40KQufFVyUO7nE63JXDU="
+  "resolved" "https://registry.npmjs.org/keymirror/-/keymirror-0.1.1.tgz"
+  "version" "0.1.1"
+
 "kind-of@^1.1.0":
   "integrity" "sha1-FAo9LUGjbS78+pN3tiwk+ElaXEQ="
   "resolved" "https://registry.yarnpkg.com/kind-of/-/kind-of-1.1.0.tgz"
@@ -7786,6 +7796,11 @@
     "invariant" "^2.2.4"
     "prop-types" "^15.7.2"
 
+"react-native-image-crop-picker@^0.35.2":
+  "integrity" "sha512-4nHAYwnemFJLzVJPl5dhNB+WQgNp41MLJjyYCypatMZl2GJD+EVXnu5eSUQE+UOpaIEhSVtqK5Y3OQ93hMhosQ=="
+  "resolved" "https://registry.npmjs.org/react-native-image-crop-picker/-/react-native-image-crop-picker-0.35.2.tgz"
+  "version" "0.35.2"
+
 "react-native-image-picker@^2.3.4":
   "integrity" "sha512-4UHu+zOyDT570r5mIbjH6h1iMrKIq/qfsKiAVUEZwncVegh0usJiEYNyJw4CEVwNeehmye/ia5sLDsa+kzIE4g=="
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-2.3.4.tgz"
@@ -7897,6 +7912,15 @@
     "prop-types" "^15.7.2"
     "yargs" "^15.0.2"
 
+"react-native-video@^5.1.0-alpha8":
+  "integrity" "sha512-RRDSxqKe2F4OtiDWKCQlwVzvcsZ/TcWQdRxeAE3wsGBmFpAYFyhCz52QkFXgQQgYUuIK6Wd+j2lVxUoLp4+R2w=="
+  "resolved" "https://registry.npmjs.org/react-native-video/-/react-native-video-5.1.0-alpha8.tgz"
+  "version" "5.1.0-alpha8"
+  dependencies:
+    "keymirror" "^0.1.1"
+    "prop-types" "^15.7.2"
+    "shaka-player" "^2.5.9"
+
 "react-native-windows@>=0.62":
   "integrity" "sha512-6QLnkBb6lS9rRyhJvvriw2VtnU+I5EUsRCo31IPOZzJ73X9ngBC8kcl4LCIY+3OCvEQMNy2SRaUioSZiS3GhFQ=="
   "resolved" "https://registry.npmjs.org/react-native-windows/-/react-native-windows-0.63.8.tgz"
@@ -7922,7 +7946,7 @@
     "use-subscription" "^1.0.0"
     "whatwg-fetch" "^3.0.0"
 
-"react-native@*", "react-native@^0.63.0-0", "react-native@^0.63.3", "react-native@>=0.42.0", "react-native@>=0.47", "react-native@>=0.47.1", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>0.57.0":
+"react-native@*", "react-native@^0.63.0-0", "react-native@^0.63.3", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.47", "react-native@>=0.47.1", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.60.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>0.57.0":
   "integrity" "sha512-71wq13uNo5W8QVQnFlnzZ3AD+XgUBYGhpsxysQFW/hJ8GAt/J5o+Bvhy81FXichp6IBDJDh/JgfHH2gNji8dFA=="
   "resolved" "https://registry.yarnpkg.com/react-native/-/react-native-0.63.3.tgz"
   "version" "0.63.3"
@@ -8632,6 +8656,13 @@
   "version" "3.0.0"
   dependencies:
     "graceful-fs" "^4.1.2"
+
+"shaka-player@^2.5.9":
+  "integrity" "sha512-kW6sNMl36E4ookOcAo7//D/+sNkKNw7kBCR58AAC0eYw+fpVXwUbFoN/aqsj5nhACZ00QGQQajTZXZyK1s8Dow=="
+  "resolved" "https://registry.npmjs.org/shaka-player/-/shaka-player-2.5.18.tgz"
+  "version" "2.5.18"
+  dependencies:
+    "eme-encryption-scheme-polyfill" "^2.0.1"
 
 "shallow-clone@^1.0.0":
   "integrity" "sha512-oeXreoKR/SyNJtRJMAKPDSvd28OqEwG4eR/xc856cRGBII7gX9lvAqDxusPm0846z/w/hWYjI1NpKwJ00NHzRA=="

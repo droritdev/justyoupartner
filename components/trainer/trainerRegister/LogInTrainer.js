@@ -214,9 +214,9 @@ const styles = StyleSheet.create({
         //height: Dimensions.get('window').height * .2,
     },
     input: {
+        borderColor: 'deepskyblue',
+        borderRadius: 17,
         borderWidth: 2,
-        borderRadius: 10,
-        borderColor: 'grey',
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .075,
         alignSelf: 'center',

@@ -14,6 +14,12 @@ import {TrainingSiteContext} from '../../../context/trainerContextes/TrainingSit
 import {TrainingPriceContext} from '../../../context/trainerContextes/TrainingPriceContext';
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 import {PhoneContext} from '../../../context/trainerContextes/PhoneContext';
+import {MediaContext} from '../../../context/trainerContextes/MediaContext';
+
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
+
+
 
 //Pop up page which shows a Done picture and disaperes after 2 seconds
 const DonePopUpTrainer = ({navigation}) => {
@@ -35,6 +41,10 @@ const DonePopUpTrainer = ({navigation}) => {
     const {couplePriceOutdoor} = useContext(TrainingPriceContext);
     const {areaCode} = useContext(PhoneContext);
     const {phoneNumber} = useContext(PhoneContext);
+    const {mediaPictures} = useContext(MediaContext);
+    const {mediaVideos} = useContext(MediaContext);
+
+
 
     const config = {
         withCredentials: true,
@@ -43,6 +53,53 @@ const DonePopUpTrainer = ({navigation}) => {
           "Content-Type": "application/json",
         },
     };
+
+    const createUserFirebase = () =>{
+        auth()
+            .createUserWithEmailAndPassword(emailAddress, password)
+            .then((data) => {
+                console.log('User account created & signed in!');
+                const userRef = "/trainers/" + data.user.uid + "/"; 
+                uploadMedia(userRef);
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                }
+
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+            });
+    }
+
+
+    const uploadMedia = async (userRef) => {
+        for (let i = 0; i < mediaPictures.length; i++) {
+           uploadImage(userRef, mediaPictures[i].uri, i);
+        }   
+        for (let i = 0; i < mediaVideos.length; i++) {
+            uploadVideo(userRef, mediaVideos[i].uri, i);
+         }        
+    }
+
+    const uploadImage = async (userRef, imageUri, imageNum) => {
+        await storage().ref(userRef+"images/trainerImage"+imageNum).putFile(imageUri).then((snapshot) => {
+            console.log(snapshot);
+          })
+          .catch((e) => console.log("fail"));
+    }
+
+
+    const uploadVideo = async (userRef, videoUri, videoNum) => {
+        await storage().ref(userRef+"videos/trainerVideo"+videoNum).putFile(videoUri).then((snapshot) => {
+            console.log(snapshot);
+          })
+          .catch((e) => console.log("fail"));
+    }
+
 
     const registerTrainer = () => {
         axios  
@@ -78,6 +135,10 @@ const DonePopUpTrainer = ({navigation}) => {
             location: {
                 type: 'Point',
                 coordinates: [32.124602, 34.825223]
+            }, 
+            media: {
+                images: [] ,
+                videos: []
             }
         },
         config
@@ -89,11 +150,11 @@ const DonePopUpTrainer = ({navigation}) => {
     }
 
     //Automaticlly navigates to the WelcomeTrainer popUp page after 2 seconds (2 * 1000 mili seconds = 2 seconds)
-    setTimeout(() => 
-        navigation.navigate('WelcomeTrainer'), 3000
-    );
+    // setTimeout(() => 
+    //     navigation.navigate('WelcomeTrainer'), 3000
+    // );
 
-    setTimeout(() => registerTrainer(), 1000);
+    setTimeout(() => createUserFirebase(), 1000);
 
     return(
         <View style={styles.container}>

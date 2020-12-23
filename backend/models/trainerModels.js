@@ -1,5 +1,6 @@
 //Mongoose library to create new schemas
 const mongoose = require("mongoose");
+const { default: Video } = require("react-native-video");
 
 //Create new mongoose schema variable
 const Schema = mongoose.Schema;
@@ -54,9 +55,14 @@ const trainerProfileSchema = new Schema(
            trim: true,
            default: "Personal trainer"
        },
-    //    images: {
-    //        type: [images]
-    //    },
+       media: {
+            images: {
+                type: [String]
+            },
+            videos: {
+                type: [String]
+            }
+       },
        maximumDistance: {
            type: Number,
            required: true

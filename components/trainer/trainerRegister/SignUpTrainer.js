@@ -194,8 +194,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: 'deepskyblue',
-    borderRadius: 20,
-    borderWidth: 3,
+    borderRadius: 17,
+    borderWidth: 2,
     height: Dimensions.get('window').height * .08,
     marginRight: Dimensions.get('window').width * .0483,
     marginTop: Dimensions.get('window').height * .0088,

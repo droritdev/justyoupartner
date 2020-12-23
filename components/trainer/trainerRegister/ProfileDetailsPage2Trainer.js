@@ -110,6 +110,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Sets the minimum age to 18 every time
     useEffect (() => {
+      console.log("test info :" + profileImage);
       let date = new Date();
       let date2 = new Date();
       let currentYear = new Date().getFullYear();
@@ -514,8 +515,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               mode="date"
               onConfirm={(date) => handleConfirm(date)}
               onCancel={hideDatePicker}
-              minimumDate={minimumDate}
-              maximumDate={maximumDate}
+              maximumDate={new Date((maximumDate))}
+              minimumDate={new Date((minimumDate))}
               headerTextIOS="Pick a date - minimum 18"
             />
             {isBirthdayErrorMessage ? 
@@ -734,9 +735,9 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     nameAndImageContanier: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: Dimensions.get('window').width * .95,
+      width: Dimensions.get('window').width * .93,
       height: Dimensions.get('window').width * .15,
-      marginLeft: Dimensions.get('window').width * .045
+      marginLeft: Dimensions.get('window').width * .025
     },
     textInput: {
       marginTop: Dimensions.get('window').height * .032,
@@ -748,10 +749,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .025
     },
     profileImage: {
+      marginTop: Dimensions.get('window').height * .015,
       width: Dimensions.get('window').width * .200,
-      height: Dimensions.get('window').height * .11,
-      borderRadius: 5
+      height: Dimensions.get('window').height * .095,
+      overflow: 'hidden',
+      borderRadius: 70
     },
+
     nameErrorMessage: {
       alignSelf: 'center',
       marginTop: Dimensions.get('window').height * .040,
@@ -800,13 +804,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     birthdayPicked: {
       textAlign: 'center',
-      fontSize: 20,
-      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .025,
       marginLeft: Dimensions.get('window').width * .3
     },
     calendarIcon: {
-      height: Dimensions.get('window').height * .04,
-      width: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .045,
+      width: Dimensions.get('window').height * .045,
     },
     birthdayErrorMessage: {
       marginLeft: Dimensions.get('window').width * .0483,
@@ -886,7 +889,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       textAlign: 'left',
       marginLeft: Dimensions.get('window').width * .010,
       fontSize: Dimensions.get('window').height * .022,
-      fontWeight: 'bold',
     },
     categoryIcon: {
       height: Dimensions.get('window').height * .04,
