@@ -4,6 +4,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {AboutMeContext} from '../../../context/trainerContextes/AboutMeContext';
 
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+
+
 //Here The trainer user writes about him
 const AboutMeTrainer = ({navigation}) => {
     const {aboutMe, dispatchAboutMe} = useContext(AboutMeContext);
@@ -114,12 +118,10 @@ const AboutMeTrainer = ({navigation}) => {
               : null}
 
             <View style={styles.submitButtonContainer}>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+            <AppButton 
+                title="Submit"
+                onPress={handleSubmit}
+              />
           </View>
         </SafeAreaView>
     );

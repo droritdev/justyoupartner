@@ -14,10 +14,9 @@ import ProfileDetailsPage1Trainer from './components/trainer/trainerRegister/Pro
 import ProfileDetailsPage2Trainer from './components/trainer/trainerRegister/ProfileDetailsPage2Trainer';
 import PickCategoryTrainer from './components/trainer/trainerRegister/PickCategoryTrainer';
 import AboutMeTrainer from './components/trainer/trainerRegister/AboutMeTrainer';
+import AddressTrainer from './components/trainer/trainerRegister/AddressTrainer';
 import CertificationsTrainer from './components/trainer/trainerRegister/CertificationsTrainer';
 import PaymentsAndPolicyTrainer from './components/trainer/trainerRegister/PaymentsAndPolicyTrainer';
-import RegisteringAccountPopUpTrainer from './components/trainer/trainerRegister/RegisteringAccountPopUpTrainer';
-import DetailsSuccessfullyTrainer from './components/trainer/trainerRegister/DetailsSuccessfullyTrainer';
 import PhoneNumberVerificationTrainer from './components/trainer/trainerRegister/PhoneNumberVerificationTrainer';
 import DonePopUpTrainer from './components/trainer/trainerRegister/DonePopUpTrainer';
 import WelcomeTrainer from './components/trainer/trainerRegister/WelcomeTrainer';
@@ -65,7 +64,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator 
           screenOptions={{headerShown: false}}
-          initialRouteName='WelcomePopUp'
+          initialRouteName='ProfileDetailsPage2Trainer'
         >
           <Stack.Screen name='WelcomePopUp' component={WelcomePopUp} />
           <Stack.Screen name='GetStarted' component={GetStarted} />
@@ -77,11 +76,10 @@ const App = () => {
           <Stack.Screen name='ProfileDetailsPage2Trainer' component={ProfileDetailsPage2Trainer} />
           <Stack.Screen name="PickCategoryTrainer" component={PickCategoryTrainer} />
           <Stack.Screen name='AboutMeTrainer' component={AboutMeTrainer} />
+          <Stack.Screen name='AddressTrainer' component={AddressTrainer} />
           <Stack.Screen name='AddPhotosTrainer' component={AddPhotosTrainer} />
           <Stack.Screen name='CertificationsTrainer' component={CertificationsTrainer} />
           <Stack.Screen name='PaymentsAndPolicyTrainer' component={PaymentsAndPolicyTrainer} />
-          <Stack.Screen name='RegisteringAccountPopUpTrainer' component={RegisteringAccountPopUpTrainer} />
-          <Stack.Screen name='DetailsSuccessfullyTrainer' component={DetailsSuccessfullyTrainer} />
           <Stack.Screen name='PhoneNumberVerificationTrainer' component={PhoneNumberVerificationTrainer} />
           <Stack.Screen name='DonePopUpTrainer' component={DonePopUpTrainer} />
           <Stack.Screen name='WelcomeTrainer' component={WelcomeTrainer} />

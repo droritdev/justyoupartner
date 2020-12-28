@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import PickCategories from '../../globalComponents/PickCategories';
 import {CategoryContext} from '../../../context/trainerContextes/CategoryContext';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 const categoriesData = [
     { id: 1, label: 'HIT' },
@@ -70,14 +71,9 @@ const PickCategory = ({navigation}) => {
             <Text style={styles.justYouHeader}>Just You</Text>
             <Text style={styles.partnerText}>Partner</Text>
         </View>
-        <TouchableOpacity
-            onPress={handleArrowButton}
-        >
-            <Image
-              source={require('../../../images/arrowBack.png')}
-              style={styles.arrowImage}
-            />
-        </TouchableOpacity>
+        <ArrowBackButton
+          onPress={handleArrowButton}
+        />
         <Text style={styles.categoryTitle}>Choose your categories</Text>
         <View style={styles.searchContainer}>
             <View style={styles.serachRow}>
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
     },
     categoryTitle: {
         fontSize: Dimensions.get('window').height * .0278,
-        marginLeft: Dimensions.get('window').width * .0483,
+        alignSelf: 'center',
         marginTop: Dimensions.get('window').height * .022,
         fontWeight: 'bold'
     },

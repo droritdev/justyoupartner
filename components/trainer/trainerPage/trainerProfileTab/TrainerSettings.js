@@ -3,6 +3,7 @@ import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageB
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Dialog from "react-native-dialog";
 import {Accordion, Block} from 'galio-framework';
+import auth from '@react-native-firebase/auth';
 
 //The question and answers page
 const TrainerSettings = ({navigation}) => {
@@ -16,7 +17,9 @@ const TrainerSettings = ({navigation}) => {
 
     const handleYesDialog = () => {
         setDialogVisible(false);
-        navigation.navigate('TrainerProfilePage');
+        auth()
+        .signOut()
+        .then(() => console.log('User signed out!'));
     };
 
     const handleNoDialog = () => {

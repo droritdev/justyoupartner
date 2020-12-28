@@ -14,6 +14,9 @@ import {AboutThePlaceContext} from '../../../context/placeContextes/AboutThePlac
 import {CategoryContext} from '../../../context/placeContextes/CategoryContext';
 import {TrainingPriceContext} from '../../../context/placeContextes/TrainingPriceContext';
 
+import AppButton from '../../globalComponents/AppButton';
+
+
 //Here the place enters his: name, number, address, categories and images/videos
 const ProfileDetailsPage2Place = ({navigation}) => {
     const {emailAddress} = useContext(EmailContext);
@@ -331,12 +334,10 @@ const ProfileDetailsPage2Place = ({navigation}) => {
               : null}
             </View>
             <View style={styles.nextButtonContainer}>
-                <TouchableOpacity
-                style={styles.nextButton}
+            <AppButton 
+                title="Next"
                 onPress={handleNext}
-                >
-                <Text style={styles.nextButtonText}>NEXT</Text>
-                </TouchableOpacity>
+              />
             </View>
        </ScrollView> 
       </SafeAreaView>

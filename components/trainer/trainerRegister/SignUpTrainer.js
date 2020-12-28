@@ -4,6 +4,8 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 //Here the user enters his email address to verify his account
 const SignUpTrainer = ({navigation}) => {
@@ -118,14 +120,9 @@ const SignUpTrainer = ({navigation}) => {
   
     return(
         <SafeAreaView style={styles.container}>
-          <TouchableOpacity
-              onPress={handleArrowButton}
-          >
-              <Image
-                  source={require('../../../images/arrowBack.png')}
-                  style={styles.arrowImage}
-              />
-          </TouchableOpacity>
+          <ArrowBackButton
+            onPress={handleArrowButton}
+          />
           <Text style={styles.justYouHeader}>Just You</Text>
           <Text style={styles.signUpText}>Sign up and start searching</Text>
           <Text style={styles.inputTitle}>Email</Text>
@@ -144,12 +141,10 @@ const SignUpTrainer = ({navigation}) => {
               :null}   
           </View>
           <View style={styles.fotterContainer}>
-              <TouchableOpacity
-                  style={styles.nextButton}
-                  onPress={() => handleNext()}
-              >
-                  <Text style={styles.nextButtonText}>Next</Text>
-              </TouchableOpacity>
+            <AppButton 
+              title="Next"
+              onPress={handleNext}
+            />
             <View style={styles.alreadyHaveAccountContainer}>
               <Text style={styles.alreadyHaveAnAccountText}>Already have an account? </Text>
               <TouchableOpacity
@@ -190,7 +185,7 @@ const styles = StyleSheet.create({
   inputTitle: {
     marginTop: Dimensions.get('window').height * .066,
     fontSize: Dimensions.get('window').height * .022,
-    marginLeft: Dimensions.get('window').width * .0483,
+    marginLeft: Dimensions.get('window').width * .05,
   },
   textInput: {
     borderColor: 'deepskyblue',

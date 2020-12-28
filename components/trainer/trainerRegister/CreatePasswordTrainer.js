@@ -4,6 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 
+import AppButton from '../../globalComponents/AppButton';
+
+
 //Here the user creates his password
 const CreatePasswordTrainer = ({navigation}) => {
     const {password, dispatchPassword} = useContext(PasswordContext);
@@ -61,14 +64,14 @@ const CreatePasswordTrainer = ({navigation}) => {
             <Text style={styles.partnerText}>Partner</Text>
           </View>
           <View style={styles.passwordContainer}>
-            <Text style={styles.createPasswordText}>CREATE PASSWORD</Text>
+            <Text style={styles.createPasswordText}>Create Password</Text>
             <View style={styles.passwordInput}>
               <TextInput
                 value={passwordInput}
                 secureTextEntry={true}
                 style={{fontSize: 20}}
                 textAlign='center'
-                placeholder='PASSWORD'
+                placeholder='Password'
                 onChangeText={text => handleOnChangePassword(text)}
               />
             </View>
@@ -78,7 +81,7 @@ const CreatePasswordTrainer = ({navigation}) => {
                 secureTextEntry={true}
                 style={{fontSize: 20}}
                 textAlign='center'
-                placeholder='CONFIRM PASSWORD'
+                placeholder='Confirm password'
                 onChangeText={
                   text => handleOnChangeConfirmedPassword(text)}
               />
@@ -88,12 +91,10 @@ const CreatePasswordTrainer = ({navigation}) => {
           <Text style={styles.passwordsErrorText}>{passwordErrorText}</Text>
           :null}
           <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-              style={styles.nextButton}
-              onPress={handleNext}
-            >
-              <Text style={styles.nextButtonText}>NEXT</Text>
-            </TouchableOpacity>
+            <AppButton 
+                title="Next"
+                onPress={handleNext}
+              />
           </View>
         </SafeAreaView>
     );
@@ -131,18 +132,18 @@ const CreatePasswordTrainer = ({navigation}) => {
     },
     passwordInput: {
       borderColor: 'deepskyblue',
-      borderRadius: 10,
-      borderWidth: 3,
-      height: Dimensions.get('window').height * .09,
+      borderRadius: 17,
+      borderWidth: 2,
+      height: Dimensions.get('window').height * .08,
       width: Dimensions.get('window').width * .7,
       marginTop: Dimensions.get('window').height * .088,
       justifyContent: 'center'
     },
     confirmedPasswordInput: {
       borderColor: 'deepskyblue',
-      borderRadius: 10,
-      borderWidth: 3,
-      height: Dimensions.get('window').height * .09,
+      borderRadius: 17,
+      borderWidth: 2,
+      height: Dimensions.get('window').height * .08,
       width: Dimensions.get('window').width * .7,
       marginTop: Dimensions.get('window').height * .044,
       justifyContent: 'center'

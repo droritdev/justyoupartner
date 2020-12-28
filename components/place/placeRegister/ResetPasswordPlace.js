@@ -4,6 +4,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PasswordContext} from '../../../context/placeContextes/PasswordContext';
 
+import AppButton from '../../globalComponents/AppButton';
+
+
+
 //Here the user creates his password
 const ResetPasswordPlace = ({navigation}) => {
     const {password, dispatchPassword} = useContext(PasswordContext);
@@ -76,12 +80,10 @@ const ResetPasswordPlace = ({navigation}) => {
         <Text style={styles.passwordsErrorText}>{passwordErrorText}</Text>
         :null}
         <View style={styles.nextButtonContainer}>
-          <TouchableOpacity
-            style={styles.nextButton}
+          <AppButton 
+            title="Next"
             onPress={handleNext}
-          >
-            <Text style={styles.nextButtonText}>NEXT</Text>
-          </TouchableOpacity>
+          />
         </View>
       </SafeAreaView>
     );

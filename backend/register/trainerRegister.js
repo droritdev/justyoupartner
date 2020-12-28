@@ -37,6 +37,10 @@ exports.register = (req, res) => {
             location: {
                 type: req.body.location.type,
                 coordinates: req.body.location.coordinates
+            },
+            media : {
+                images: req.body.media.images,
+                videos: req.body.media.videos
             }
         }
     );

@@ -4,6 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
 import Dialog from "react-native-dialog";
 
+import AppButton from '../../globalComponents/AppButton';
+
+
 //Here the trainer adds his payment details and agrees to the app policy
 const PaymentsAndPolicyPlace = ({navigation}) => {
     const [cardNumber, setCardNumber] = useState("");
@@ -167,12 +170,10 @@ const PaymentsAndPolicyPlace = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.nextButtonContainer}>
-                <TouchableOpacity
-                    style={styles.nextButton}
-                    onPress={handleApprove}
-                >
-                    <Text style={styles.nextButtonText}>APPROVE</Text>
-                </TouchableOpacity>
+            <AppButton 
+                title="Approve"
+                onPress={handleApprove}
+              />
             </View>
         </SafeAreaView>
     );

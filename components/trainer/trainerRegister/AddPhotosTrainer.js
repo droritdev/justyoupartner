@@ -6,6 +6,10 @@ import Dialog from "react-native-dialog";
 import {MediaContext} from '../../../context/trainerContextes/MediaContext';
 import Video from 'react-native-video';
 
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+
+
 //Here the traniner add photos and videos to his profile
 const AddPhotosTrainer = ({navigation}) => {
     const {profileImage, dispatchProfileImage} = useContext(MediaContext);
@@ -256,14 +260,9 @@ const AddPhotosTrainer = ({navigation}) => {
                 </Dialog.Container>
             </View>
             <View style={styles.headerContainer}>
-                <TouchableOpacity
-                    onPress={handleArrowButton}
-                >
-                    <Image
-                        source={require('../../../images/arrowBack.png')}
-                        style={styles.arrowImage}
-                    />
-                </TouchableOpacity>
+            <ArrowBackButton
+                onPress={handleArrowButton}
+            />
                 <Text style={styles.mediaTitle}>Media</Text>
                 <TouchableOpacity
                     onPress={handleAPencilButton}
@@ -297,12 +296,10 @@ const AddPhotosTrainer = ({navigation}) => {
             {isError ?
                 <Text style={styles.errorMessage}>{errorMessage}</Text>
               : null}
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+            <AppButton 
+                title="Submit"
+                onPress={handleSubmit}
+              />
           </View>
         </SafeAreaView>
     );

@@ -9,8 +9,12 @@ import MultiSelect from 'react-native-multiple-select';
 import {Platform} from 'react-native';
 import {openSettings, check, checkNotifications, requestNotifications, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
-import PickCountry from '../../globalComponents/PickCountry';
 import {CountryContext} from '../../../context/trainerContextes/CountryContext';
+
+import PickCountry from '../../globalComponents/PickCountry';
+import AppButton from '../../globalComponents/AppButton';
+import FlipToggleButton from '../../globalComponents/FlipToggleButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 
 
@@ -203,14 +207,9 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
   
     return(
       <SafeAreaView style={styles.container}>
-          <TouchableOpacity
-            onPress={handleArrowButton}
-          >
-            <Image
-              source={require('../../../images/arrowBack.png')}
-              style={styles.arrowImage}
-            />
-          </TouchableOpacity>
+        <ArrowBackButton
+          onPress={handleArrowButton}
+        />
           <View style={styles.upperContainer}>
             <Text style={styles.profileDetailesText}>Profile Details</Text>
             <Text style={styles.fillTheFieldsText}>Please fill out all fields:</Text>
@@ -235,19 +234,9 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
             <View style={styles.permissionsSection}>
               <Text 
                 style={{fontWeight: 'bold', fontSize: 20}}
-              >Location</Text>
-              <FlipToggle
+              >Location</Text> 
+              <FlipToggleButton
                 value={isLocationPermission}
-                buttonHeight={30}
-                buttonWidth={70}
-                buttonRadius={40}
-                sliderWidth={35}
-                sliderHeight={30}
-                sliderRadius={50}
-                sliderOffColor={'slategray'}
-                sliderOnColor={'white'}
-                buttonOffColor={'lightgray'}
-                buttonOnColor={'deepskyblue'}
                 onToggle={(newState) => handleLocationToggleChange(newState)}
               />
             </View>
@@ -257,18 +246,8 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
               <Text 
                 style={{fontWeight: 'bold', fontSize: 20}}
               >Allow push notifications</Text>
-              <FlipToggle
+              <FlipToggleButton
                 value={isPushPermission}
-                buttonHeight={30}
-                buttonWidth={70}
-                buttonRadius={40}
-                sliderWidth={35}
-                sliderHeight={30}
-                sliderRadius={50}
-                sliderOffColor={'slategray'}
-                sliderOnColor={'white'}
-                buttonOffColor={'lightgray'}
-                buttonOnColor={'deepskyblue'}
                 onToggle={(newState) => handleNotificationsToggleChange(newState)}
               />
             </View>
@@ -280,12 +259,10 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
           <Text style={styles.permissionsErrorText}>Please allow both permissions to continue the registration</Text>
           :null}
           <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-              style={styles.nextButton}
+          <AppButton 
+              title="Next"
               onPress={handleNext}
-            >
-              <Text style={styles.nextButtonText}>NEXT</Text>
-            </TouchableOpacity>
+            />
           </View>
       </SafeAreaView>
     )

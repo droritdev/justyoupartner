@@ -2,6 +2,9 @@ import React, { useContext, useState } from 'react'
 import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import AppButton from '../../globalComponents/AppButton';
+
+
 //Page where the place verifies his phone/email before re-sets his password
 const ForgotPasswordPlace = ({navigation}) => {
     
@@ -74,12 +77,10 @@ const ForgotPasswordPlace = ({navigation}) => {
                 />
             </View>
             <View style={styles.nextButtonContainer}>
-                <TouchableOpacity
-                    style={styles.nextButton}
-                    onPress={handleNext}
-                >
-                    <Text style={styles.nextButtonText}>Next</Text>
-                </TouchableOpacity>
+            <AppButton 
+                title="Next"
+                onPress={handleNext}
+              />
             </View>
         </SafeAreaView>
     );

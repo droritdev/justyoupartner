@@ -4,6 +4,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
 import Dialog from "react-native-dialog";
 
+import AppButton from '../../globalComponents/AppButton';
+
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+
 //Here the trainer adds his payment details and agrees to the app policy
 const PaymentsAndPolicyTrainer = ({navigation}) => {
     const [cardNumber, setCardNumber] = useState("");
@@ -70,7 +74,7 @@ const PaymentsAndPolicyTrainer = ({navigation}) => {
             setIsAllfieldsFilled(true);
             setDialogVisible(false);
             setPaymentsErrorText(""); 
-            navigation.navigate('RegisteringAccountPopUpTrainer');
+            navigation.navigate('PhoneNumberVerificationTrainer');
         }
     }
 
@@ -84,14 +88,9 @@ const PaymentsAndPolicyTrainer = ({navigation}) => {
                 </Dialog.Container>
             </View>
             <View style={styles.headerContainer}>
-              <TouchableOpacity
+            <ArrowBackButton
                 onPress={handleArrowButton}
-              >
-                <Image
-                  source={require('../../../images/arrowBack.png')}
-                  style={styles.arrowImage}
-                />
-              </TouchableOpacity>
+            />
               <Text style={styles.profileDetailesText}>Profile Details</Text>
             </View>
             <View style={styles.paymentsAndPolicyContainer}>
@@ -167,12 +166,10 @@ const PaymentsAndPolicyTrainer = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.nextButtonContainer}>
-                <TouchableOpacity
-                    style={styles.nextButton}
-                    onPress={handleApprove}
-                >
-                    <Text style={styles.nextButtonText}>APPROVE</Text>
-                </TouchableOpacity>
+            <AppButton 
+              title="Approve"
+              onPress={handleApprove}
+            />
             </View>
         </SafeAreaView>
     );

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 //Here the user enters the verification code he recived to his mail address
 const EmailVerificationTrainer = ({navigation}) => {
@@ -120,14 +122,9 @@ const EmailVerificationTrainer = ({navigation}) => {
 
     return(
       <SafeAreaView style={styles.container}>
-        <TouchableOpacity
+        <ArrowBackButton
           onPress={handleArrowButton}
-        >
-          <Image
-            source={require('../../../images/arrowBack.png')}
-            style={styles.arrowImage}
-          />
-        </TouchableOpacity>
+        />
         <Text style={styles.verifyEmailTitle}>Verify email</Text>
         <Text style={styles.verifyEmailText}>We've sent a code to {<Text style={{color: 'deepskyblue'}}>{emailAddress}</Text>}. To continue, enter your code here bellow.</Text>
         <View style={styles.textInputContainer}>
@@ -151,12 +148,10 @@ const EmailVerificationTrainer = ({navigation}) => {
             </TouchableOpacity>
         </View>
         <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-                style={styles.nextButton}
-                onPress={handleNext}
-            >
-                <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
+          <AppButton 
+                  title="Next"
+                  onPress={handleNext}
+          />
         </View>
       </SafeAreaView>
     )
@@ -192,8 +187,8 @@ const EmailVerificationTrainer = ({navigation}) => {
     },
     textInput: {
         borderColor: 'deepskyblue',
-        borderRadius: 20,
-        borderWidth: 3,
+        borderRadius: 17,
+        borderWidth: 2,
         height: Dimensions.get('window').height * .08,
         marginRight: Dimensions.get('window').width * .0483,
         marginTop: Dimensions.get('window').height * .066,

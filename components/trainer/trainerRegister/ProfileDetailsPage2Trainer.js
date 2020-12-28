@@ -25,6 +25,10 @@ import {MaximumDistanceContext} from '../../../context/trainerContextes/MaximumD
 import {TrainingSiteContext} from '../../../context/trainerContextes/TrainingSiteContext';
 import {TrainingPriceContext} from '../../../context/trainerContextes/TrainingPriceContext';
 
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+import BirthdayPicker from '../../globalComponents/BirthdayPicker';
+
 //Here the trainer enters his: full name, images/videos, birthday, training categories, maximum distance to be fined, writes about him, certifications, at least one training site, and training prices
 const ProfileDetailsPage2Trainer = ({navigation}) => {
     const {emailAddress} = useContext(EmailContext);
@@ -45,7 +49,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     const [firstNameInput, setFirstNameInput] = useState("");
     const [lastNameInput, setLastNameInput] = useState("");
-    // const [profileImageSource, setProfileImageSource] = useState(require('../../images/profileImage.jpeg'));
     const [minimumDate, setMinimumDate] = useState("");
     const [maximumDate, setMaximumDate] = useState("");
     const [birthdaySelected, setBirthdaySelected] = useState("Set your birthday");
@@ -110,22 +113,24 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Sets the minimum age to 18 every time
     useEffect (() => {
-      console.log("test info :" + profileImage);
-      let date = new Date();
-      let date2 = new Date();
+      setIsNamesError(false);
       let currentYear = new Date().getFullYear();
       let currentMonth = new Date().getMonth();
       let currentDay = new Date().getDate();
-      date.setFullYear(currentYear - 120, currentMonth, currentDay)
-      date2.setFullYear(currentYear - 18, currentMonth, currentDay)
-      setMinimumDate(date);
-      setMaximumDate(date2);
+      setMaximumDate(new Date().setFullYear(currentYear - 18, currentMonth, currentDay));
+      setMinimumDate(new Date().setFullYear(currentYear - 120, currentMonth, currentDay));
     }, []);
     
     //Navigates back to the ProfileDetailsPage1Trainer
     const handleArrowButton = () => {
       navigation.navigate('ProfileDetailsPage1Trainer');
     }
+
+
+    const openAddressWindow = () => {
+      navigation.navigate('AddressTrainer');
+    }
+
 
     //Sets the firstName input to the value
     const handleOnChangeFirstName = (text) => {
@@ -321,7 +326,12 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Handle the next button press, if ok - saves all values states and navigates to the PaymentsAndPolicyTrainer page
     const handleNext = () => {
-      if(firstNameInput === "" && lastNameInput === ""){
+      if (profileImage === require('../../../images/profileImage.jpeg')) {
+        setIsNamesError(true);
+        setNameErrorMessage('Profile image is required');
+        scrollTo("profileImage");
+      }
+      else if(firstNameInput === "" && lastNameInput === ""){
         setIsNamesError(true);
         setNameErrorMessage('First and Last name are required');
         scrollTo("name");
@@ -446,14 +456,9 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     return(
       <SafeAreaView style={styles.safeArea}>
         <ScrollView ref={scrollRef} style={styles.container}>
-          <TouchableOpacity
-            onPress={handleArrowButton}
-          >
-            <Image
-              source={require('../../../images/arrowBack.png')}
-              style={styles.arrowImage}
-            />
-          </TouchableOpacity>
+        <ArrowBackButton
+          onPress={handleArrowButton}
+        />
           <Text style={styles.profileDetailesText}>Profile Details</Text>
             <View style={styles.upperContainer}>
               <View style={styles.nameAndImageContanier}>
@@ -618,18 +623,24 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           </View>
           <View style={styles.trainingSiteContainer}>
             <Text style={styles.trainingSiteText}>Training Site</Text>
-            <TextInput
-              style={styles.trainingSiteInput}
-              title='address'
-              placeholder='Primary Address'
-              onChangeText={(text) => handleOnChangeAddress1(text)}
-            /> 
-            <TextInput
-              style={styles.trainingSiteInput}
-              title='address'
-              placeholder='Secondary Address'
-              onChangeText={(text) => handleOnChangeAddress2(text)}
-            /> 
+            <TouchableOpacity onPress = {() => openAddressWindow()}>
+              <TextInput
+                style={styles.trainingSiteInput}
+                title='address'
+                placeholder='Primary Address'
+                pointerEvents="none"
+                // onChangeText={(text) => handleOnChangeAddress1(text)}
+              />    
+            </TouchableOpacity>
+            <TouchableOpacity onPress = {() => openAddressWindow()}>
+              <TextInput
+                style={styles.trainingSiteInput}
+                title='address'
+                placeholder='Secondary Address'
+                pointerEvents="none"
+                // onChangeText={(text) => handleOnChangeAddress2(text)}
+              /> 
+            </TouchableOpacity>
             {isTrainingSiteError ? 
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
             : null}                                                          
@@ -691,12 +702,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
             </View>
           </View>
           <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-              style={styles.nextButton}
+          <AppButton 
+              title="Next"
               onPress={handleNext}
-            >
-              <Text style={styles.nextButtonText}>NEXT</Text>
-            </TouchableOpacity>
+            />
           </View>
        </ScrollView>
       </SafeAreaView>
@@ -1068,11 +1077,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       backgroundColor: 'white'
     },
     singleText: {
+      marginTop: Dimensions.get('window').height * .005,
       fontSize: Dimensions.get('window').height * .022,
       color: 'white',
       fontWeight: 'bold'
     },
     singleTextLabeld: {
+      marginTop: Dimensions.get('window').height * .005,
       fontSize: Dimensions.get('window').height * .022,
       color: 'deepskyblue',
       fontWeight: 'bold'
@@ -1097,11 +1108,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center'
     },
     coupleText: {
+      marginTop: Dimensions.get('window').height * .005,
       fontSize: Dimensions.get('window').height * .022,
       color: 'deepskyblue',
       fontWeight: 'bold'
     },
     coupleTextLabeld: {
+      marginTop: Dimensions.get('window').height * .005,
       fontSize: Dimensions.get('window').height * .022,
       color: 'white',
       fontWeight: 'bold'

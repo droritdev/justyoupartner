@@ -4,6 +4,10 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import {CertificationsContext} from '../../../context/trainerContextes/CertificationsContext';
 
+import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+
+
 //Here The trainer user writes his certifications
 const CertificationsTrainer = ({navigation}) => {
     const {certifications, dispatchCertifications} = useContext(CertificationsContext);
@@ -86,14 +90,9 @@ const CertificationsTrainer = ({navigation}) => {
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
-                <TouchableOpacity
-                onPress={() => handleArrowButton()}
-                >
-                <Image
-                    source={require('../../../images/arrowBack.png')}
-                    style={styles.arrowImage}
-                />
-                </TouchableOpacity>
+            <ArrowBackButton
+                onPress={handleArrowButton}
+            />
                 <Text style={styles.profileDetailesText}>Certifications</Text>
             </View>
             <Text style={styles.shareYourCertifications}>Share certifications (up to {charLimit} chars):  {charsLength}</Text>
@@ -113,12 +112,10 @@ const CertificationsTrainer = ({navigation}) => {
               : null}
 
             <View style={styles.submitButtonContainer}>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+            <AppButton 
+                title="Submit"
+                onPress={handleSubmit}
+              />
           </View>
         </SafeAreaView>
     );

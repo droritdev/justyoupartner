@@ -1,14 +1,28 @@
 import React from 'react';
 import {StyleSheet, View, Text, Dimensions} from 'react-native';
 import axios from 'axios';
+import auth from '@react-native-firebase/auth';
 
 //Page 1 of the app, welcoming the user
 const WelcomePopUpTrainer = ({navigation}) => {
 
 
+    //Check if user is already logged in
+    //If logged -> move to home page
+    //If not -> move to get started
+    const checkIfUserLogged = () => {
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                navigation.navigate('WelcomeTrainer');
+            } else {
+                navigation.navigate('GetStarted');
+            }
+         });
+    }
 
-    //Aoutomaticlly navigates to the next page in 4 seconds (4 * 1000 milli secons = 4000)
-    setTimeout(() => navigation.navigate('GetStarted'), 4000);
+    //Automatically navigates to the next page in 4 seconds (4 * 1000 milli secons = 4000)
+    setTimeout(() => checkIfUserLogged(), 4000);
+
 
     return(
         <View style={styles.welcomePage1}>

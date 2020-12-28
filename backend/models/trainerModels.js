@@ -1,7 +1,5 @@
 //Mongoose library to create new schemas
 const mongoose = require("mongoose");
-const { default: Video } = require("react-native-video");
-
 //Create new mongoose schema variable
 const Schema = mongoose.Schema;
 

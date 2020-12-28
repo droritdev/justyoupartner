@@ -8,6 +8,9 @@ import {Dropdown} from 'react-native-material-dropdown'
 import PickCountry from '../../globalComponents/PickCountry';
 import {CountryContext} from '../../../context/placeContextes/CountryContext';
 
+import AppButton from '../../globalComponents/AppButton';
+
+
 //Here the user picks his country and grante the push and location pemissions
 const ProfileDetailsPage1Place = ({navigation}) => {
     const {country, dispatchCountry} = useContext(CountryContext);
@@ -173,12 +176,10 @@ const ProfileDetailsPage1Place = ({navigation}) => {
         <Text style={styles.permissionsErrorText}>Please allow both permissions to continue the registration</Text>
         :null}
         <View style={styles.nextButtonContainer}>
-          <TouchableOpacity
-            style={styles.nextButton}
-            onPress={handleNext}
-          >
-            <Text style={styles.nextButtonText}>NEXT</Text>
-          </TouchableOpacity>
+        <AppButton 
+          title="Next"
+          onPress={handleNext}
+        />
         </View>
       </SafeAreaView>
     )

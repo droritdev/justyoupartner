@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
 import axios from 'axios';
 
@@ -18,6 +18,8 @@ import {MediaContext} from '../../../context/trainerContextes/MediaContext';
 
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
+import * as Progress from 'react-native-progress';
+
 
 
 
@@ -44,6 +46,9 @@ const DonePopUpTrainer = ({navigation}) => {
     const {mediaPictures} = useContext(MediaContext);
     const {mediaVideos} = useContext(MediaContext);
 
+    var picturesURL = [];
+    var videosURL = [];
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const config = {
@@ -54,21 +59,34 @@ const DonePopUpTrainer = ({navigation}) => {
         },
     };
 
-    const createUserFirebase = () =>{
+
+
+    //Check if the upload to Firebase is finished
+    const checkFinishFirebaseUpload = () => {
+        if (mediaPictures.length === picturesURL.length && mediaVideos.length == videosURL.length) {
+            clearInterval(checkFinishInterval);
+            registerTrainer();
+        }
+    }
+
+
+
+    //Create Firebase user
+    const createUserFirebase = () => {
         auth()
             .createUserWithEmailAndPassword(emailAddress, password)
             .then((data) => {
                 console.log('User account created & signed in!');
-                const userRef = "/trainers/" + data.user.uid + "/"; 
+                const userRef = "/trainers/" + data.user.uid + "/";
                 uploadMedia(userRef);
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
+                    console.log('That email address is already in use!');
                 }
 
                 if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
+                    console.log('That email address is invalid!');
                 }
 
                 console.error(error);
@@ -76,31 +94,52 @@ const DonePopUpTrainer = ({navigation}) => {
     }
 
 
+    //Upload all media to firebase
     const uploadMedia = async (userRef) => {
         for (let i = 0; i < mediaPictures.length; i++) {
-           uploadImage(userRef, mediaPictures[i].uri, i);
+            uploadImage(userRef, mediaPictures[i].uri, i);
         }   
         for (let i = 0; i < mediaVideos.length; i++) {
             uploadVideo(userRef, mediaVideos[i].uri, i);
          }        
     }
 
+
+    //Upload image to firebase storage
     const uploadImage = async (userRef, imageUri, imageNum) => {
-        await storage().ref(userRef+"images/trainerImage"+imageNum).putFile(imageUri).then((snapshot) => {
-            console.log(snapshot);
-          })
+        let ref = storage().ref(userRef+"images/trainerImage"+imageNum+getFormat(imageUri));
+        await ref.putFile(imageUri).then((snapshot) => {
+            ref.getDownloadURL().then((url) => {
+                picturesURL.push(url);
+            })
+        })
           .catch((e) => console.log("fail"));
     }
 
 
+
+    //Upload video to firebase storage
     const uploadVideo = async (userRef, videoUri, videoNum) => {
-        await storage().ref(userRef+"videos/trainerVideo"+videoNum).putFile(videoUri).then((snapshot) => {
-            console.log(snapshot);
+        let ref = storage().ref(userRef+"videos/trainerVideo"+videoNum+getFormat(videoUri));
+        await ref.putFile(videoUri).then((snapshot) => {
+            ref.getDownloadURL().then((url) => {
+                videosURL.push(url);
+            })
           })
           .catch((e) => console.log("fail"));
     }
 
 
+
+    //Get file format (.jpg, .png, .mp4, etc)
+     const getFormat = (uri) => {
+         indexOfDot = uri.indexOf('.', uri.length-6);
+         return uri.slice(indexOfDot);
+     }
+
+
+
+    //Register trainer to mongodb
     const registerTrainer = () => {
         axios  
         .post('/trainers/register', {
@@ -137,32 +176,47 @@ const DonePopUpTrainer = ({navigation}) => {
                 coordinates: [32.124602, 34.825223]
             }, 
             media: {
-                images: [] ,
-                videos: []
+                images: picturesURL,
+                videos: videosURL
             }
         },
         config
         )
         .then((res) => {
-            navigation.navigate('WelcomeTrainer')
+            setIsLoading(false);
+            setTimeout(() => navigation.navigate('WelcomeTrainer'), 1570);
         })
         .catch((err) => alert(err.data));
     }
 
-    //Automaticlly navigates to the WelcomeTrainer popUp page after 2 seconds (2 * 1000 mili seconds = 2 seconds)
-    // setTimeout(() => 
-    //     navigation.navigate('WelcomeTrainer'), 3000
-    // );
 
-    setTimeout(() => createUserFirebase(), 1000);
+    //start account creating process
+    setTimeout(() => createUserFirebase(), 20);
+
+    //start interval to check if upload is done
+    var checkFinishInterval = setInterval(() => checkFinishFirebaseUpload(), 1000);
+   
 
     return(
         <View style={styles.container}>
-            <Image 
-                source={require('../../../images/doneImage.jpeg')}
-                style={styles.doneImage}
-            />
-            <Text style={styles.registeringText}>Done</Text>
+            {isLoading?            
+             <View>
+                <View style={styles.progressView}>
+                    <Progress.Circle size={Dimensions.get('window').height * .25} indeterminate={true} />
+                </View>
+                <View style={styles.loadingTextView}>
+                    <Text style={styles.registeringText}>Creating account...</Text>
+                </View>
+            </View>
+            : 
+            <View>
+                <Image 
+                    source={require('../../../images/doneImage.jpeg')}
+                    style={styles.doneImage}
+                />
+                <Text style={styles.registeringText}>Done</Text>
+            </View> 
+            }
         </View>
     );
 }
@@ -174,11 +228,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
+    loadingTextView: {
+        alignSelf: 'center',
+        marginTop: Dimensions.get('window').height * .020
+    },
+    progressView: {
+        alignSelf: 'center'
+    },
     registeringText: {
         fontWeight: 'bold',
-        fontSize: 40,
+        fontSize: Dimensions.get('window').height * .040,
         textAlign: 'center',
-        marginTop: 25
+        marginTop: Dimensions.get('window').height * .020
     },
     doneImage: {
         height: Dimensions.get('window').height * .25,

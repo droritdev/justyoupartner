@@ -4,6 +4,7 @@ import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {EmailContext} from '../../../context/placeContextes/EmailContext';
+import AppButton from '../../globalComponents/AppButton';
 
 //Here the user enters the verification code he recived to his mail address
 const EmailVerificationPlace = ({navigation}) => {
@@ -153,12 +154,10 @@ const EmailVerificationPlace = ({navigation}) => {
             </TouchableOpacity>
         </View>
         <View style={styles.nextButtonContainer}>
-            <TouchableOpacity
-                style={styles.nextButton}
-                onPress={() => handleNext()}
-            >
-                <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
+        <AppButton 
+                title="Next"
+                onPress={handleNext}
+              />
         </View>
      </SafeAreaView>
     )

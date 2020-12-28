@@ -6,6 +6,9 @@ import auth from '@react-native-firebase/auth';
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+
+
 //The log in page for exsisting users
 const LogInTrainer = ({navigation}) => {
     const {emailAddress, dispatchEmail} = useContext(EmailContext);
@@ -64,7 +67,8 @@ const LogInTrainer = ({navigation}) => {
             navigation.navigate('WelcomeTrainer');
         })
         .catch(error => {
-            alert("The user doesn't exist");
+            setErrorMessage("The account doesn't exist");
+            setIsErrorMessage(true);
         });
     }
 
@@ -74,7 +78,7 @@ const LogInTrainer = ({navigation}) => {
         setEmailAddressInput(text);
         setIsErrorMessage(false);
         let mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        if(mailformat.test(text)){
+        if(mailformat.test(text)) {
             setIsEmailValid(true);
         } else {
             setIsEmailValid(false);
@@ -127,14 +131,9 @@ const LogInTrainer = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity
+            <ArrowBackButton
                 onPress={handleArrowButton}
-            >
-                <Image
-                    source={require('../../../images/arrowBack.png')}
-                    style={styles.arrowImage}
-                />
-            </TouchableOpacity>
+            />
             <View style={styles.headerContainer}>
                 <Text style={styles.justYouTitle}>Just You</Text>
                 <Text style={styles.partnerText}>Partner</Text>

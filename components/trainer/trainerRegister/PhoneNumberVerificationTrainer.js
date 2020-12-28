@@ -5,6 +5,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PhoneContext} from '../../../context/trainerContextes/PhoneContext';
 import {CountryContext} from '../../../context/trainerContextes/CountryContext';
+import AppButton from '../../globalComponents/AppButton';
+
  
 //Here the user enters his full phone number (area code and phone number) and verify it with a code sent to his phone
 const PhoneNumberVerificationTrainer = ({navigation}) => {
@@ -287,12 +289,10 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
               {isNextError ?
               <Text style={styles.nextErrorMessage}>{nextErrorMessage}</Text>
               :null}
-                <TouchableOpacity
-                    style={styles.nextButton}
-                    onPress={() => handleNext()}
-                >
-                    <Text style={styles.nextButtonText}>Next</Text>
-                </TouchableOpacity>
+              <AppButton 
+                title="Next"
+                onPress={handleNext}
+              />
             </View>
         </SafeAreaView>
     );

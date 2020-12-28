@@ -18,6 +18,9 @@ import {MaximumDistanceContext} from '../../../../context/trainerContextes/Maxim
 import {TrainingSiteContext} from '../../../../context/trainerContextes/TrainingSiteContext';
 import {TrainingPriceContext} from '../../../../context/trainerContextes/TrainingPriceContext';
 
+import AppButton from '../../../globalComponents/AppButton';
+
+
 const TrainerEditProfile = ({navigation}) => {
 
     const {firstName, dispatchFirst} = useContext(NameContext);
@@ -670,12 +673,10 @@ const TrainerEditProfile = ({navigation}) => {
                     </View>
                 </View>
                 <View style={styles.nextButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.nextButton}
-                        onPress={() => handleOnApprovePressed()}
-                    >
-                        <Text style={styles.nextButtonText}>APPROVE</Text>
-                    </TouchableOpacity>
+                <AppButton 
+                     title="Approve"
+                     onPress={handleOnApprovePressed}
+                />
                 </View>
             </ScrollView>
         </SafeAreaView>
