@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import {FlatList, StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {TrainingSite} from '../../../context/trainerContextes/TrainingSiteContext';
+import {TrainingSiteContext} from '../../../context/trainerContextes/TrainingSiteContext';
 
-import AppButton from '../../globalComponents/AppButton';
 import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 import MapView, { Marker }  from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -12,8 +11,20 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
 
+
+
+var API_KEY = 'AIzaSyAKKYEMdjG_Xc6ZuvyzxHBi1raltggDA2c'; // TODO: move api key to .env
+Geocoder.init(API_KEY); // use a valid API key
+
+
 //Here The trainer user writes about him
-const AddressTrainer = ({navigation}) => {
+const AddressTrainer = ({navigation, route}) => {
+    const type = route.params.type;
+    const {dispatchTrainingSite1} = useContext(TrainingSiteContext);
+    const {dispatchTrainingSite2} = useContext(TrainingSiteContext);
+    const {dispatchCoordinates1} = useContext(TrainingSiteContext);
+    const {dispatchCoordinates2} = useContext(TrainingSiteContext);
+
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     const [latitudeDelta, setLatitudeDelta] = useState(0);
@@ -21,7 +32,9 @@ const AddressTrainer = ({navigation}) => {
     const [listData, setListData] = useState({});
     const [inputText, setInputText] = useState("");
     const [locationTitle, setLocationTitle] = useState("");
+    const [locationCoordinates, setLocationCoordinates] = useState([]);
     const [isSubmitOn, setIsSubmitOn] = useState("none");
+    const [markerLocation, setMarkerLocation] = useState({latitude: 0, longitude: 0});
 
 
     //Navigates back to the ProfileDetailsPage1Trainer
@@ -34,17 +47,23 @@ const AddressTrainer = ({navigation}) => {
     const searchLocation = async (text) => {
         setInputText(text);
         setIsSubmitOn('none');
-        axios
-          .request({
-            method: 'post',
-            url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`,
-          })
-          .then((response) => {
-            setListData(response.data.predictions);
-          })
-          .catch((e) => {
-            console.log(e.response);
-          });
+
+        if(text === "") {
+            setListData({});
+            showUserCurrentLocation();
+        } else {
+            axios
+            .request({
+                method: 'post',
+                url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`,
+            })
+            .then((response) => {
+                setListData(response.data.predictions);
+            })
+            .catch((e) => {
+                console.log(e.response);
+            });
+        }
     };
 
 
@@ -60,7 +79,9 @@ const AddressTrainer = ({navigation}) => {
         .then(json => {
             var location = json.results[0].geometry.location;
             setZoomedLocation(location.lat, location.lng);
+            setMarkerLocation({latitude: location.lat, longitude: location.lng});
             setLocationTitle(text);
+            setLocationCoordinates([location.lat, location.lng]);
             setIsSubmitOn('flex');
         })
         .catch(error => console.warn(error));
@@ -83,15 +104,51 @@ const AddressTrainer = ({navigation}) => {
     const showUserCurrentLocation = () => {
         Geolocation.getCurrentPosition(info => {
             setZoomedLocation(info.coords.latitude, info.coords.longitude);
+            Geocoder.from(info.coords.latitude, info.coords.longitude)
+            .then(json => {
+                var address = json.results[0].formatted_address;
+                setLocationTitle(address);
+                setLocationCoordinates([info.coords.latitude, info.coords.longitude]);
+                setIsSubmitOn('flex');   
+		    })
+		.catch(error => console.warn(error));
+
         });
     }
 
 
 
+
+    //Save user address and coordinates to dispatch
     const handleSubmit = () => {
+        if (locationTitle !== "") {
+            if (type === 1) {
+                dispatchTrainingSite1({
+                    type: 'SET_TRAINING_SITE_1',
+                    trainingSite1: locationTitle
+                });
 
+                dispatchCoordinates1({
+                    type: 'SET_COORDINATES_1',
+                    coordinates1: locationCoordinates
+                });
+
+                navigation.navigate('ProfileDetailsPage2Trainer');
+            } else if (type === 2) {
+                dispatchTrainingSite2({
+                    type: 'SET_TRAINING_SITE_2',
+                    trainingSite2: locationTitle
+                });
+
+                dispatchCoordinates2({
+                    type: 'SET_COORDINATES_2',
+                    coordinates2: locationCoordinates
+                });
+
+                navigation.navigate('ProfileDetailsPage2Trainer');
+            }
+        }
     }
-
 
 
     //Show user current location when map is first loaded
@@ -118,7 +175,7 @@ const AddressTrainer = ({navigation}) => {
                 showsUserLocation={true}   
             >
                 <Marker
-                    coordinate={{ latitude : latitude , longitude : longitude }}
+                    coordinate={markerLocation}
                     title={locationTitle}
                     pinColor = {'red'}
                 />   
@@ -131,14 +188,19 @@ const AddressTrainer = ({navigation}) => {
             </View>
 
             <View style={styles.searchBarContainer}>
-                <TextInput
-                    style={styles.searchBar}
-                    placeholder={'Search your address'}
-                    placeholderTextColor={'grey'}
-                    placeholderStyle={styles.placeholderStyle}
-                    onChangeText={(text)=>searchLocation(text)}
-                    value={inputText}
-                />
+                <View style={styles.searchBar}>
+                    <Image
+                        source={require('../../../images/locationIcon.png')}
+                        style={styles.locationIcon}
+                    />
+                    <TextInput
+                        style={styles.textStyle}
+                        placeholder={'Search your address'}
+                        placeholderTextColor={'grey'}
+                        onChangeText={(text)=>searchLocation(text)}
+                        value={inputText}
+                    />                 
+                </View>
                 <FlatList
                     data={listData}
                     renderItem={({item, index}) => {
@@ -156,8 +218,8 @@ const AddressTrainer = ({navigation}) => {
                 />
             </View> 
             <View display={isSubmitOn} style={styles.sumbitContainer}>
-                <Text style={styles.locationTitle}> {locationTitle.slice(0, locationTitle.indexOf(','))} </Text> 
-                <Text style={styles.locationTitle}> {locationTitle.slice(locationTitle.indexOf(',')+1)}</Text> 
+                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(0, locationTitle.indexOf(',')) : locationTitle} </Text> 
+                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(locationTitle.indexOf(',')+1) : ""}</Text> 
                 <TouchableOpacity
                     style={styles.submitButtonContainer}
                     onPress={handleSubmit}
@@ -187,26 +249,46 @@ const styles = StyleSheet.create({
         width: '100%' 
     },
     searchBar: {
+        flexDirection: 'row',
+        paddingLeft: Dimensions.get('window').width * .01,
         borderRadius: 17,
         marginTop: Dimensions.get('window').height * .1,
-        marginLeft: Dimensions.get('window').width * .02,
-        marginRight: Dimensions.get('window').width * .02,
+        marginLeft: Dimensions.get('window').width * .05,
+        marginRight: Dimensions.get('window').width * .05,
         color: 'black',
-        borderColor: 'deepskyblue',
         backgroundColor: 'white',
         opacity: 0.8,
-        borderWidth: 1,
         height: Dimensions.get('window').height * .05,
-        fontSize: Dimensions.get('window').height * .02,
+        zIndex: 1,
+        shadowColor: "black",
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
       },
-      placeholderStyle: {
-        alignSelf: 'center',
+    textStyle: {
+        flex: 1,
+        paddingLeft: Dimensions.get('window').width * .03,
+        marginTop: Dimensions.get('window').height * .01,
+        fontSize: Dimensions.get('window').height * .02,
     },
     searchResultsContainer: {
-        width: Dimensions.get('window').width * 0.95,
+        width: Dimensions.get('window').width * 0.85,
         alignSelf: 'center',
         backgroundColor: 'white',
         opacity: 0.8,
+        zIndex: 1,
+        shadowColor: "black",
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
     },
     resultItem: {
         height: Dimensions.get('window').height * 0.05,
@@ -217,14 +299,23 @@ const styles = StyleSheet.create({
     sumbitContainer: {
         position: 'absolute',
         height: Dimensions.get('window').height * 0.15,
-        width: Dimensions.get('window').width * 0.55,
+        width: Dimensions.get('window').width * 0.75,
         backgroundColor: 'white',
-        opacity: 0.8,
         alignSelf: 'center',
         borderRadius: 17,
         bottom: 0,
         marginBottom: Dimensions.get('window').height * 0.05,
-        zIndex: 1
+        zIndex: 1,
+        opacity: 0.8,
+        shadowColor: "black",
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        
+        elevation: 12,
     },
     locationTitle: {
         marginTop: Dimensions.get('window').height * 0.01,
@@ -245,7 +336,14 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * 0.030,
         fontWeight: 'bold',
         color: 'white'
-    }
+    },
+    locationIcon: {
+        marginLeft: Dimensions.get('window').width * 0.02,
+        marginTop: Dimensions.get('window').height * 0.01,
+        width: Dimensions.get('window').width * .07,
+        height: Dimensions.get('window').height * .035,
+        resizeMode: 'stretch',
+    },
 });
 
 export default AddressTrainer;

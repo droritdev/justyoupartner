@@ -26,6 +26,12 @@ const PickCategory = ({navigation}) => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [items, setItems] = useState(categoriesData);
 
+
+    useEffect(() => {
+        
+    }, [])
+
+    //Navigate user back to profile details page
     const handleArrowButton = () => {
         navigation.navigate('ProfileDetailsPage2Trainer');
     }
@@ -42,6 +48,7 @@ const PickCategory = ({navigation}) => {
             navigation.navigate('ProfileDetailsPage2Trainer');
         }
     }
+
 
     //When the user chooses category it whill be displayed on the input bellow
     const handleOnItemPress = (item) => {
@@ -64,6 +71,9 @@ const PickCategory = ({navigation}) => {
             setItems(categoriesData);
         }
     }
+
+
+ 
   
     return(
       <SafeAreaView style={styles.container}>

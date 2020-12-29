@@ -65,14 +65,6 @@ const trainerProfileSchema = new Schema(
            type: Number,
            required: true
        },
-       trainingSite1: {
-           type: String,
-           default: "Outdoor"
-       },
-       trainingSite2: {
-            type: String,
-            default: "Outdoor"
-       },
        prices: {
            single: {
                singleAtTrainer: {
@@ -158,15 +150,23 @@ const trainerProfileSchema = new Schema(
            ]
        },
        location: {
-           type: {
-               type: String,
-               enum: ['Point']
-           },
-           coordinates: {
-               type: [Number],
-               index: '2dsphere'
-           }
-       }
+            trainingSite1: {
+                address: {
+                    type: String
+                },
+                coordinates: {
+                    type: [Number]
+                }
+            },
+            trainingSite2: {
+                address: {
+                    type: String
+                },
+                coordinates: {
+                    type: [Number]
+                }
+            }
+        },
     }, 
     {
         timestamps: true,

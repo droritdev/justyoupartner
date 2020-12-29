@@ -90,14 +90,9 @@ const AboutMeTrainer = ({navigation}) => {
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
-                <TouchableOpacity
-                onPress={() => handleArrowButton()}
-                >
-                <Image
-                    source={require('../../../images/arrowBack.png')}
-                    style={styles.arrowImage}
+                <ArrowBackButton
+                    onPress={handleArrowButton}
                 />
-                </TouchableOpacity>
                 <Text style={styles.profileDetailesText}>About Me</Text>
             </View>
             <Text style={styles.writeAboutYourselfTitle}>Write about yourself (up to {charLimit} chars):  {charsLength}</Text>

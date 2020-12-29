@@ -40,12 +40,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     const {aboutMe} = useContext(AboutMeContext);
     const {certifications} = useContext(CertificationsContext);
     const {dispatchMaximumDistance} = useContext(MaximumDistanceContext);
-    const {dispatchTrainingSite1} = useContext(TrainingSiteContext);
-    const {dispatchTrainingSite2} = useContext(TrainingSiteContext);
+    const {trainingSite1, dispatchTrainingSite1} = useContext(TrainingSiteContext);
+    const {trainingSite2, dispatchTrainingSite2} = useContext(TrainingSiteContext);
     const {dispatchSingleAtTrainer} = useContext(TrainingPriceContext);
     const {dispatchSingleOutdoor} = useContext(TrainingPriceContext);
     const {dispatchCoupleAtTrainer} = useContext(TrainingPriceContext);
     const {dispatchCoupleOutdoor} = useContext(TrainingPriceContext);
+
 
     const [firstNameInput, setFirstNameInput] = useState("");
     const [lastNameInput, setLastNameInput] = useState("");
@@ -57,8 +58,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     const [aboutMeInput, setAboutMeInput] = useState("");
     const [certificationsInput, setCertificationsInput] = useState("");
     const [sliderValue, setSliderValue] = useState("1 MILES");
-    const [address1, setAddress1] = useState("");
-    const [address2, setAddress2] = useState("");
     const [isSingle, setIsSingle] = useState(true);
     const [singleAtTrainerInput, setSingleAtTrainerInput] = useState("");
     const [singleOutdoorInput, setSingleOutdoorInput] = useState("");
@@ -127,8 +126,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     }
 
 
-    const openAddressWindow = () => {
-      navigation.navigate('AddressTrainer');
+    const openAddressWindow = (type) => {
+      navigation.navigate('AddressTrainer', {type: type});
     }
 
 
@@ -212,34 +211,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       setIsPriceError(false);
       setSliderValue(value+" MILE");
       setMaxDistanceSelected(value);
-    }
-
-    //Sets the first address to the value
-    const handleOnChangeAddress1 = (text) => {
-      setIsNamesError(false);
-      setIsFirstNamesError(false);
-      setIsLastNamesError(false);
-      setIsBirthdayErrorMessage(false);
-      setIsCategoryError(false);
-      setIsAboutMeError(false);
-      setIsCertificationError(false);
-      setIsTrainingSiteError(false);
-      setIsPriceError(false);
-      setAddress1(text);
-    }
-
-    //Sets the second address to the value
-    const handleOnChangeAddress2 = (text) => {
-      setIsNamesError(false);
-      setIsFirstNamesError(false);
-      setIsLastNamesError(false);
-      setIsBirthdayErrorMessage(false);
-      setIsCategoryError(false);
-      setIsAboutMeError(false);
-      setIsCertificationError(false);
-      setIsTrainingSiteError(false);
-      setIsPriceError(false);
-      setAddress2(text);
     }
 
     //sets the training at the trainer price to the value - by the type of: single/couple
@@ -366,7 +337,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
         setIsCertificationError(true);
         scrollTo("certifications");
       }
-      else if(address1 === "" && address2 === ""){
+      else if(trainingSite1 === "" && trainingSite2 === ""){
         setTrainingSiteErrorMessage("Enter at least one training site");
         setIsTrainingSiteError(true);
       }
@@ -395,16 +366,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           maximumDistnace: maxDistanceSelected
         });
 
-        if(address1 !== ""){
+        if(trainingSite1 !== ""){
           dispatchTrainingSite1({
             type: 'SET_TRAINING_SITE_1',
-            trainingSite1: address1
+            trainingSite1: trainingSite1
           });
         }
-        if(address1 !== ""){
+        if(trainingSite2 !== ""){
           dispatchTrainingSite2({
             type: 'SET_TRAINING_SITE_2',
-            trainingSite2: address2
+            trainingSite2: trainingSite2
           });
         }
         
@@ -623,22 +594,22 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           </View>
           <View style={styles.trainingSiteContainer}>
             <Text style={styles.trainingSiteText}>Training Site</Text>
-            <TouchableOpacity onPress = {() => openAddressWindow()}>
+            <TouchableOpacity onPress = {() => openAddressWindow(1)}>
               <TextInput
                 style={styles.trainingSiteInput}
                 title='address'
                 placeholder='Primary Address'
                 pointerEvents="none"
-                // onChangeText={(text) => handleOnChangeAddress1(text)}
+                value = {trainingSite1 === "" ? "" : trainingSite1}
               />    
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => openAddressWindow()}>
+            <TouchableOpacity onPress = {() => openAddressWindow(2)}>
               <TextInput
                 style={styles.trainingSiteInput}
                 title='address'
                 placeholder='Secondary Address'
                 pointerEvents="none"
-                // onChangeText={(text) => handleOnChangeAddress2(text)}
+                value = {trainingSite2 === "" ? "" : trainingSite2}
               /> 
             </TouchableOpacity>
             {isTrainingSiteError ? 
@@ -1034,7 +1005,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
-      fontSize: Dimensions.get('window').height * .022,
+      fontSize: Dimensions.get('window').height * .017,
       textAlign: 'center'
     },
     trainingSiteErrorText: {

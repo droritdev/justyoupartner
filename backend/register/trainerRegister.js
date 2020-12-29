@@ -35,8 +35,14 @@ exports.register = (req, res) => {
                 phoneNumber: req.body.phone.phoneNumber
             },
             location: {
-                type: req.body.location.type,
-                coordinates: req.body.location.coordinates
+                trainingSite1: {
+                    address: req.body.location.trainingSite1.address,
+                    coordinates: req.body.location.trainingSite1.coordinates
+                },
+                trainingSite2: {
+                    address: req.body.location.trainingSite2.address,
+                    coordinates: req.body.location.trainingSite2.coordinates
+                }
             },
             media : {
                 images: req.body.media.images,

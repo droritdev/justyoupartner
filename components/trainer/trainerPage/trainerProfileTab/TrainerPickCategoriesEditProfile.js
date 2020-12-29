@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import PickCategories from '../../../globalComponents/PickCategories';
 import {CategoryContext} from '../../../../context/trainerContextes/CategoryContext';
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 
 const categoriesData = [
     { id: 1, label: 'HIT' },
@@ -19,44 +20,45 @@ const categoriesData = [
 
 const TrainerPickCategoriesEditProfile = ({navigation}) => {
     const {categories, dispatchCategories} = useContext(CategoryContext);
+    const [isError, setIsError] = useState(false); 
+    const [errorMessage ,setErrorMessage] = useState("");
 
-    const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [items, setItems] = useState(categoriesData);
 
-    const [isCategoryError, setIsCategoryError] = useState(false);
-    const [categoryErrorMessage, setCategoryErrorMessage] = useState("Pick at least 1 category")
 
-    // useEffect(() => {
-    //     for(let i = 0; i < categories.length; i++){
-    //         let item = categoriesData.filter((category) => category.label === categories[i]);
-    //         alert("hey");
-    //         setSelectedCategories(selectedCategories => [...selectedCategories, item]);
-    //     }
-    // },[]);
+    useEffect(() => {
+        
+    }, [])
 
+    //Navigate user back to profile details page
     const handleArrowButton = () => {
-        if(selectedItems.length > 0){
+        navigation.navigate('TrainerEditProfile');
+    }
+
+    const handleSubmit = () => {
+        if (selectedItems.length == 0) {
+            setIsError(true);
+            setErrorMessage('Select at least one category');
+        } else {
             dispatchCategories({
                 type: 'SET_CATEGORIES',
                 categories: selectedItems
             });
             navigation.navigate('TrainerEditProfile');
         }
-        else{
-            setIsCategoryError(true);
-        }
     }
+
 
     //When the user chooses category it whill be displayed on the input bellow
     const handleOnItemPress = (item) => {
-        setIsCategoryError(false);
         if(selectedItems.includes(item.label)){
           let index = selectedItems.indexOf(item.label);
           selectedItems.splice(index, 1);
           setSelectedItems(selectedItems.filter(element => element !== item.label));
         }
         else{
+          setIsError(false);
           setSelectedItems(selectedItems => [...selectedItems, item.label]);
         }
     }
@@ -69,6 +71,9 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
             setItems(categoriesData);
         }
     }
+
+
+ 
   
     return(
       <SafeAreaView style={styles.container}>
@@ -76,42 +81,42 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
             <Text style={styles.justYouHeader}>Just You</Text>
             <Text style={styles.partnerText}>Partner</Text>
         </View>
-        <TouchableOpacity
-            onPress={handleArrowButton}
-        >
-            <Image
-              source={require('../../../../images/arrowBack.png')}
-              style={styles.arrowImage}
-            />
-        </TouchableOpacity>
+        <ArrowBackButton
+          onPress={handleArrowButton}
+        />
         <Text style={styles.categoryTitle}>Choose your categories</Text>
-        <View style={styles.categoryAndErrorContainer}>
-            <View style={styles.searchContainer}>
-                <View style={styles.serachRow}>
-                    <Image
-                        source={require('../../../../images/searchIcon.png')}
-                        style={styles.searchIcon}
-                    />
-                    <TextInput
-                        placeholder="Search category"
-                        style={styles.textInputStyle}
-                        onChangeText={(text) => handleOnInputChange(text)}
-                    />
-                </View>
+        <View style={styles.searchContainer}>
+            <View style={styles.serachRow}>
+                <Image
+                    source={require('../../../../images/searchIcon.png')}
+                    style={styles.searchIcon}
+                />
+                <TextInput
+                    placeholder="Search by category"
+                    style={styles.textInputStyle}
+                    onChangeText={(text) => handleOnInputChange(text)}
+                />
             </View>
-            {isCategoryError ? 
-                <Text style={styles.categoryErrorMessage}>{categoryErrorMessage}</Text>
-            : null}
         </View>
         <View style={styles.categoryPickerContainer}>
             <View style={styles.categorySelect}>
                 <PickCategories
-                    value={selectedCategories}
                     data={items}
                     onItemPress={(item) => handleOnItemPress(item)}
                 />
             </View>
         </View>
+        {isError ?
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+              : null}
+        <View style={styles.submitButtonContainer}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
       </SafeAreaView>
     );
 }
@@ -125,25 +130,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     justYouHeader: {
-        fontSize: 30,
+        fontSize: Dimensions.get('window').height * .033,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: Dimensions.get('window').height * .022
     },
     arrowImage: {
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * .0483
     },
     categoryTitle: {
-        fontSize: 25,
-        marginLeft: 20,
-        marginTop: 20,
+        fontSize: Dimensions.get('window').height * .0278,
+        alignSelf: 'center',
+        marginTop: Dimensions.get('window').height * .022,
         fontWeight: 'bold'
-    },
-    categoryAndErrorContainer: {
-        height: Dimensions.get('window').height * .09,
     },
     searchContainer: {
         borderWidth: 2,
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .06,
         alignSelf: 'center',
-        marginTop: 15,
+        marginTop: Dimensions.get('window').height * .018,
         justifyContent: 'center'
     },
     serachRow: {
@@ -163,17 +165,12 @@ const styles = StyleSheet.create({
     searchIcon: {
         height: Dimensions.get('window').height * .04,
         width: Dimensions.get('window').width * .09,
-        marginLeft: 10,
+        marginLeft: Dimensions.get('window').width * .0241,
     },
     textInputStyle: {
-        marginLeft: 15,
-        fontSize: 20,
+        marginLeft: Dimensions.get('window').width * .0362,
+        fontSize: Dimensions.get('window').height * .022,
         justifyContent: 'center'
-    },
-    categoryErrorMessage: {
-        color: 'red',
-        textAlign: 'center',
-        marginTop: 5
     },
     categoryPickerContainer: {
         alignItems: 'center',
@@ -181,8 +178,31 @@ const styles = StyleSheet.create({
     },
     categorySelect: {
         width: Dimensions.get('window').width * .9,
-        marginTop: 30
+        marginTop: Dimensions.get('window').height * .033
     },
+    submitButtonContainer: {
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .3,
+        alignItems: 'center'
+      },
+    submitButton: {
+        width: Dimensions.get('window').width * .9,
+        height: Dimensions.get('window').height * .065,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'deepskyblue',
+        borderRadius: 20
+      },
+      submitButtonText: {
+        fontSize: Dimensions.get('window').height * .0278,
+        fontWeight: 'bold',
+        color: 'white'
+      },
+      errorMessage: {
+        marginLeft: Dimensions.get('window').width * .0483,
+        color: 'red'
+      },
 });
 
 export default TrainerPickCategoriesEditProfile;

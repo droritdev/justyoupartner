@@ -3,15 +3,16 @@ import {SafeAreaView, StyleSheet, View, Text, Image, Dimensions} from 'react-nat
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import Dialog from "react-native-dialog";
-import {MediaContext} from '../../../context/trainerContextes/MediaContext';
+import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import Video from 'react-native-video';
 
-import AppButton from '../../globalComponents/AppButton';
-import ArrowBackButton from '../../globalComponents/ArrowBackButton';
+import AppButton from '../../../globalComponents/AppButton';
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+import FastImage from 'react-native-fast-image';
 
 
 //Here the traniner add photos and videos to his profile
-const AddPhotosTrainer = ({navigation}) => {
+const TrainerEditMedia = ({navigation}) => {
     const {profileImage, dispatchProfileImage} = useContext(MediaContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
@@ -39,7 +40,7 @@ const AddPhotosTrainer = ({navigation}) => {
 
     //Navigates back to the profile details page
     const handleArrowButton = () => {
-        navigation.navigate('ProfileDetailsPage2Trainer');
+        navigation.navigate('TrainerEditProfile');
     }
 
     const handleAPencilButton = () => {
@@ -64,22 +65,9 @@ const AddPhotosTrainer = ({navigation}) => {
                 type: 'SET_MEDIA_VIDEOS',
                 mediaVideos: videos
             });
-            navigation.navigate('ProfileDetailsPage2Trainer');
+            navigation.navigate('TrainerEditProfile');
         }
     }
-
-
-    const uploadTest = async (uri, i) => {
-      await storage().ref("/alot/test"+i).putFile(uri).then((snapshot) => {
-          console.log(snapsoht);
-        })
-        .catch((e) => alert("fail"));
-    }
-
-    // for (let i = 0; i < pictures; i++) {
-    //     uploadTest(pictures[i].uri, i);
-    // }
-
 
     //Show image picker with crop and set image to the cropped image
     const handleImage = (index) => {
@@ -195,19 +183,25 @@ const AddPhotosTrainer = ({navigation}) => {
                     <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
                     >
-                        <Image
-                            source={pictures[i]}
+                        <FastImage
                             style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            key={i}
+                            source={{
+                            uri: pictures[i],
+                            priority: FastImage.priority.normal,
+                            }}
+                            resizeMode={FastImage.resizeMode.stretch}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("pic", i+1) : handleImage(i+1)}
                     >
-                        <Image
-                            source={pictures[i+1]}
+                        <FastImage
                             style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            key={i+1}
+                            source={{
+                            uri: pictures[i+1],
+                            priority: FastImage.priority.normal,
+                            }}
+                            resizeMode={FastImage.resizeMode.stretch}
                         />
                     </TouchableOpacity>
                 </View>
@@ -265,12 +259,12 @@ const AddPhotosTrainer = ({navigation}) => {
             <ArrowBackButton
                 onPress={handleArrowButton}
             />
-                <Text style={styles.mediaTitle}>Media</Text>
+                <Text style={styles.mediaTitle}>Edit Media</Text>
                 <TouchableOpacity
                     onPress={handleAPencilButton}
                 >
                     <Image
-                        source={require('../../../images/pencil.png')}
+                        source={require('../../../../images/pencil.png')}
                         style={styles.pencilImage}
                     />
                 </TouchableOpacity>
@@ -433,4 +427,4 @@ const styles = StyleSheet.create ({
       
 });
 
-export default AddPhotosTrainer;
+export default TrainerEditMedia;

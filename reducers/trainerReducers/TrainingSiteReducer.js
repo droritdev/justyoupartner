@@ -6,6 +6,14 @@ const TrainingSiteReducer = (state, action) => {
 
         case 'SET_TRAINING_SITE_2':
             return action.trainingSite2;
+
+
+        case 'SET_COORDINATES_1':
+            return action.coordinates1;
+
+
+        case 'SET_COORDINATES_2':
+            return action.coordinates2;
             
         default:
             return state;

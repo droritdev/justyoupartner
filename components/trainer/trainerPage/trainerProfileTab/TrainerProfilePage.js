@@ -2,7 +2,10 @@ import React, {useContext, useState, useEffect} from 'react';
 import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
+import auth from '@react-native-firebase/auth';
+import FastImage from 'react-native-fast-image';
 
+import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import {CountryContext} from '../../../../context/trainerContextes/CountryContext';
 import {EmailContext} from '../../../../context/trainerContextes/EmailContext';
 import {NameContext} from '../../../../context/trainerContextes/NameContext';
@@ -36,9 +39,17 @@ const TrainerProfilePage = ({navigation}) => {
     const {couplePriceOutdoor, dispatchCoupleOutdoor} = useContext(TrainingPriceContext);
     const {areaCode, dispatchArea} = useContext(PhoneContext);
     const {phoneNumber, dispatchNumber} = useContext(PhoneContext);
+    const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
+    const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
 
     const [age, setAge] = useState();
+    const [starRating ,setStarRating] = useState();
     const [isSingle, setIsSingle] = useState(true);
+
+    //Format the categories list to lower case with first letter upper case
+    const categoryDisplayFormat = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
 
     const config = {
         withCredentials: true,
@@ -48,104 +59,136 @@ const TrainerProfilePage = ({navigation}) => {
         },
     };
 
-    //Calculate the trainers age according to the his birthday
-    // useEffect(() => {
-    //     axios
-    //         .get('/trainers/omer@hotmail.com',
-    //         config
-    //     )
-    //     .then((doc) => {
-    //         if(doc){
-    //             dispatchEmail({
-    //                 type: 'SET_EMAIL_ADDRESS',
-    //                 emailAddress: doc.data[0].email   
-    //             });
+    
+    //Load all trainer info from mongodb to the dispatch
+    useEffect(() => {
+        axios
+            .get('/trainers/'+auth().currentUser.email,
+            config
+        )
+        .then((doc) => {
+            if(doc) {
+                loadStarRating(doc);
+                calculateTrainerAge(doc);
 
-    //             dispatchFirst({
-    //                 type: 'SET_FIRST_NAME',
-    //                 firstName: doc.data[0].name.first
-    //             });
+                dispatchEmail({
+                    type: 'SET_EMAIL_ADDRESS',
+                    emailAddress: doc.data[0].email   
+                });
+        
+                dispatchFirst({
+                    type: 'SET_FIRST_NAME',
+                    firstName: doc.data[0].name.first
+                });
+        
+                dispatchLast({
+                    type: 'SET_LAST_NAME',
+                    lastName: doc.data[0].name.last
+                })
+        
+                dispatchBirthday({
+                    type: 'SET_BIRTHDAY',
+                    birthday: doc.data[0].birthday
+                })
 
-    //             dispatchLast({
-    //                 type: 'SET_LAST_NAME',
-    //                 lastName: doc.data[0].name.last
-    //             })
+                dispatchCategories({
+                    type: 'SET_CATEGORIES',
+                    categories: doc.data[0].categories
+                })
 
-    //             dispatchBirthday({
-    //                 type: 'SET_BIRTHDAY',
-    //                 birthday: doc.data[0].birthday
-    //             })
+                dispatchMaximumDistance({
+                    type: 'SET_MAXIMUM_DISTANCE',
+                    maximumDistnace: doc.data[0].maximumDistance
+                })
 
-    //             let array = doc.data[0].birthday.split('/');
-    //             let today = new Date();
-    //             let year = today.getFullYear();
-    //             let month = today.getMonth();
-    //             let todayDay = today.getDate();
-    //             let age = year - (Number(array[2]));
-    //             if(month < (Number(array[0]))){
-    //                 age--;
-    //             }
-    //             if((Number(array[0])) === month && todayDay < (Number(array[1]))){
-    //                 age--
-    //             }
-    //             setAge(age);
+                dispatchTrainingSite1({
+                    type: 'SET_TRAINING_SITE_1',
+                    trainingSite1: doc.data[0].location.trainingSite1.address
+                })
 
-    //             dispatchCategories({
-    //                 type: 'SET_CATEGORIES',
-    //                 categories: doc.data[0].categories
-    //             })
+                dispatchTrainingSite2({
+                    type: 'SET_TRAINING_SITE_2',
+                    trainingSite2: doc.data[0].location.trainingSite2.address
+                })
 
-    //             dispatchMaximumDistance({
-    //                 type: 'SET_MAXIMUM_DISTANCE',
-    //                 maximumDistnace: doc.data[0].maximumDistance
-    //             })
+                dispatchAboutMe({
+                    type: 'SET_ABOUT_ME',
+                    aboutMe: doc.data[0].about_me
+                })
 
-    //             dispatchTrainingSite1({
-    //                 type: 'SET_TRAINING_SITE_1',
-    //                 trainingSite1: doc.data[0].trainingSite1
-    //             })
+                dispatchCertifications({
+                    type: 'SET_CERTIFICATIONS',
+                    certifications: doc.data[0].certifications
+                })
 
-    //             dispatchTrainingSite2({
-    //                 type: 'SET_TRAINING_SITE_2',
-    //                 trainingSite2: doc.data[0].trainingSite2
-    //             })
+                dispatchSingleAtTrainer({
+                    type: 'SET_SINGLE_AT_TRAINER',
+                    singleAtTrainer: doc.data[0].prices.single.singleAtTrainer
+                })
 
-    //             dispatchAboutMe({
-    //                 type: 'SET_ABOUT_ME',
-    //                 aboutMe: doc.data[0].about_me
-    //             })
+                dispatchSingleOutdoor({
+                    type: 'SET_SINGLE_OUTDOOR',
+                    singleOutdoor: doc.data[0].prices.single.singleOutdoor
+                })
 
-    //             dispatchCertifications({
-    //                 type: 'SET_CERTIFICATIONS',
-    //                 certifications: doc.data[0].certifications
-    //             })
+                dispatchCoupleAtTrainer({
+                    type: 'SET_COUPLE_AT_TRAINER',
+                    coupleAtTrainer: doc.data[0].prices.couple.coupleAtTrainer
+                })
 
-    //             dispatchSingleAtTrainer({
-    //                 type: 'SET_SINGLE_AT_TRAINER',
-    //                 singleAtTrainer: doc.data[0].prices.single.singleAtTrainer
-    //             })
+                dispatchCoupleOutdoor({
+                    type: 'SET_COUPLE_OUTDOOR',
+                    coupleOutdoor: doc.data[0].prices.couple.coupleOutdoor
+                })
 
-    //             dispatchSingleOutdoor({
-    //                 type: 'SET_SINGLE_OUTDOOR',
-    //                 singleOutdoor: doc.data[0].prices.single.singleOutdoor
-    //             })
+                dispatchMediaPictures({
+                    type: 'SET_MEDIA_PICTURES',
+                    mediaPictures: doc.data[0].media.images
+                });
 
-    //             dispatchCoupleAtTrainer({
-    //                 type: 'SET_COUPLE_AT_TRAINER',
-    //                 coupleAtTrainer: doc.data[0].prices.couple.coupleAtTrainer
-    //             })
+                dispatchMediaVideos({
+                    type: 'SET_MEDIA_VIDEOS',
+                    mediaVideos: doc.data[0].media.videos
+                });
+            }
+            else{
+                alert("No trainer");
+            }
+        })
+        .catch((err) => alert(err));
+    }, [])
 
-    //             dispatchCoupleOutdoor({
-    //                 type: 'SET_COUPLE_OUTDOOR',
-    //                 coupleOutdoor: doc.data[0].prices.couple.coupleOutdoor
-    //             })
-    //         }
-    //         else{
-    //             alert("No trainer");
-    //         }
-    //     })
-    //     .catch((err) => alert(err));
-    // }, [])
+
+
+
+    //Load trainer star rating
+    const loadStarRating = (doc) => {
+        var numberOfStars = doc.data[0].starCounter.numberOfStars;
+        var numberOfStarComments = doc.data[0].starCounter.numberOfStarComments;
+        var starRating = numberOfStarComments === 0 ? 0 : numberOfStars/numberOfStarComments
+        setStarRating(starRating);
+    }
+
+
+
+    //Calculate trainer age
+    const calculateTrainerAge = (doc) => {
+        let array = doc.data[0].birthday.split('/');
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth();
+        let todayDay = today.getDate();
+        let age = year - (Number(array[2]));
+        if(month < (Number(array[0]))){
+            age--;
+        }
+        if((Number(array[0])) === month && todayDay < (Number(array[1]))){
+            age--
+        }
+        setAge(age);
+    }
+
+
 
     //Sets the single/couple flipToggle value
     const handleFlipToggle = () => {
@@ -182,34 +225,42 @@ const TrainerProfilePage = ({navigation}) => {
                     <Text style={styles.partnerText}>Partner</Text>
                 </View>
                 <View style={styles.imageAndDetailsContainer}>
-                    <TouchableOpacity>
-                        <Image
-                        style={styles.profileImage} 
+                        <FastImage
+                            style={styles.profileImage}
+                            source={{
+                                uri: mediaPictures[0],
+                                priority: FastImage.priority.normal,
+                            }}
+                            resizeMode={FastImage.resizeMode.contain}
                         />
-                    </TouchableOpacity>
                     <View style={styles.nameRatingAgeContainer}>
                         <Text style={styles.nameText}>{firstName+" "+lastName}</Text>
                         <Text style={styles.personalTrainerText}>Personal Trainer</Text> 
                         <View style={styles.ratingAndAge}>
-                            <Text style={styles.ratingText}>8.7 </Text>
+                            <Text style={styles.ratingText}>{starRating} </Text>
                             <Image
                                 source={require('../../../../images/starIconBlue.png')}
                                 style={styles.startIcon}
                             />
-                            <Text style={styles.ageText}> - age {age}</Text>
+                            <Text style={styles.ageText}> - Age {age}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={styles.categoryCertSitesAbout}>
                     <Text style={styles.categoriesTitle}>
-                        Categories: {<Text style={styles.categoriesText}>{categories.join(', ')}</Text>}
+                        Categories: {<Text style={styles.categoriesText}>{categoryDisplayFormat(categories.join(', '))}</Text>}
                     </Text>
                     <Text style={styles.certificationsTitle}>
-                        Certifications: {<Text style={styles.certificationsText}>{certifications}</Text>}
+                        Certifications: {<Text style={styles.certificationsText}>{certifications.length > 80 ? certifications.slice(0, 80)+"...": certifications}</Text>}
                     </Text>
+
                     <Text style={styles.trainingSiteTitle}>
-                        Training Sites: {<Text style={styles.certificationsText}>{trainingSite2 !== "" ? trainingSite1+", "+trainingSite2 : trainingSite1}</Text>}
+                        Primary Address: {<Text style={styles.certificationsText}>{trainingSite1}</Text>}
                     </Text>
+                    {trainingSite2===undefined? null : 
+                        <Text style={styles.trainingSiteTitle}>
+                        Secondary Address: {<Text style={styles.certificationsText}>{trainingSite2}</Text>}
+                    </Text>}
                     <Text style={styles.aboutMeTitle}>
                         About Me: {<Text style={styles.aboutMeText}>
                             {aboutMe.length > 80 ? aboutMe.slice(0, 80)+"..."
@@ -381,7 +432,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginLeft: Dimensions.get('window').width * .0483,
         justifyContent: 'space-between',
-        height: Dimensions.get('window').height * .111
+        height: Dimensions.get('window').height * .11
     },
     nameText: {
         fontWeight: 'bold',

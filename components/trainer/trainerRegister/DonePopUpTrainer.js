@@ -37,6 +37,8 @@ const DonePopUpTrainer = ({navigation}) => {
     const {maximumDistnace} = useContext(MaximumDistanceContext);
     const {trainingSite1} = useContext(TrainingSiteContext);
     const {trainingSite2} = useContext(TrainingSiteContext);
+    const {coordinates1} = useContext(TrainingSiteContext);
+    const {coordinates2} = useContext(TrainingSiteContext);
     const {singlePriceAtTrainer} = useContext(TrainingPriceContext);
     const {singlePriceOutdoor} = useContext(TrainingPriceContext);
     const {couplePriceAtTrainer} = useContext(TrainingPriceContext);
@@ -68,7 +70,6 @@ const DonePopUpTrainer = ({navigation}) => {
             registerTrainer();
         }
     }
-
 
 
     //Create Firebase user
@@ -155,8 +156,6 @@ const DonePopUpTrainer = ({navigation}) => {
             about: aboutMe,
             certifications: certifications,
             maximumDistance: maximumDistnace,
-            trainingSite1: trainingSite1,
-            trainingSite1: trainingSite2,
             prices: { 
                 single: {
                     singleAtTrainer: singlePriceAtTrainer, 
@@ -172,9 +171,15 @@ const DonePopUpTrainer = ({navigation}) => {
                 phoneNumber: phoneNumber
             },
             location: {
-                type: 'Point',
-                coordinates: [32.124602, 34.825223]
-            }, 
+                trainingSite1: {
+                    address: trainingSite1,
+                    coordinates: coordinates1
+                },
+                trainingSite2: {
+                    address: trainingSite2,
+                    coordinates: coordinates2
+                }
+            },
             media: {
                 images: picturesURL,
                 videos: videosURL
