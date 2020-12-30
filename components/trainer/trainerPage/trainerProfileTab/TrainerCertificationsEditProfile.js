@@ -56,7 +56,7 @@ const TrainerCertificationsEditProfile = ({navigation}) => {
                 type: 'SET_CERTIFICATIONS',
                 certifications: oldText
             })
-            navigation.navigate('TrainerEditProfile');
+            navigation.navigate('TrainerProfilePage');
         }
 
 

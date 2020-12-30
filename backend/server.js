@@ -12,6 +12,8 @@ const changeVisibility = require('./changeVisibility/changeVisibility');
 const trainerEditProfile = require('./trainerEditProfile/trainerEditProfile');
 const findTrainerByEmail = require('./findTrainerByEmail/findTrainerByEmail');
 const findTrainerByPhone = require('./findTrainerByPhone/findTrainerByPhone');
+const updateMedia = require('./updateMedia/updateMedia');
+const updateTrainerInfo = require('./updateTrainerInfo/updateTrainerInfo');
 
 
         //**Client imports**//
@@ -45,6 +47,7 @@ const updateOrderStatus = require('./orders/updateOrderStatus');
 const getOrdersByStatus = require('./orders/getOrdersByStatus');
 const logIn = require('./logIn/logIn');
 const signOut = require('./signOut/signOut');
+
 
         //**In-app variables**//
 const port = 3000;
@@ -109,6 +112,12 @@ app.put('/settings/visibility', changeVisibility.changeVisibility);
             ////**Trainer end points**////
 //End point for confirming the registration and add a new trainer to the dataBase
 app.post('/trainers/register', trainerRegister.register);
+
+//End point to update trainer media
+app.post('/trainers/updateMedia', updateMedia.updateMedia);
+
+//End point to update trainer info
+app.post('/trainers/updateTrainerinfo', updateTrainerInfo.updateTrainerInfo);
 
 //End point to get trainer by email
 app.get('/trainers/:email', findTrainerByEmail.getTrainerByEmail);

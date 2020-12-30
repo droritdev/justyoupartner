@@ -1,5 +1,6 @@
 import React from 'react';
 
+import IdContextProvider from './IdContext';
 import EmailContextProvider from './EmailContext';
 import CountryContextProvider from './CountryContext';
 import PasswordContextProvider from './PasswordContext';
@@ -17,33 +18,35 @@ import TrainingPriceContextProvider from './TrainingPriceContext';
 const TrainerGlobalStore = ({children}) => {
 
     return(
-        <EmailContextProvider>
-            <CountryContextProvider>
-                <PasswordContextProvider>
-                    <NameContextProvider>
-                        <BirthdayContextProvider>
-                            <CategoryContextProvider>
-                                <AboutMeContextProvider>
-                                    <CertificationsContextProvider>
-                                        <MaximumDistanceContextProvider>
-                                            <TrainingSiteContextProvider>
-                                                <TrainingPriceContextProvider>
-                                                    <MediaContextProvider>
-                                                        <PhoneContextProvider>
-                                                            {children}  
-                                                        </PhoneContextProvider>
-                                                    </MediaContextProvider>
-                                                </TrainingPriceContextProvider>
-                                            </TrainingSiteContextProvider>
-                                        </MaximumDistanceContextProvider>
-                                    </CertificationsContextProvider>
-                                </AboutMeContextProvider>
-                            </CategoryContextProvider>
-                        </BirthdayContextProvider>
-                    </NameContextProvider>
-                </PasswordContextProvider>
-            </CountryContextProvider>
-        </EmailContextProvider>
+        <IdContextProvider>
+            <EmailContextProvider>
+                <CountryContextProvider>
+                    <PasswordContextProvider>
+                        <NameContextProvider>
+                            <BirthdayContextProvider>
+                                <CategoryContextProvider>
+                                    <AboutMeContextProvider>
+                                        <CertificationsContextProvider>
+                                            <MaximumDistanceContextProvider>
+                                                <TrainingSiteContextProvider>
+                                                    <TrainingPriceContextProvider>
+                                                        <MediaContextProvider>
+                                                            <PhoneContextProvider>
+                                                                {children}  
+                                                            </PhoneContextProvider>
+                                                        </MediaContextProvider>
+                                                    </TrainingPriceContextProvider>
+                                                </TrainingSiteContextProvider>
+                                            </MaximumDistanceContextProvider>
+                                        </CertificationsContextProvider>
+                                    </AboutMeContextProvider>
+                                </CategoryContextProvider>
+                            </BirthdayContextProvider>
+                        </NameContextProvider>
+                    </PasswordContextProvider>
+                </CountryContextProvider>
+            </EmailContextProvider>
+        </IdContextProvider>
     );
 }
 

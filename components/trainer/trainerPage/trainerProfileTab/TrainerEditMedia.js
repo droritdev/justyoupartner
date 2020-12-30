@@ -3,16 +3,22 @@ import {SafeAreaView, StyleSheet, View, Text, Image, Dimensions} from 'react-nat
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import Dialog from "react-native-dialog";
-import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import Video from 'react-native-video';
+
+import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
+
+import {IdContext} from '../../../../context/trainerContextes/IdContext';
 
 import AppButton from '../../../globalComponents/AppButton';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 import FastImage from 'react-native-fast-image';
-
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import axios from 'axios';
 
 //Here the traniner add photos and videos to his profile
 const TrainerEditMedia = ({navigation}) => {
+    const {trainerID, dispatchTrainerID} = useContext(IdContext);
     const {profileImage, dispatchProfileImage} = useContext(MediaContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
@@ -20,13 +26,29 @@ const TrainerEditMedia = ({navigation}) => {
     const [videos, setVideos] = useState(mediaVideos);
     const [isPencilPressed, setIsPencilPressed] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [upload, setUpload] = useState(false);
     const [selectedItem, setSelectedItem] = useState("");
     const [selectedType, setSelectedType] = useState("");
-    const [numOfElements, setNumOfElements] = useState(8);
     const [isError, setIsError] = useState(false); 
     const [errorMessage ,setErrorMessage] = useState("");
+
+    const [picOrigin, setPicOrigin] = useState([]);
+    const [vidOrigin, setVidOrigin] = useState([]);
   
+    var picturesURL = [];
+    var videosURL = [];
+    var checkFinishInterval;
+
     const scrollRef = useRef();
+
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
+
 
     //Scroll the user UI to specific position
     const scrollTo = () => {
@@ -36,6 +58,35 @@ const TrainerEditMedia = ({navigation}) => {
       });
     }
 
+    
+
+    useEffect(() => {
+        let tempPicOrigin = [...picOrigin];
+        let tempVidOrigin = [...vidOrigin];
+
+        for (let index = 0; index < pictures.length; index++) {
+            console.log(" facking this line : " + pictures[index]);
+            const picSource = pictures[index]+"";
+            if(picSource.includes("file://")) {
+                tempPicOrigin[index] = "offline";
+            } else {
+                tempPicOrigin[index] = "online";
+            }       
+        }
+
+        for (let index = 0; index < videos.length; index++) {
+            const vidSource = videos[index]+"";
+            if(vidSource.includes("file://")) {
+                tempVidOrigin[index] = "offline";
+            } else {
+                tempVidOrigin[index] = "online";
+            }       
+        }
+
+        setPicOrigin(tempPicOrigin);
+        setVidOrigin(tempVidOrigin);
+    }, [pictures, videos])
+
 
 
     //Navigates back to the profile details page
@@ -43,31 +94,155 @@ const TrainerEditMedia = ({navigation}) => {
         navigation.navigate('TrainerEditProfile');
     }
 
+    //Set pencil on/off
     const handleAPencilButton = () => {
         isPencilPressed ? setIsPencilPressed(false) : setIsPencilPressed(true);
     }
 
+
+    //Upload all info to Firebase and MongoDB
     const handleSubmit = () => {
         if (pictures[0] === undefined) {
             scrollTo();
             setIsError(true);
             setErrorMessage('Please choose a profile picture');
         } else {
-            dispatchProfileImage({
-                type: 'SET_PROFILE_IMAGE',
-                profileImage: pictures[0]
-              });
-            dispatchMediaPictures({
-                type: 'SET_MEDIA_PICTURES',
-                mediaPictures: pictures
-            });
-            dispatchMediaVideos({
-                type: 'SET_MEDIA_VIDEOS',
-                mediaVideos: videos
-            });
-            navigation.navigate('TrainerEditProfile');
+            if (pictures.length < mediaPictures.length) {
+                removeImagesFromFirebase();
+            }
+
+            if (videos.length < mediaVideos.length) {
+                removeVideosFromFirebase();
+            }
+
+            setUpload(true);
+            //start interval to check if upload is done
+            checkFinishInterval = setInterval(() => checkFinishFirebaseUpload(), 1000);
+            //start uploading images
+            uploadImages();
+            //start uploading videos
+            uploadVideos();
+
         }
     }
+
+
+
+    //Delete images from firebase
+    const removeImagesFromFirebase = async () => {
+        const userRef = "/trainers/" + auth().currentUser.uid + "/";
+
+        for (let index = pictures.length; index < mediaPictures.length; index++) {
+            let ref = storage().ref(userRef+"images/trainerImage"+index+".jpg");
+
+            await ref.delete().then((snapshot) => {
+                
+            })
+            .catch((e) => console.log("Failed to remove image from Firebase"));
+        }
+    }
+
+
+
+
+    //Delete videos from firebase
+    const removeVideosFromFirebase = async () => {
+        const userRef = "/trainers/" + auth().currentUser.uid + "/";
+
+        for (let index = videos.length; index < mediaVideos.length; index++) {
+            let ref = storage().ref(userRef+"videos/trainerVideo"+index+".MP4");
+
+            await ref.delete().then((snapshot) => {
+                
+            })
+            .catch((e) => console.log("Failed to remove video from Firebase"));
+        }
+    }
+
+
+
+
+    //Upload all trainer images to Firebase
+    const uploadImages = async () => {
+        const userRef = "/trainers/" + auth().currentUser.uid + "/";
+
+        for (let index = 0; index < pictures.length; index++) {
+            const source = pictures[index];
+
+            if(picOrigin[index] === "offline") {
+                let ref = storage().ref(userRef+"images/trainerImage"+index+".jpg");
+                await ref.putFile(source).then((snapshot) => {
+                    ref.getDownloadURL().then((url) => {
+                        picturesURL[index] = url;
+                    })
+                    .catch((e) => console.log("fail to download image url"));
+                })
+                .catch((e) => console.log("fail to upload image to firebase"));
+            } else {
+                picturesURL[index] = source;
+            }
+        }
+    }
+
+
+
+    //Upload all trainer videos to Firebase
+    const uploadVideos = async () => {
+        const userRef = "/trainers/" + auth().currentUser.uid + "/";
+
+        for (let index = 0; index < videos.length; index++) {
+            const source = videos[index];
+
+            if(vidOrigin[index] === "offline") { 
+                let ref = storage().ref(userRef+"videos/trainerVideo"+index+".MP4");
+                await ref.putFile(source).then((snapshot) => {
+                    ref.getDownloadURL().then((url) => {
+                        videosURL[index] = url;
+                    })
+                    .catch((e) => console.log("fail to download video url"));
+                })
+                .catch((e) => console.log("fail to upload video to firebase"));
+            } else {
+                videosURL[index] = source;
+            }
+        }
+    }
+
+
+    //Check if the upload to Firebase is finished
+    const checkFinishFirebaseUpload = () => {
+        if (pictures.length === picturesURL.length && videos.length === videosURL.length) {
+            clearInterval(checkFinishInterval);
+            uploadToMongo();
+        }
+    }
+
+
+    //Upload images and videos URL to mongoDB
+    const uploadToMongo = () => {
+        axios  
+        .post('/trainers/updateMedia', {
+            _id: trainerID,
+            media: {
+                images: picturesURL,
+                videos: videosURL
+            }
+        },
+        config
+        )
+        .then((res) => {
+          if (res.data.type === "success") {
+            setUpload(false);
+            navigation.navigate('TrainerEditProfile');
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+
+
+
+
+
 
     //Show image picker with crop and set image to the cropped image
     const handleImage = (index) => {
@@ -79,7 +254,7 @@ const TrainerEditMedia = ({navigation}) => {
           }).then(image => {
             const source = {uri: "file://"+image.path};
             let picturesTemp = [...pictures];
-            picturesTemp[index] = source;
+            picturesTemp[index] = source.uri;
             picturesTemp = bubbleSort(picturesTemp);
             setPictures(picturesTemp);
             setIsError(false);
@@ -87,6 +262,7 @@ const TrainerEditMedia = ({navigation}) => {
             //user cancel the picker
         });
     }
+
 
     //Sort image/video oreder 
     const bubbleSort = (array) => {
@@ -122,7 +298,7 @@ const TrainerEditMedia = ({navigation}) => {
           }).then((video) => {
             const source = {uri: video.sourceURL};
             let videosTemp = [...videos];
-            videosTemp[index] = source;
+            videosTemp[index] = source.uri;
             videosTemp = bubbleSort(videosTemp);
             setVideos(videosTemp);
         }).catch(err => {
@@ -143,6 +319,7 @@ const TrainerEditMedia = ({navigation}) => {
         switch (selectedType) {
             case "pic":
                 pictures.splice(selectedItem, 1);
+
             break;
             case "vid": 
                 videos.splice(selectedItem, 1);
@@ -150,6 +327,7 @@ const TrainerEditMedia = ({navigation}) => {
         }
         setVisible(false);
     };
+
     
 
     //Views the dialog
@@ -177,73 +355,120 @@ const TrainerEditMedia = ({navigation}) => {
     //Sets the view to rows and cols for the images
     const getImagePattern = () => {
         let repeats = [];
-        for(let i = 0; i < numOfElements; i+=2) {
-            repeats.push(
-                <View style={styles.rowPicturesContainer}>
-                    <TouchableOpacity
+        for(let i = 0; i < pictures.length; i++) {
+            if (picOrigin[i] === "online") {
+                repeats.push(
+                    <View style={styles.rowPicturesContainer}>
+                        <TouchableOpacity
+                            onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
+                            style={styles.shadowContainer}
+                        >
+                            <FastImage
+                                style={isPencilPressed ? styles.deletePicture : styles.picture}
+                                source={{
+                                uri: pictures[i],
+                                priority: FastImage.priority.normal,
+                                }}
+                                resizeMode={FastImage.resizeMode.stretch}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                )
+            } else {
+                repeats.push(
+                    <View style={styles.rowPicturesContainer}>
+                        <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
-                    >
-                        <FastImage
+                        style={styles.shadowContainer}
+                        >
+                        <Image
+                            source={{uri: pictures[i]}}
                             style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            source={{
-                            uri: pictures[i],
-                            priority: FastImage.priority.normal,
-                            }}
-                            resizeMode={FastImage.resizeMode.stretch}
+                            key={i}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("pic", i+1) : handleImage(i+1)}
-                    >
-                        <FastImage
-                            style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            source={{
-                            uri: pictures[i+1],
-                            priority: FastImage.priority.normal,
-                            }}
-                            resizeMode={FastImage.resizeMode.stretch}
-                        />
-                    </TouchableOpacity>
-                </View>
-            )
+                    </View>
+                )
+                }
         }
+
+
+        repeats.push(
+            <View style={styles.rowPicturesContainer}>
+                <TouchableOpacity
+                onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
+                >
+                <Image
+                    source={require('../../../../images/plusIcon.png')}
+                    style={styles.plusPicture}
+                    key={pictures.length}
+                />
+            </TouchableOpacity>
+            </View>
+        )
         return repeats;
     }
+
+
 
     //Sets the view to rows and cols for the videos 
     const getVideoPattern = () => {
         let repeats = [];
-        for(let i = 0; i < numOfElements; i+=2) {
-            repeats.push(
-                <View style={styles.rowPicturesContainer}>
-                    <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
-                    >
-                        <Video 
-                            resizeMode="cover"  
-                            controls={videos[i]=== undefined?  false : !isPencilPressed}
-                            source={videos[i]}
-                            style={isPencilPressed ? styles.deletePicture : styles.video}
-                            key={i}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("vid", i+1) : handleVideo(i+1)}
-                    >
-                        <Video
-                            resizeMode="cover"  
-                            controls={videos[i+1]=== undefined? false : !isPencilPressed}
-                            source={videos[i+1]}
-                            fullscreen={true}
-                            style={isPencilPressed ? styles.deletePicture : styles.video}
-                            key={i+1}
-                        />
-                    </TouchableOpacity>
-                </View>
-            )
+        for(let i = 0; i < videos.length; i++) {
+            if (vidOrigin[i] === "online") {
+                repeats.push(
+                    <View style={styles.rowPicturesContainer}>
+                        <TouchableOpacity
+                            onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
+                            style={styles.shadowContainer}
+                        >
+                            <Video 
+                                muted={true}
+                                resizeMode="cover"  
+                                controls={videos[i]=== undefined?  false : !isPencilPressed}
+                                source={{uri: videos[i]}}
+                                style={isPencilPressed ? styles.deletePicture : styles.video}
+                                key={i}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                )
+            } else {
+                repeats.push(
+                    <View style={styles.rowPicturesContainer}>
+                        <TouchableOpacity
+                            onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
+                            style={styles.shadowContainer}
+                        >
+                            <Video 
+                                resizeMode="cover"  
+                                controls={videos[i]=== undefined?  false : !isPencilPressed}
+                                source={{uri: videos[i]}}
+                                style={isPencilPressed ? styles.deletePicture : styles.video}
+                                key={i}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                )
+            }
         }
+
+        repeats.push(
+            <View style={styles.rowPicturesContainer}>
+                <TouchableOpacity
+                onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
+                >
+                <Image
+                    source={require('../../../../images/plusIcon.png')}
+                    style={styles.plusPicture}
+                    key={pictures.length}
+                />
+            </TouchableOpacity>
+            </View>
+        )
         return repeats;
     }
+    
 
     
     return(
@@ -255,6 +480,14 @@ const TrainerEditMedia = ({navigation}) => {
                     <Dialog.Button label="Delete" onPress={handleDelete} />
                 </Dialog.Container>
             </View>
+
+            <View>
+                <Dialog.Container visible={upload}>
+                    <Dialog.Title>Updating your media</Dialog.Title>
+                    <Dialog.Description>Please wait..</Dialog.Description>
+                </Dialog.Container>
+            </View>
+
             <View style={styles.headerContainer}>
             <ArrowBackButton
                 onPress={handleArrowButton}
@@ -272,21 +505,25 @@ const TrainerEditMedia = ({navigation}) => {
 
 
 
-            <ScrollView ref={scrollRef} style={styles.mainScrollContainer} >
-                <ScrollView ref={scrollRef} style={styles.photoScrollContainer}>
-                    <View style={styles.picturesListContainer}>
-                        <Text style={styles.photoTitle}>Photos</Text>
-                        <Text style={styles.profilePictureText}>Profile Picture</Text>
-                        {getImagePattern()}
-                    </View>
+            
+            <Text style={styles.photoTitle}>Photos</Text>
+                <ScrollView style={styles.photoScrollContainer}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    >
+                    {getImagePattern()}
                 </ScrollView>
-                <ScrollView  ref={scrollRef} style={styles.videoScrollContainer}>
-                    <View style={styles.videosListContainer}>
-                        <Text style={styles.videoTitle}>Videos</Text>
-                        {getVideoPattern()}
-                    </View>
-                </ScrollView>
-            </ScrollView>
+
+                <Text style={styles.videoTitle}>Videos</Text>
+
+                <ScrollView style={styles.videoScrollContainer}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    >
+                    {getVideoPattern()}
+                </ScrollView>            
 
             <View style={styles.submitButtonContainer}>
             {isError ?
@@ -338,28 +575,29 @@ const styles = StyleSheet.create ({
     photoTitle: {
         fontSize: Dimensions.get('window').height * .030,
         fontWeight: 'bold',
-        marginTop: Dimensions.get('window').height * .008,
+        marginTop: Dimensions.get('window').height * .08,
         marginBottom: Dimensions.get('window').height * .03,
         alignSelf: 'center',
         color: "deepskyblue"
     },
     photoScrollContainer: {
-        marginTop: Dimensions.get('window').height * .02,
+        height: Dimensions.get('window').height * .0005,
     },
     picturesListContainer: {
         marginTop: Dimensions.get('window').height * .040,
         
     },
     videoScrollContainer: {
-        marginTop: Dimensions.get('window').height * .040,
+        height: Dimensions.get('window').height * .0005,
+        marginTop: Dimensions.get('window').height * .03,
     },
     videosListContainer: {
     
     },
     videoTitle: {
+        marginTop: Dimensions.get('window').height * .08,
         fontSize: Dimensions.get('window').height * .030,
         fontWeight: 'bold',
-        marginBottom: Dimensions.get('window').height * .03,
         alignSelf: 'center',
         color: "deepskyblue"
     },
@@ -368,22 +606,36 @@ const styles = StyleSheet.create ({
         marginBottom: Dimensions.get('window').height * .005
     },
     rowPicturesContainer: {
+        height: Dimensions.get('window').height * .15,
         marginLeft: Dimensions.get('window').width * .050,
-        marginRight: Dimensions.get('window').width * .050,
-        marginBottom: Dimensions.get('window').height * .015,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    picture: {
-        borderRadius: 3,
-        height: Dimensions.get('window').height * .15,
-        width: Dimensions.get('window').width * .43,
-        backgroundColor: 'lightgrey'
+    shadowContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        overflow: 'visible'
     },
-    video: {
+    picture: {
         height: Dimensions.get('window').height * .15,
         width: Dimensions.get('window').width * .43,
-        backgroundColor: 'lightgrey'
+        borderRadius: 16,
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,    
+        elevation: 24,
+    },
+    plusPicture: {
+        height: Dimensions.get('window').height * .15,
+        width: Dimensions.get('window').width * .43,
+        borderRadius: 16,
+        backgroundColor: 'whitesmoke',
+        resizeMode: 'stretch'
     },
     deletePicture: {
         height: Dimensions.get('window').height * .15,
@@ -391,6 +643,20 @@ const styles = StyleSheet.create ({
         backgroundColor: 'lightgrey',
         borderColor: 'deepskyblue',
         borderWidth: 3
+    },
+    video: {
+        height: Dimensions.get('window').height * .15,
+        width: Dimensions.get('window').width * .43,
+        borderRadius: 16,
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,    
+        elevation: 24,
     },
     footerContainer:{
     },
@@ -402,7 +668,8 @@ const styles = StyleSheet.create ({
         marginTop: Dimensions.get('window').height * .020,
     },
     submitButtonContainer: {
-        marginTop: Dimensions.get('window').height * .066,
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .05,
         alignItems: 'center'
       },
     submitButton: {

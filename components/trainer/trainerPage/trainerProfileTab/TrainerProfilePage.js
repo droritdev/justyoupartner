@@ -5,6 +5,7 @@ import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 
+import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import {CountryContext} from '../../../../context/trainerContextes/CountryContext';
 import {EmailContext} from '../../../../context/trainerContextes/EmailContext';
@@ -21,6 +22,7 @@ import {PhoneContext} from '../../../../context/trainerContextes/PhoneContext';
 
 //The trainer main profile page - profile area
 const TrainerProfilePage = ({navigation}) => {
+    const {trainerID, dispatchTrainerID} = useContext(IdContext);
     const {firstName, dispatchFirst} = useContext(NameContext);
     const {lastName, dispatchLast} = useContext(NameContext);
     const {birthday, dispatchBirthday} = useContext(BirthdayContext);
@@ -62,6 +64,8 @@ const TrainerProfilePage = ({navigation}) => {
     
     //Load all trainer info from mongodb to the dispatch
     useEffect(() => {
+
+        console.log("");
         axios
             .get('/trainers/'+auth().currentUser.email,
             config
@@ -70,6 +74,11 @@ const TrainerProfilePage = ({navigation}) => {
             if(doc) {
                 loadStarRating(doc);
                 calculateTrainerAge(doc);
+
+                dispatchTrainerID({
+                    type: 'SET_TRAINER_ID',
+                    trainerID: doc.data[0]._id   
+                });     
 
                 dispatchEmail({
                     type: 'SET_EMAIL_ADDRESS',

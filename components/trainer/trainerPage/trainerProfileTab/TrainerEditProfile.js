@@ -8,13 +8,16 @@ import Icon from 'react-native-vector-icons';
 import Slider from '@react-native-community/slider';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Dialog from "react-native-dialog";
 
 import { utils } from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
 const storageRef = storage().ref('/images/');
 import FastImage from 'react-native-fast-image';
 
+
 import PickCategories from '../../../globalComponents/PickCategories';
+import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import {EmailContext} from '../../../../context/trainerContextes/EmailContext';
 import {NameContext} from '../../../../context/trainerContextes/NameContext';
 import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
@@ -32,10 +35,10 @@ import BirthdayPicker from '../../../globalComponents/BirthdayPicker';
 
 //Here the trainer enters his: full name, images/videos, birthday, training categories, maximum distance to be fined, writes about him, certifications, at least one training site, and training prices
 const TrainerEditProfile = ({navigation}) => {
+    const {trainerID, dispatchTrainerID} = useContext(IdContext);
     const {emailAddress} = useContext(EmailContext);
     const {firstName, dispatchFirst} = useContext(NameContext);
     const {lastName, dispatchLast} = useContext(NameContext);
-    const {profileImage} = useContext(MediaContext);
     const {birthday, dispatchBirthday} = useContext(BirthdayContext);
     const {categories, dispatchCategories} = useContext(CategoryContext);
     const {aboutMe} = useContext(AboutMeContext);
@@ -43,27 +46,29 @@ const TrainerEditProfile = ({navigation}) => {
     const {maximumDistnace, dispatchMaximumDistance} = useContext(MaximumDistanceContext);
     const {trainingSite1, dispatchTrainingSite1} = useContext(TrainingSiteContext);
     const {trainingSite2, dispatchTrainingSite2} = useContext(TrainingSiteContext);
+    const {coordinates1} = useContext(TrainingSiteContext);
+    const {coordinates2} = useContext(TrainingSiteContext);
     const {singlePriceAtTrainer, dispatchSingleAtTrainer} = useContext(TrainingPriceContext);
     const {singlePriceOutdoor, dispatchSingleOutdoor} = useContext(TrainingPriceContext);
     const {couplePriceAtTrainer, dispatchCoupleAtTrainer} = useContext(TrainingPriceContext);
     const {couplePriceOutdoor, dispatchCoupleOutdoor} = useContext(TrainingPriceContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
 
-    const [firstNameInput, setFirstNameInput] = useState("");
-    const [lastNameInput, setLastNameInput] = useState("");
+    const [firstNameInput, setFirstNameInput] = useState(firstName);
+    const [lastNameInput, setLastNameInput] = useState(lastName);
     const [minimumDate, setMinimumDate] = useState("");
     const [maximumDate, setMaximumDate] = useState("");
     const [birthdaySelected, setBirthdaySelected] = useState(birthday);
     const [selectedItems, setSelectedItems] = useState([]);
-    const [maxDistanceSelected, setMaxDistanceSelected] = useState(maximumDistnace+"");
+    const [maxDistanceSelected, setMaxDistanceSelected] = useState(maximumDistnace);
     const [aboutMeInput, setAboutMeInput] = useState("");
     const [certificationsInput, setCertificationsInput] = useState("");
     const [sliderValue, setSliderValue] = useState(maximumDistnace+" MILES");
     const [isSingle, setIsSingle] = useState(true);
-    const [singleAtTrainerInput, setSingleAtTrainerInput] = useState("");
-    const [singleOutdoorInput, setSingleOutdoorInput] = useState("");
-    const [coupleAtTrainerInput, setCoupleAtTrainerInput] = useState("");
-    const [coupleOutdoorInput, setCoupleOutdoorInput] = useState("");
+    const [singleAtTrainerInput, setSingleAtTrainerInput] = useState(singlePriceAtTrainer);
+    const [singleOutdoorInput, setSingleOutdoorInput] = useState(singlePriceOutdoor);
+    const [coupleAtTrainerInput, setCoupleAtTrainerInput] = useState(couplePriceAtTrainer);
+    const [coupleOutdoorInput, setCoupleOutdoorInput] = useState(couplePriceOutdoor);
     
 
     const [isNamesError, setIsNamesError] = useState(false); 
@@ -87,6 +92,7 @@ const TrainerEditProfile = ({navigation}) => {
     const [isPriceError, setIsPriceError] = useState(false);
     const [priceErrorMessage, setPriceErrorMessage] = useState("");
 
+    const [update, setUpdate] = useState(false);
     
     const scrollRef = useRef();
 
@@ -109,6 +115,13 @@ const TrainerEditProfile = ({navigation}) => {
     }
 
 
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
 
     const charsLimit = 130;
 
@@ -299,12 +312,7 @@ const TrainerEditProfile = ({navigation}) => {
 
     //Handle the next button press, if ok - saves all values states and navigates to the PaymentsAndPolicyTrainer page
     const handleSubmit = () => {
-      if (profileImage === require('../../../../images/profileImage.jpeg')) {
-        setIsNamesError(true);
-        setNameErrorMessage('Profile image is required');
-        scrollTo("profileImage");
-      }
-      else if(firstNameInput === "" && lastNameInput === ""){
+      if(firstNameInput === "" && lastNameInput === ""){
         setIsNamesError(true);
         setNameErrorMessage('First and Last name are required');
         scrollTo("name");
@@ -348,66 +356,55 @@ const TrainerEditProfile = ({navigation}) => {
         setIsPriceError(true);
       } 
       else{
-        dispatchFirst({
-          type: 'SET_FIRST_NAME',
-          firstName: firstNameInput
-        });
-
-        dispatchLast({
-          type: 'SET_LAST_NAME',
-          lastName: lastNameInput
-        });
-
-        dispatchBirthday({
-          type: 'SET_BIRTHDAY',
-          birthday: birthdaySelected
-        });
-
-        dispatchMaximumDistance({
-          type: 'SET_MAXIMUM_DISTANCE',
-          maximumDistnace: maxDistanceSelected
-        });
-
-        if(trainingSite1 !== ""){
-          dispatchTrainingSite1({
-            type: 'SET_TRAINING_SITE_1',
-            trainingSite1: trainingSite1
-          });
-        }
-        if(trainingSite2 !== ""){
-          dispatchTrainingSite2({
-            type: 'SET_TRAINING_SITE_2',
-            trainingSite2: trainingSite2
-          });
-        }
-        
-        if(singleAtTrainerInput !== ""){
-          dispatchSingleAtTrainer({
-            type: 'SET_SINGLE_AT_TRAINER',
-            singleAtTrainer: singleAtTrainerInput
-          });
-        }
-        if(singleOutdoorInput !== ""){
-          dispatchSingleOutdoor({
-            type: 'SET_SINGLE_OUTDOOR',
-            singleOutdoor: singleOutdoorInput
-          });
-        }
-        if(coupleAtTrainerInput !== ""){
-          dispatchCoupleAtTrainer({
-            type: 'SET_COUPLE_AT_TRAINER',
-            coupleAtTrainer: coupleAtTrainerInput
-          });
-        }
-        if(coupleOutdoorInput !== ""){
-          dispatchCoupleOutdoor({
-            type: 'SET_COUPLE_OUTDOOR',
-            coupleOutdoor: coupleOutdoorInput
-          });
-        }
-
-        navigation.navigate('PaymentsAndPolicyTrainer');
+        setUpdate(true);
+        updateInfo();
       }
+    }
+
+
+    const updateInfo = () => {
+        axios  
+        .post('/trainers/updateTrainerInfo', {
+            _id: trainerID,
+            name: {
+                first: firstNameInput,
+                last: lastNameInput
+            },
+            birthday: birthdaySelected,
+            categories: categories,
+            about_me: aboutMe,
+            certifications: certifications,
+            maximumDistance: maximumDistnace,
+            prices: { 
+                single: {
+                    singleAtTrainer: singleAtTrainerInput, 
+                    singleOutdoor: singleOutdoorInput
+                }, 
+                couple: {
+                    coupleAtTrainer: coupleAtTrainerInput, 
+                    coupleOutdoor: coupleOutdoorInput
+                } 
+            }, 
+            location: {
+                trainingSite1: {
+                    address: trainingSite1,
+                    coordinates: coordinates1
+                },
+                trainingSite2: {
+                    address: trainingSite2,
+                    coordinates: coordinates2
+                }
+            }
+        },
+        config
+        )
+        .then((res) => {
+          if (res.data.type === "success") {
+            setUpdate(false);
+            navigation.navigate("TrainerProfilePage");
+          }
+        })
+        .catch((err) => console.log(err));
     }
 
 
@@ -428,6 +425,13 @@ const TrainerEditProfile = ({navigation}) => {
 
     return(
       <SafeAreaView style={styles.safeArea}>
+
+            <View>
+                <Dialog.Container visible={update}>
+                    <Dialog.Title>Updating your info</Dialog.Title>
+                    <Dialog.Description>Please wait..</Dialog.Description>
+                </Dialog.Container>
+            </View>
         <ScrollView ref={scrollRef} style={styles.container}>
         <ArrowBackButton
           onPress={handleArrowButton}
@@ -452,7 +456,7 @@ const TrainerEditProfile = ({navigation}) => {
                   placeholder='First name'
                   placeholderTextColor='darkgrey'
                   onChangeText={value => handleOnChangeFirstName(value)}
-                > {firstName}</TextInput>
+                >  {firstName} </TextInput>
                 <TextInput
                   style={styles.textInput}
                   textAlign='center'

@@ -8,6 +8,7 @@ const MediaContextProvider = ({children}) => {
     const [profileImage, dispatchProfileImage] = useReducer(MediaReducer, require('../../images/profileImage.jpeg'));
     const [mediaPictures, dispatchMediaPictures] = useReducer(MediaReducer, []);
     const [mediaVideos, dispatchMediaVideos] = useReducer(MediaReducer, []);
+    
 
     return(
         <MediaContext.Provider value={{profileImage, mediaPictures, mediaVideos, dispatchProfileImage, dispatchMediaPictures, dispatchMediaVideos}}>
