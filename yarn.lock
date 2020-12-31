@@ -5913,7 +5913,7 @@
   "resolved" "https://registry.npmjs.org/lodash.without/-/lodash.without-4.4.0.tgz"
   "version" "4.4.0"
 
-"lodash@^4.17.10", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.3.0", "lodash@>4.17.00":
+"lodash@^4.17.10", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.4", "lodash@^4.3.0", "lodash@>4.17.00":
   "integrity" "sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA=="
   "resolved" "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz"
   "version" "4.17.20"
@@ -6608,6 +6608,11 @@
   "version" "0.5.5"
   dependencies:
     "minimist" "^1.2.5"
+
+"moment@^2.18.1":
+  "integrity" "sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ=="
+  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
+  "version" "2.29.1"
 
 "move-concurrently@^1.0.1":
   "integrity" "sha1-viwAX9oy4LKa8fBdfEszIUxwH5I="
@@ -7800,12 +7805,25 @@
   "resolved" "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz"
   "version" "17.0.1"
 
+"react-native-add-calendar-event@^4.0.0":
+  "integrity" "sha512-gkqidtFquTKR46QWdV12iu86OQJGNTnsT1C58EBPFy1MyCFJZar6y6wRBLaWNfvnhgeGzJeA0ODb8KmD+HU8GQ=="
+  "resolved" "https://registry.npmjs.org/react-native-add-calendar-event/-/react-native-add-calendar-event-4.0.0.tgz"
+  "version" "4.0.0"
+
 "react-native-dialog@^6.1.2":
   "integrity" "sha512-9d/GDoCYAaEbiJZY832pw4z+c0SrFzbMT+aIBnSRqc122cIo+Sub2yE8ermj12vS+A0/898RSQIn0x7CnGnzMw=="
   "resolved" "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-6.1.2.tgz"
   "version" "6.1.2"
   dependencies:
     "prop-types" "^15.7.2"
+
+"react-native-events-calendar@^1.0.8":
+  "integrity" "sha512-2jMFWaNLA45+6qe230WpxZ1+DtrvlvW8XWCIhUzJ3rejiulKTNrc55QPM+Xm+cpZH2gRGfSykyJwY1XzDZgj/A=="
+  "resolved" "https://registry.npmjs.org/react-native-events-calendar/-/react-native-events-calendar-1.0.8.tgz"
+  "version" "1.0.8"
+  dependencies:
+    "lodash" "^4.17.4"
+    "moment" "^2.18.1"
 
 "react-native-fast-image@^8.3.4":
   "integrity" "sha512-LpzAdjUphihUpVEBn5fEv5AILe55rHav0YiZroPZ1rumKDhAl4u2cG01ku2Pb7l8sayjTsNu7FuURAlXUUDsow=="

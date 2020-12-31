@@ -60,12 +60,12 @@ const TrainerEditMedia = ({navigation}) => {
 
     
 
+    //Check if the picture came from storage or from the deviece
     useEffect(() => {
         let tempPicOrigin = [...picOrigin];
         let tempVidOrigin = [...vidOrigin];
 
         for (let index = 0; index < pictures.length; index++) {
-            console.log(" facking this line : " + pictures[index]);
             const picSource = pictures[index]+"";
             if(picSource.includes("file://")) {
                 tempPicOrigin[index] = "offline";
@@ -172,12 +172,13 @@ const TrainerEditMedia = ({navigation}) => {
             if(picOrigin[index] === "offline") {
                 let ref = storage().ref(userRef+"images/trainerImage"+index+".jpg");
                 await ref.putFile(source).then((snapshot) => {
-                    ref.getDownloadURL().then((url) => {
-                        picturesURL[index] = url;
-                    })
-                    .catch((e) => console.log("fail to download image url"));
                 })
                 .catch((e) => console.log("fail to upload image to firebase"));
+
+                await ref.getDownloadURL().then((url) => {
+                    picturesURL[index] = url;
+                })
+                .catch((e) => console.log("fail to download image url"));
             } else {
                 picturesURL[index] = source;
             }

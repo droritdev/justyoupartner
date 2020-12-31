@@ -10,6 +10,7 @@ import TrainerAboutMeEditProfile from './TrainerAboutMeEditProfile';
 import TrainerCertificationsEditProfile from './TrainerCertificationsEditProfile';
 import TrainerPickCategoriesEditProfile from './TrainerPickCategoriesEditProfile';
 import TrainerEditMedia from './TrainerEditMedia';
+import TrainerEditAddress from './TrainerEditAddress';
 import TrainerSettings from './TrainerSettings';
 import ChangeEmailAddress from './ChangeEmailAddres';
 import ChangePhoneNumber from './ChangePhoneNumber';
@@ -29,6 +30,7 @@ const TrainerProfilePageStack = ({navigation}) => {
             <Stack.Screen name='TrainerEditProfile' component={TrainerEditProfile}/>
             <Stack.Screen name='TrainerPickCategoriesEditProfile' component={TrainerPickCategoriesEditProfile}/>
             <Stack.Screen name='TrainerEditMedia' component={TrainerEditMedia}/>
+            <Stack.Screen name='TrainerEditAddress' component={TrainerEditAddress}/>
             <Stack.Screen name='TrainerAboutMeEditProfile' component={TrainerAboutMeEditProfile}/>
             <Stack.Screen name='TrainerCertificationsEditProfile' component={TrainerCertificationsEditProfile}/>
             <Stack.Screen name='TrainerSettings' component={TrainerSettings}/>

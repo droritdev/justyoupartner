@@ -65,7 +65,7 @@ const TrainerProfilePage = ({navigation}) => {
     //Load all trainer info from mongodb to the dispatch
     useEffect(() => {
 
-        console.log("");
+        console.log("sa");
         axios
             .get('/trainers/'+auth().currentUser.email,
             config

@@ -215,17 +215,23 @@ const TrainerEditProfile = ({navigation}) => {
 
     //Sets the slider value to the value
     const handleSliderValueChange = (value) => {
-      setIsNamesError(false);
-      setIsFirstNamesError(false);
-      setIsLastNamesError(false);
-      setIsBirthdayErrorMessage(false);
-      setIsCategoryError(false);
-      setIsAboutMeError(false);
-      setIsCertificationError(false);
-      setIsTrainingSiteError(false);
-      setIsPriceError(false);
-      setSliderValue(value+" MILE");
-      setMaxDistanceSelected(value);
+        setIsNamesError(false);
+        setIsFirstNamesError(false);
+        setIsLastNamesError(false);
+        setIsBirthdayErrorMessage(false);
+        setIsCategoryError(false);
+        setIsAboutMeError(false);
+        setIsCertificationError(false);
+        setIsTrainingSiteError(false);
+        setIsPriceError(false);
+        setSliderValue(value+" MILE");
+        setMaxDistanceSelected(value);
+
+        dispatchMaximumDistance({
+        type: 'SET_MAXIMUM_DISTANCE',
+        maximumDistnace: value
+        })
+
     }
 
     //sets the training at the trainer price to the value - by the type of: single/couple
@@ -374,7 +380,7 @@ const TrainerEditProfile = ({navigation}) => {
             categories: categories,
             about_me: aboutMe,
             certifications: certifications,
-            maximumDistance: maximumDistnace,
+            maximumDistance: maxDistanceSelected,
             prices: { 
                 single: {
                     singleAtTrainer: singleAtTrainerInput, 

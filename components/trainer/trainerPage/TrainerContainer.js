@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TrainerProfilePageStack from './trainerProfileTab/TrainerProfilePageStack';
 import TrainerOrderPageStack from './trainerOrdersTab/TrainerOrderPageStack';
 import TrainerStatsPageStack from './trainerStatsTab/TrainerStatsPageStack'
+import TrainerCalendarPageStack from './trainerCalendarTab/TrainerCalendarPageStack'
 
 const Tab = createBottomTabNavigator();
 
@@ -66,6 +67,23 @@ const TrainerContainer = () => {
                           :
                           <Image
                             source={require('../../../images/statsFocusedIcon.png')}
+                            style={[styles.statsFocusedIcon, {tintColor: tintColor}]}
+                          />
+                    ),
+                }}
+            />
+            <Tab.Screen 
+                name="TrainerCalendarPageStack" 
+                component={TrainerCalendarPageStack}
+                options={{
+                    tabBarIcon: ({ focused,tintColor }) => (
+                        !focused ? <Image
+                            source={require('../../../images/calendarIcon.jpeg')}
+                            style={[styles.statsIcon, {tintColor: tintColor}]}
+                          />
+                          :
+                          <Image
+                            source={require('../../../images/calendarFocusedIcon.jpeg')}
                             style={[styles.statsFocusedIcon, {tintColor: tintColor}]}
                           />
                     ),
