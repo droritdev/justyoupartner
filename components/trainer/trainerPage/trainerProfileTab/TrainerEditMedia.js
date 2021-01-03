@@ -234,6 +234,18 @@ const TrainerEditMedia = ({navigation}) => {
         .then((res) => {
           if (res.data.type === "success") {
             setUpload(false);
+            
+            dispatchMediaPictures({
+                type: 'SET_MEDIA_PICTURES',
+                mediaPictures: picturesURL
+            });
+
+
+            dispatchMediaVideos({
+                type: 'SET_MEDIA_VIDEOS',
+                mediaVideos: videosURL
+            });
+
             navigation.navigate('TrainerEditProfile');
           }
         })
