@@ -1,10 +1,16 @@
 import React, {useContext, useState} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import axios from 'axios';
+import {OrderContext} from '../../../../context/orderContexts/OrderContext';
+import FastImage from 'react-native-fast-image';
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+import Icon from 'react-native-vector-icons/Feather';
 
 //The trainer's order page - pennding + approved
 const PendingApprovalOrder = ({navigation}) => {
 
+    const {orderObject, dispatchOrderObject} = useContext(OrderContext);
 
     const handleArrowButton = () => {
         navigation.navigate('TrainerOrdersPage');
@@ -18,86 +24,93 @@ const PendingApprovalOrder = ({navigation}) => {
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>
                 </View>
-                <TouchableOpacity
-                    onPress={handleArrowButton}
-                >
-                    <Image
-                        source={require('../../../../images/arrowBack.png')}
-                        style={styles.arrowImage}
-                    />
-                </TouchableOpacity>
-                <Text style={styles.pendingTitle}>PENDING APPROVAL</Text>
-                <View style={styles.imageNameApproveRowContainer}>
-                    <View style={styles.imageNameApproveRow}>
-                        <Image
-                            //source={}
-                            style={styles.profileImage}
+                <ArrowBackButton
+                onPress={handleArrowButton}
+                />
+                <Text style={styles.pendingTitle}>Order pending for approval</Text>
+
+                <View style={styles.imageNameRowContainer}>
+                        <FastImage
+                                    style={styles.profileImage}
+                                    source={{
+                                    uri: orderObject.client.profilePic,
+                                    priority: FastImage.priority.normal,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.stretch}
                         />
-                        <View style={styles.nameAndButtonsContainer}>
-                            <Text style={styles.nameTitle}>Erez Buganim</Text>
+                        <View style={styles.nameButtonsColumContainer}>
+                            <View style={styles.nameBox}>
+                                <Text style={styles.nameText}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
+                            </View>
+
                             <View style={styles.buttonsRowContaier}>
                                 <View style={styles.buttonsRow}>
                                     <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity>
-                                            <Image
-                                                source={require('../../../../images/callIcon.png')}
-                                            />
+                                        <TouchableOpacity style={styles.iconBackStyle}>
+                                            <Icon name="phone-call" size={30} style={styles.phoneCallIcon}/>
+                                           
                                         </TouchableOpacity>
                                         <Text style={styles.buttonTitle}>Call</Text>
                                     </View>
                                     <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity>
-                                            <Image
-                                                source={require('../../../../images/chatIcon.png')}
-                                            />
+                                        <TouchableOpacity style={styles.iconBackStyle}>
+                                            <Icon name="message-circle" size={30} style={styles.messageIcon}/>
                                         </TouchableOpacity>
                                         <Text style={styles.buttonTitle}>Chat</Text>
                                     </View>
-                                    <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity>
-                                            <Image
-                                                source={require('../../../../images/declineIcon.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <Text style={styles.buttonTitle}>Decline</Text>
-                                    </View>
+
                                 </View>
                             </View>
                         </View>
-                        <TouchableOpacity
-                            //onPress={}
-                            style={styles.approveButton}
-                        >
-                            <Text style={styles.approveButtonText}>APPROVE</Text>
-                        </TouchableOpacity>
-                    </View>
+
                 </View>
+
+
+
+
+
+
                 <View style={styles.orderInformationContainer}>
                     <View style={styles.orderRow}>
                         <Text style={styles.title}>Date:</Text>
                         <View style={styles.informationView}>
-                            <Text style={styles.informationText}>3.6.2020</Text>
+                            <Text style={styles.informationText}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>
                         </View>
                     </View>
-                    <View style={styles.orderRow}>
+                    <View style={styles.orderRowSecond}>
                         <Text style={styles.title}>Time:</Text>
                         <View style={styles.informationView}>
-                            <Text style={styles.informationText}>16:00</Text>
+                            <Text style={styles.informationText}>{orderObject.trainingDate.startTime.slice(11, 16) + ' - ' + orderObject.trainingDate.endTime.slice(11, 16)}</Text>
                         </View>
                     </View>
                     <View style={styles.orderRow}>
                         <Text style={styles.title}>Address:</Text>
                         <View style={styles.informationView}>
-                            <Text style={styles.informationText}>5th Ave, NY, NY</Text>
+                            <Text style={styles.informationText}>{orderObject.location.address}</Text>
                         </View>
                     </View>
-                    <View style={styles.orderRow}>
+                    <View style={styles.orderRowSecond}>
                         <Text style={styles.title}>Type of training:</Text>
                         <View style={styles.informationView}>
-                            <Text style={styles.informationText}>Personal</Text>
+                            <Text style={styles.informationText}>{orderObject.type}</Text>
                         </View>
                     </View>
                 </View>
+
+                <TouchableOpacity
+                    //onPress={}
+                        style={styles.approveButton}
+                    >
+                        <Text style={styles.approveButtonText}>Approve</Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    //onPress={}
+                        style={styles.declineButton}
+                    >
+                        <Text style={styles.approveButtonText}>Decline</Text>
+                </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
@@ -129,26 +142,29 @@ const styles = StyleSheet.create({
     },
     pendingTitle: {
         fontWeight: 'bold',
+        alignSelf: 'center',
         fontSize: Dimensions.get('window').height * .022,
         marginLeft: Dimensions.get('window').width * .0483,
         marginTop: Dimensions.get('window').height * .018
     },
-    imageNameApproveRowContainer: {
-        height: Dimensions.get('window').height * .15,
-        justifyContent: 'center'
-    },  
-    imageNameApproveRow: {
+    imageNameRowContainer: {
+        marginTop: Dimensions.get('window').height * .05,
         flexDirection: 'row',
-        alignItems: 'center',
-        width: Dimensions.get('window').width * .925,
-        justifyContent: 'space-between',
+        width: Dimensions.get('window').width * .9,
         alignSelf: 'center',
-        marginTop: Dimensions.get('window').height * .033
-    },
+       
+    },  
     profileImage: {
-        backgroundColor: 'gainsboro',
-        width: Dimensions.get('window').height * .08,
-        height: Dimensions.get('window').height * .08,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.5,
+        elevation: 3,
+        width: Dimensions.get('window').height * .09,
+        height: Dimensions.get('window').height * .09,
         borderRadius: 40
     },
     nameAndButtonsContainer: {
@@ -157,7 +173,6 @@ const styles = StyleSheet.create({
     nameTitle: {
         fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold',
-        width: Dimensions.get('window').width * .4
     },
     buttonsRowContaier: {
         width: Dimensions.get('window').width * .35,
@@ -172,48 +187,123 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonTitle: {
+        marginTop: Dimensions.get('window').height * .005,
         textAlign: 'center',
         fontSize: Dimensions.get('window').height * .011
     },  
     approveButton: {
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .08,
         height: Dimensions.get('window').height * .055,
-        width: Dimensions.get('window').width * .275,
+        width: Dimensions.get('window').width * .85,
+        alignSelf: 'center',
         backgroundColor: 'deepskyblue',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10
-
+    },
+    declineButton: {
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .02,
+        height: Dimensions.get('window').height * .055,
+        width: Dimensions.get('window').width * .85,
+        alignSelf: 'center',
+        backgroundColor: 'crimson',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
     },
     approveButtonText: {
         fontSize: Dimensions.get('window').height * .022,
         color: 'white',
         fontWeight: 'bold'
     },
+    topBorder: {
+        borderTopWidth: 2,
+        borderTopColor: 'lightgrey',
+    },
     orderInformationContainer: {
+        borderTopWidth: 2,
+        borderTopColor: 'lightgrey',
         marginTop: Dimensions.get('window').height * .055,
-        justifyContent: 'space-between',
-        height: Dimensions.get('window').height * .275
+        height: Dimensions.get('window').height * .275,
+        width: Dimensions.get('window').width *.85,
+        alignSelf: 'center'
     },
     orderRow: {
+        backgroundColor: 'whitesmoke',
         flexDirection: 'row',
-        justifyContent: 'space-between',
         width: Dimensions.get('window').width * .85,
+        height: Dimensions.get('window').height * .08,
         alignSelf: 'center',
-        alignItems: 'center'
+        justifyContent: 'space-between',
+        borderBottomWidth: 2,
+        borderBottomColor: 'lightgrey',
+        
+    },
+    orderRowSecond: {
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        width: Dimensions.get('window').width *.85,
+        height: Dimensions.get('window').height * .08,
+        alignSelf: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 2,
+        borderBottomColor: 'lightgrey',
     },
     title: {
+        marginTop: Dimensions.get('window').height * .02,
         fontSize: Dimensions.get('window').height * .022,
     },
     informationView: {
-        backgroundColor: 'gainsboro',
         width: Dimensions.get('window').width * .4,
+        marginTop: Dimensions.get('window').height * .02,
         alignItems: 'center',
-        justifyContent: 'center',
         height: Dimensions.get('window').height * .05,
         borderRadius: 10
     },
     informationText: {
         fontSize: Dimensions.get('window').height * .02,
+    },
+    nameBox: {
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: Dimensions.get('window').width * .7
+    },
+    nameText: {
+        fontSize: Dimensions.get('window').height * .02,
+        fontWeight: '500'
+    },
+    dateBox: {
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: Dimensions.get('window').width * .275
+    },
+    dateText: {
+        fontSize: Dimensions.get('window').height * .02,
+        fontWeight: '500'
+    },
+    phoneCallIcon: {
+        marginLeft: Dimensions.get('window').width * .01, 
+        marginTop: Dimensions.get('window').width * .02, 
+        width: Dimensions.get('window').width * .09, 
+        height: Dimensions.get('window').height * .04,
+        color: 'white'
+    },
+    messageIcon: {
+        marginLeft: Dimensions.get('window').width * .015, 
+        marginTop: Dimensions.get('window').width * .015, 
+        width: Dimensions.get('window').width * .09, 
+        height: Dimensions.get('window').height * .04,
+        color: 'white'
+    },
+    iconBackStyle: {
+        backgroundColor: 'deepskyblue',
+        borderRadius: 40,
+        width: Dimensions.get('window').width * .1, 
+        height: Dimensions.get('window').height * .05,
     }
 
 });

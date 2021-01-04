@@ -407,6 +407,32 @@ const TrainerEditProfile = ({navigation}) => {
         .then((res) => {
           if (res.data.type === "success") {
             setUpdate(false);
+
+            dispatchBirthday({
+              type: 'SET_BIRTHDAY',
+              birthday: birthdaySelected
+            })
+
+            dispatchSingleAtTrainer({
+              type: 'SET_SINGLE_AT_TRAINER',
+              singleAtTrainer: singleAtTrainerInput
+           })
+
+          dispatchSingleOutdoor({
+              type: 'SET_SINGLE_OUTDOOR',
+              singleOutdoor: singleOutdoorInput
+          })
+
+          dispatchCoupleAtTrainer({
+              type: 'SET_COUPLE_AT_TRAINER',
+              coupleAtTrainer: coupleAtTrainerInput
+          })
+
+          dispatchCoupleOutdoor({
+              type: 'SET_COUPLE_OUTDOOR',
+              coupleOutdoor: coupleOutdoorInput
+          })
+          
             navigation.navigate("TrainerProfilePage");
           }
         })

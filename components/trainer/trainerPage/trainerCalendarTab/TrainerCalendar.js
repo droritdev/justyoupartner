@@ -104,7 +104,6 @@ const TrainerCalendar = ({navigation}) => {
             const endTime = singleEvent.end.slice(11);
             occupiedHours.push(startTime+'-'+endTime);
          }
-
         return occupiedHours;
     }
  

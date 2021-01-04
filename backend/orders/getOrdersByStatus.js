@@ -1,11 +1,14 @@
 //Impot the order model
 const orderModel = require('../models/orderModel');
 
+//{trainer.id:"5fecb647ae559a4f6e525ddb", "status":"pending"}
 //Get trainer oreders by a specific status (approoved/pending/accomplished)
 exports.getOrdersByStatus = (req, res) => {
     orderModel.find(
         {
-            trainerId: req.body.trainerId, 
+            trainer: {
+                id: req.body.trainer.id,
+            },
             status: req.body.status
         }, 
         (err, doc) => {

@@ -16,6 +16,7 @@ const updateMedia = require('./updateMedia/updateMedia');
 const updateTrainerInfo = require('./updateTrainerInfo/updateTrainerInfo');
 
 
+
         //**Client imports**//
 const findTrainerByCategory = require('./findTrainersByCategory/findTrainersByCategory');
 const makeOrder = require('./orders/makeOrder');
@@ -45,6 +46,7 @@ const updateEmailAddress = require('./updateEmailAddress/updateEmailAddress');
 const updatePhoneNumber = require('./updatePhoneNumber/updatePhoneNumber');
 const updateOrderStatus = require('./orders/updateOrderStatus');
 const getOrdersByStatus = require('./orders/getOrdersByStatus');
+const getOrdersByTrainerID = require('./orders/getOrdersByTrainerID');
 const logIn = require('./logIn/logIn');
 const signOut = require('./signOut/signOut');
 
@@ -97,6 +99,9 @@ app.put('/orders/update-status', updateOrderStatus.updateOrderStatus);
 
 //End point for searching order by status (declined/pending/approved/acomplished)
 app.get('/orders/search', getOrdersByStatus.getOrdersByStatus);
+
+//End point for searching order trainer id
+app.get('/orders/by-trainer-id/:id', getOrdersByTrainerID.getOrdersByTrainerID);
 
 //End point for log in existing accounts
 app.put('/log-in', logIn.logIn);
