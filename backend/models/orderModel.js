@@ -109,6 +109,6 @@ const orderSchema = new Schema(
 );
 
 //Create new order model who will contain object tyoe of "orderSchema" 
-const orderModel = mongoose.model("Orders", orderSchema);
+const orderModel = mongoose.model("orders", orderSchema);
 
 module.exports = orderModel;

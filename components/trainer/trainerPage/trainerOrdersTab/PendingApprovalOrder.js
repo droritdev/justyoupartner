@@ -1,24 +1,191 @@
-import React, {useContext, useState} from 'react';
-import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import {OrderContext} from '../../../../context/orderContexts/OrderContext';
 import FastImage from 'react-native-fast-image';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 import Icon from 'react-native-vector-icons/Feather';
+import Dialog from 'react-native-dialog';
+import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
+
 
 //The trainer's order page - pennding + approved
 const PendingApprovalOrder = ({navigation}) => {
 
-    const {orderObject, dispatchOrderObject} = useContext(OrderContext);
+    const {calendar, dispatchCalendar} = useContext(CalendarContext);
+    const {orderObject} = useContext(OrderContext);
+    const [approveClicked, setApproveClicked] = useState(false);
+    const [declineClicked, setDeclineClicked] = useState(false);
 
+    //Format the categories list to lower case with first letter upper case
+    const textDisplayFormat = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
+
+    //Hide bottom navgation UI
+    useEffect(() => {
+       navigation.dangerouslyGetParent().setOptions({
+        tabBarVisible: false
+       })
+    }, []);
+
+
+
+    //Axios post config
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
+
+
+
+    //Show bottom navgation UI
     const handleArrowButton = () => {
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: true
+        })
         navigation.navigate('TrainerOrdersPage');
     }
 
 
+    //Prompt approve pop-up
+    const handleApproveButton = () => {
+        setApproveClicked(true);
+    }
+
+
+
+    //Update order status to approved
+    const handleApproveClicked = () => {
+        axios  
+        .post('/orders/update-status', {
+            _id: orderObject._id,
+            status: "approved"
+        },
+        config
+        )
+        .then((res) => {
+            if (res.data.type === "success") {
+                createEventForCalendar();
+            }
+        })
+        .catch((err) =>  {
+            handleDismiss();
+            alert("Something went wrong, please try again later.");
+        });
+    }
+
+
+    //Create an event object to add to the calendar
+    const createEventForCalendar = () => {
+        var allEvents = calendar;
+        var usersInvolved = {
+            trainerID: orderObject.trainer.id,
+            clientID: orderObject.client.id
+        }
+
+        var event = 
+        { 
+            start: orderObject.trainingDate.startTime,
+            end: orderObject.trainingDate.endTime,
+            title: orderObject.client.firstName + ' ' + orderObject.client.lastName + ' - ' + textDisplayFormat(orderObject.category),
+            summary: textDisplayFormat(orderObject.type) + ' - ' + orderObject.location.address,
+            color: 'deepskyblue'  
+        }
+
+        allEvents.push({usersInvolved, event});
+    
+        updateTrainerCalendar(allEvents);
+    }
+
+
+
+    //Update trainer calendar with the new order 
+    const updateTrainerCalendar = async (allEvents) => {
+        axios  
+        .post('/trainers/updateTrainerInfo', {
+            _id: orderObject.trainer.id,
+            calendar: allEvents
+           
+        },
+        config
+        )
+        .then((res) => {
+          if (res.data.type === "success") {
+            handleDismiss();
+            handleArrowButton();
+          }
+        })
+        .catch((err) =>  {
+            handleDismiss();
+            alert("Something went wrong, please try again later.");
+        });
+    }
+
+
+
+    //Prompt decline pop-up
+    const handleDeclineButton = () => {
+        setDeclineClicked(true);
+    }
+
+
+
+
+    //Update order status to declined
+    const handleDeclineClicked = () => {
+        axios  
+        .post('/orders/update-status', {
+            _id: orderObject._id, 
+            status: 'decline'
+        },
+        config
+        )
+        .then((res) => {
+            if (res.data.type === "success") {
+                handleDismiss();
+                handleArrowButton();
+            }
+        })
+        .catch((err) =>  {
+            handleDismiss();
+            alert("Something went wrong, please try again later.");
+        });
+    }
+
+
+
+    //Dismiss pop-up
+    const handleDismiss = () => {
+        setDeclineClicked(false);
+        setApproveClicked(false);
+    }
+
     return(
         <SafeAreaView style={styles.safeArea}>
+            <View>
+                <Dialog.Container visible={approveClicked}>
+                    <Dialog.Title>Approve Order</Dialog.Title>
+                    <Dialog.Description>Do you want to approve this order ?</Dialog.Description>
+                    <Dialog.Button label="No" onPress={()=>handleDismiss()} />
+                    <Dialog.Button label="Yes" onPress={()=>handleApproveClicked()} />
+                </Dialog.Container>
+            </View>
+
+            <View>
+                <Dialog.Container visible={declineClicked}>
+                    <Dialog.Title>Decline Order</Dialog.Title>
+                    <Dialog.Description>Do you want to decline this order ?</Dialog.Description>
+                    <Dialog.Button label="No" onPress={()=>handleDismiss()} />
+                    <Dialog.Button label="Yes" onPress={()=>handleDeclineClicked()} />
+                </Dialog.Container>
+            </View>
+
             <ScrollView style={styles.container}> 
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
@@ -85,30 +252,42 @@ const PendingApprovalOrder = ({navigation}) => {
                     </View>
                     <View style={styles.orderRow}>
                         <Text style={styles.title}>Address:</Text>
-                        <View style={styles.informationView}>
+                        <View style={styles.addressView}>
                             <Text style={styles.informationText}>{orderObject.location.address}</Text>
                         </View>
                     </View>
                     <View style={styles.orderRowSecond}>
                         <Text style={styles.title}>Type of training:</Text>
                         <View style={styles.informationView}>
-                            <Text style={styles.informationText}>{orderObject.type}</Text>
+                            <Text style={styles.informationText}>{textDisplayFormat(orderObject.type)}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.orderRow}>
+                        <Text style={styles.title}>Category:</Text>
+                        <View style={styles.informationView}>
+                            <Text style={styles.informationText}>{textDisplayFormat(orderObject.category)}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.orderRowSecond}>
+                        <Text style={styles.title}>Cost:</Text>
+                        <View style={styles.informationView}>
+                            <Text style={styles.informationText}>{orderObject.cost + '$'}</Text>
                         </View>
                     </View>
                 </View>
 
                 <TouchableOpacity
-                    //onPress={}
+                        onPress={()=>handleApproveButton()}
                         style={styles.approveButton}
-                    >
+                >
                         <Text style={styles.approveButtonText}>Approve</Text>
                 </TouchableOpacity>
 
 
                 <TouchableOpacity
-                    //onPress={}
+                    onPress={()=>handleDeclineButton()}
                         style={styles.declineButton}
-                    >
+                >
                         <Text style={styles.approveButtonText}>Decline</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -143,12 +322,11 @@ const styles = StyleSheet.create({
     pendingTitle: {
         fontWeight: 'bold',
         alignSelf: 'center',
-        fontSize: Dimensions.get('window').height * .022,
+        fontSize: Dimensions.get('window').height * .03,
         marginLeft: Dimensions.get('window').width * .0483,
-        marginTop: Dimensions.get('window').height * .018
     },
     imageNameRowContainer: {
-        marginTop: Dimensions.get('window').height * .05,
+        marginTop: Dimensions.get('window').height * .04,
         flexDirection: 'row',
         width: Dimensions.get('window').width * .9,
         alignSelf: 'center',
@@ -193,7 +371,7 @@ const styles = StyleSheet.create({
     },  
     approveButton: {
         flex: 1,
-        marginTop: Dimensions.get('window').height * .08,
+        marginTop: Dimensions.get('window').height * .15,
         height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width * .85,
         alignSelf: 'center',
@@ -225,8 +403,8 @@ const styles = StyleSheet.create({
     orderInformationContainer: {
         borderTopWidth: 2,
         borderTopColor: 'lightgrey',
-        marginTop: Dimensions.get('window').height * .055,
-        height: Dimensions.get('window').height * .275,
+        marginTop: Dimensions.get('window').height * .040,
+        height: Dimensions.get('window').height * .3,
         width: Dimensions.get('window').width *.85,
         alignSelf: 'center'
     },
@@ -234,7 +412,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'whitesmoke',
         flexDirection: 'row',
         width: Dimensions.get('window').width * .85,
-        height: Dimensions.get('window').height * .08,
+        height: Dimensions.get('window').height * .07,
         alignSelf: 'center',
         justifyContent: 'space-between',
         borderBottomWidth: 2,
@@ -245,7 +423,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexDirection: 'row',
         width: Dimensions.get('window').width *.85,
-        height: Dimensions.get('window').height * .08,
+        height: Dimensions.get('window').height * .07,
         alignSelf: 'center',
         justifyContent: 'space-between',
         borderBottomWidth: 2,
@@ -253,7 +431,7 @@ const styles = StyleSheet.create({
     },
     title: {
         marginTop: Dimensions.get('window').height * .02,
-        fontSize: Dimensions.get('window').height * .022,
+        fontSize: Dimensions.get('window').height * .020,
     },
     informationView: {
         width: Dimensions.get('window').width * .4,
@@ -262,8 +440,18 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * .05,
         borderRadius: 10
     },
+    addressView: {
+        width: Dimensions.get('window').width * .4,
+        marginTop: Dimensions.get('window').height * .01,
+        alignItems: 'center',
+        height: Dimensions.get('window').height * .05,
+    },
     informationText: {
         fontSize: Dimensions.get('window').height * .02,
+    },
+    addressText: {
+        fontSize: Dimensions.get('window').height * .02,
+        marginBottom: Dimensions.get('window').height * .01,
     },
     nameBox: {
         borderRadius: 20,

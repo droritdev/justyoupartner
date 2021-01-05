@@ -95,12 +95,12 @@ app.put('/settings/update-email-address', updateEmailAddress.updateEmailAddress)
 app.put('/settings/update-phone-number', updatePhoneNumber.updatePhoneNumber);
 
 //End point for updating an order status
-app.put('/orders/update-status', updateOrderStatus.updateOrderStatus);
+app.post('/orders/update-status', updateOrderStatus.updateOrderStatus);
 
 //End point for searching order by status (declined/pending/approved/acomplished)
 app.get('/orders/search', getOrdersByStatus.getOrdersByStatus);
 
-//End point for searching order trainer id
+//End point for searching order by trainer id
 app.get('/orders/by-trainer-id/:id', getOrdersByTrainerID.getOrdersByTrainerID);
 
 //End point for log in existing accounts

@@ -14,6 +14,7 @@ import CertificationsContextProvider from './CertificationsContext';
 import MaximumDistanceContextProvider from './MaximumDistanceContext';
 import TrainingSiteContextProvider from './TrainingSiteContext';
 import TrainingPriceContextProvider from './TrainingPriceContext';
+import CalendarContextProvider from './CalendarContext';
 
 const TrainerGlobalStore = ({children}) => {
 
@@ -32,7 +33,9 @@ const TrainerGlobalStore = ({children}) => {
                                                     <TrainingPriceContextProvider>
                                                         <MediaContextProvider>
                                                             <PhoneContextProvider>
+                                                                <CalendarContextProvider>
                                                                 {children}  
+                                                                </CalendarContextProvider>
                                                             </PhoneContextProvider>
                                                         </MediaContextProvider>
                                                     </TrainingPriceContextProvider>

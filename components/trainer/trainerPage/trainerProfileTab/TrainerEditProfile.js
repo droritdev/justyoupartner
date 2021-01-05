@@ -125,6 +125,8 @@ const TrainerEditProfile = ({navigation}) => {
 
     const charsLimit = 130;
 
+
+
     //Sets the minimum age to 18 every time
     useEffect (() => {
       setIsNamesError(false);
@@ -133,10 +135,18 @@ const TrainerEditProfile = ({navigation}) => {
       let currentDay = new Date().getDate();
       setMaximumDate(new Date().setFullYear(currentYear - 18, currentMonth, currentDay));
       setMinimumDate(new Date().setFullYear(currentYear - 120, currentMonth, currentDay));
+
+      //Hide bottom navigation UI
+      navigation.dangerouslyGetParent().setOptions({
+        tabBarVisible: false
+       })
     }, []);
     
     //Navigates back to the ProfileDetailsPage1Trainer
     const handleArrowButton = () => {
+      navigation.dangerouslyGetParent().setOptions({
+        tabBarVisible: true
+       })
       navigation.navigate('TrainerProfilePage');
     }
 
@@ -433,6 +443,10 @@ const TrainerEditProfile = ({navigation}) => {
               coupleOutdoor: coupleOutdoorInput
           })
           
+          navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: true
+           })
+
             navigation.navigate("TrainerProfilePage");
           }
         })

@@ -19,6 +19,7 @@ import {TrainingSiteContext} from '../../../../context/trainerContextes/Training
 import {TrainingPriceContext} from '../../../../context/trainerContextes/TrainingPriceContext';
 import {PasswordContext} from '../../../../context/trainerContextes/PasswordContext';
 import {PhoneContext} from '../../../../context/trainerContextes/PhoneContext';
+import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
 
 //The trainer main profile page - profile area
 const TrainerProfilePage = ({navigation}) => {
@@ -43,6 +44,7 @@ const TrainerProfilePage = ({navigation}) => {
     const {phoneNumber, dispatchNumber} = useContext(PhoneContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
+    const {calendar, dispatchCalendar} = useContext(CalendarContext);
 
     const [age, setAge] = useState();
     const [starRating ,setStarRating] = useState();
@@ -61,14 +63,11 @@ const TrainerProfilePage = ({navigation}) => {
         },
     };
 
-    
-    //Load all trainer info from mongodb to the dispatch
-    useEffect(() => {
-
-        console.log("sa");
+     //Load all trainer info from mongodb to the dispatch
+    const getInfoFromMongoDB = () => {
         axios
-            .get('/trainers/'+auth().currentUser.email,
-            config
+        .get('/trainers/'+auth().currentUser.email,
+        config
         )
         .then((doc) => {
             if(doc) {
@@ -159,13 +158,33 @@ const TrainerProfilePage = ({navigation}) => {
                     type: 'SET_MEDIA_VIDEOS',
                     mediaVideos: doc.data[0].media.videos
                 });
+
+
+                dispatchCalendar({
+                    type: 'SET_CALENDAR',
+                    calendar: doc.data[0].calendar
+                });
+
+                
             }
             else{
                 alert("No trainer");
             }
         })
         .catch((err) => alert(err));
-    }, [])
+    };
+
+
+
+   //When page is focused, load info again
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getInfoFromMongoDB();
+        });
+    
+        
+        return unsubscribe;
+      }, [navigation]);
 
 
 

@@ -1,15 +1,14 @@
 //Impot the order model
 const orderModel = require('../models/orderModel');
 
-//Update a specific order status
+//Update a specific (by order ID) order status
 exports.updateOrderStatus = (req, res) => {
     orderModel.findByIdAndUpdate(
-        {_id: req.body.orderId},
-        {
-            status: req.body.status,
-            responseUser: req.body.responseUserID
-        }
+        req.body._id,
+        {$set:req.body},{new:true}
     )
-    .then(() => res.send("okay"))
+    .then(() => res.json({type: "success"}))
     .catch(err => res.status(400).json("Error: " + err));
 }
+
+

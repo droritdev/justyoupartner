@@ -25,9 +25,15 @@ const TrainerOrdersPage = ({navigation}) => {
         },
     };
 
-    useEffect(() => {
-        getTrainerOrders();
-    }, [])
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTrainerOrders();
+        });
+    
+        
+        return unsubscribe;
+      }, [navigation]);
+
 
 
     //Sets the single/couple flipToggle value

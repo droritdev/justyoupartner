@@ -8,6 +8,6 @@ exports.updateMedia = (req, res) => {
         {$set:req.body},{new:true}
     )
     .then(() => res.json({type: "success"}))
-    .catch(err => console.log(err.data));
+    .catch(err => res.status(400).json("Error: " + err));
 
 }

@@ -5,6 +5,10 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import EventCalendar from '../../../globalComponents/calendar/EventCalendar';
 import Dialog from "react-native-dialog";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
+import axios from 'axios';
+import auth from '@react-native-firebase/auth';
+import {IdContext} from '../../../../context/trainerContextes/IdContext';
 
 // calendar [Object of type Event]
 /*
@@ -35,11 +39,159 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 //Trainer calendar page
 const TrainerCalendar = ({navigation}) => {
 
+    const {trainerID, dispatchTrainerID} = useContext(IdContext);
+    const {calendar, dispatchCalendar} = useContext(CalendarContext);
     const [allEvents, setAllEvents] = useState([]);
     const [datePickerVisible, setDatePickerVisible] = useState(false);
     const [makeAvailableVisible, setMakeAvailableVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const forceUpdate = React.useReducer(bool => !bool)[1]; 
+
+    
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
+
+    //When window is focused. load all events.
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTrainerCalendar();
+        });
+    
+        
+        return unsubscribe;
+      }, [navigation]);
+
+     
+      //Get current trainer calendar from MongoDB and update UI
+      const getTrainerCalendar =  async () => { 
+        axios
+        .get('/trainers/'+auth().currentUser.email,
+        config
+        )
+        .then((doc) => {
+            var calendar = doc.data[0].calendar;
+            var allEvents = [];
+            for (let index = 0; index < calendar.length; index++) {
+                const singleCalendarData = calendar[index];
+                allEvents.push(singleCalendarData.event);
+            }
+            setAllEvents(allEvents);
+    
+            dispatchCalendar({
+                type: 'SET_CALENDAR',
+                calendar: calendar
+            });
+        })
+        .catch((err) => alert(err));
+      }
+
+
+
+
+    //Make the event available for customers
+    const handleMakeAvailableAccept = async () => {
+        setMakeAvailableVisible(false);
+
+        await getTrainerCalendar();
+
+        var events = allEvents;
+        var index = events.indexOf(selectedEvent);
+        var eventToRemove = events[index];
+
+        await removeEventFromMongoDB(eventToRemove);
+    }
+
+
+    //Remove a given event from the calendar object of trainer in database
+    const removeEventFromMongoDB = async (eventToRemove) => {
+        var tempCalendar = calendar;
+        var isEventInCalendar = false;
+        var tempIndex = -1;
+
+        //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
+        for (let j = 0; j < tempCalendar.length; j++) {
+            const singleCalendarData = tempCalendar[j];
+            //Check if the event is already inside the claendar object from mongo
+            if(eventToRemove === singleCalendarData.event) {
+                tempIndex = j;
+                isEventInCalendar = true;
+                break;
+            }
+        }
+
+        //Push the calendar object into our temp calendar
+        if(isEventInCalendar === true) {
+            tempCalendar.splice(tempIndex, 1);
+            await updateCalendarToMongoDB(tempCalendar);
+        }
+    }
+
+
+    //Update calendar to mongodb
+    const updateCalendarToMongoDB = async (calendar) => {
+        axios  
+        .post('/trainers/updateTrainerInfo', {
+            _id: trainerID,
+            calendar: calendar
+            
+        },
+        config
+        )
+        .then((res) => {
+            if (res.data.type === "success") {
+                getTrainerCalendar();
+                alert("Updated");
+            }
+        })
+        .catch((err) =>  {
+            alert("Something went wrong, please try again later.");
+        });
+    }
+
+
+
+
+
+    //Update trainer calendar with the new order 
+    const updateTrainerUnavailable = async () => {
+        var tempCalendar = calendar;
+        var isEventInCalendar = false;
+
+        var usersInvolved = {
+            trainerID: trainerID,
+            clientID: 'not involved'
+        }
+
+        //Run over all the events on the currently displayed calendar
+        for (let index = 0; index < allEvents.length; index++) {
+            const event = allEvents[index]; //single event on the app calendar
+            isEventInCalendar = false;
+
+            //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
+            for (let j = 0; j < tempCalendar.length; j++) {
+                const singleCalendarData = tempCalendar[j];
+                //Check if the event is already inside the claendar object from mongo
+                if(event === singleCalendarData.event) {
+                    isEventInCalendar = true;
+                    break;
+                }
+            }
+
+            //Push the calendar object into our temp calendar
+            if(isEventInCalendar === false) {
+                tempCalendar.push({usersInvolved, event});
+            }
+            
+        }
+     
+        await updateCalendarToMongoDB(tempCalendar);
+    }
+
 
 
     //Hides the Date picker when user close/confirm
@@ -76,17 +228,6 @@ const TrainerCalendar = ({navigation}) => {
     }
 
 
-    //Add event to the calendar
-    const handleAddEvent = () => {
-        // var temp = { start: '2021-01-03 02:30:00', end: '2021-01-03 03:30:00', title: 'Sunset yoga', summary: '3412 Piedmont Rd NE, GA 3032', color: 'deepskyblue' }
-        // var events = allEvents;
-        // events.push(temp);
-        // setAllEvents(events);
-        setAllEvents([]);
-        forceUpdate();
-    }
-
-    
     //Show date picker
     const handleBlockDay = () => {
         setDatePickerVisible(true);
@@ -208,7 +349,7 @@ const TrainerCalendar = ({navigation}) => {
             }
         }
         setAllEvents(events);
-        forceUpdate();
+        updateTrainerUnavailable();
     }
 
 
@@ -220,19 +361,28 @@ const TrainerCalendar = ({navigation}) => {
 
     
 
-    //Make the event available for customers
-    const handleMakeAvailableAccept = () => {
-        setMakeAvailableVisible(false);
-        var events = allEvents;
-        var index = events.indexOf(selectedEvent);
+    // const deleteOldEvents = () => {
+    //     var tempCalendar = calendar;
+    //     var isEventInCalendar = false;
+    //     var tempIndex = -1;
 
-        if (index > -1) {
-            events.splice(index, 1);
-        }
+    //     //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
+    //     for (let j = 0; j < tempCalendar.length; j++) {
+    //         const singleCalendarData = tempCalendar[j];
+    //         //Check if the event is already inside the claendar object from mongo
+    //         if(eventToRemove === singleCalendarData.event) {
+    //             tempIndex = j;
+    //             isEventInCalendar = true;
+    //             break;
+    //         }
+    //     }
 
-        setAllEvents(events);
-        forceUpdate();
-    }
+    //     //Push the calendar object into our temp calendar
+    //     if(isEventInCalendar === true) {
+    //         tempCalendar.splice(tempIndex, 1);
+    //         await updateCalendarToMongoDB(tempCalendar);
+    //     }
+    // }
 
 
     
@@ -257,23 +407,23 @@ const TrainerCalendar = ({navigation}) => {
                 </Dialog.Container>
             </View>
 
-
+            <View style={styles.headerContainer}>
+                    <Text style={styles.justYouHeader}>Just You</Text>
+                    <Text style={styles.partnerText}>Partner</Text>
+            </View>
         <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-                style={styles.addEventButton}
-                onPress={() => handleAddEvent()}
-                >
-                <Text style={styles.addEventText}> Add Event </Text>
-            </TouchableOpacity>
-
+            <Text style={styles.calendarTitle}>My Calendar</Text>
 
             <TouchableOpacity
-                style={styles.addEventButton}
+                style={styles.blockDayButton}
                 onPress={() => handleBlockDay()}
                 >
-                <Text style={styles.addEventText}> Block Day </Text>
+                <Text style={styles.blockDayText}> Block Day </Text>
             </TouchableOpacity>
         </View>
+
+
+       
 
              <EventCalendar
                 events={allEvents}
@@ -284,7 +434,6 @@ const TrainerCalendar = ({navigation}) => {
                 upperCaseHeader
                 uppercase
                 scrollToFirst
-                format24h
             />
 
             
@@ -300,30 +449,44 @@ const styles = StyleSheet.create({
             backgroundColor: 'white'
         }, 
         buttonsContainer: {
+            marginTop: Dimensions.get('window').height * .020,
+            marginBottom: Dimensions.get('window').height * .010,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
         },
         event: {
             zIndex: -1,
             opacity: 0.5
         },
-        addEventButton: {
-            marginBottom: Dimensions.get('window').height * .020,
-            width: Dimensions.get('window').width * .3,
-            height: Dimensions.get('window').height * .065,
-            alignItems: 'center',
-            justifyContent: 'center',
-            alignSelf: 'flex-start',
-            borderRadius: 20
-        },
-        addEventText: {
-            fontSize: Dimensions.get('window').height * .020,
-            fontWeight: 'bold',
-            color: 'deepskyblue'
-        },
         dialogStyle: {
             zIndex: 1
-        }
+        },
+        calendarTitle: {
+            color: 'black',
+            fontFamily: 'Noteworthy',
+            fontSize: Dimensions.get('window').height * .030,
+            marginLeft: Dimensions.get('window').width * .010,
+            fontWeight: 'bold'
+        },
+        blockDayText: {
+            marginTop: Dimensions.get('window').width * .020,
+            color: 'red',
+            fontSize: Dimensions.get('window').height * .020,
+            marginLeft: Dimensions.get('window').width * .010,
+            fontWeight: 'bold'
+        },
+        headerContainer: {
+            alignItems: 'center'
+          },
+        justYouHeader: {
+            fontSize: Dimensions.get('window').height * .0278,
+            fontWeight: 'bold'
+        },
+        partnerText: {
+            color: 'deepskyblue',
+            fontWeight: 'bold',
+            fontSize: Dimensions.get('window').height * .018
+        },
 });
 
 export default TrainerCalendar;
