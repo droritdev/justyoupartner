@@ -319,10 +319,14 @@ const TrainerCalendar = ({navigation}) => {
                 occupiedEventEndDate.setSeconds(endTime.split(":")[2]);
 
                 //example 1609707700000 >=  1609707600000 && 1609711000000 <= 1609711200000 
-                isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
-                 || (eventStartDate.getTime() > occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime())
-                 || (eventEndDate.getTime() > occupiedEventStartDate.getTime() && eventEndDate.getTime() < occupiedEventEndDate.getTime());
+                // isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
+                //  || (eventStartDate.getTime() > occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime())
+                //  || (eventEndDate.getTime() > occupiedEventStartDate.getTime() && eventEndDate.getTime() < occupiedEventEndDate.getTime());
 
+                isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() > occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() < occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() >= occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() < occupiedEventStartDate.getTime() && eventEndDate.getTime() > occupiedEventStartDate.getTime() && eventEndDate.getTime() < occupiedEventEndDate.getTime());
                 //Break loop and return answer if time is occupied (no need to continue)
                 if (isOccupied) {
                     break;
@@ -505,25 +509,27 @@ const TrainerCalendar = ({navigation}) => {
 
     
 
+    //Save value from start time picker
     const onStartTimeChage = (event) => {
         var selectedTime = new Date(event.nativeEvent.timestamp);
         selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
-        blockStartTime = selectedTime;
+        blockStartTime = new Date(selectedTime.toISOString());
     }
 
-
+    //Save value from end time picker
     const onEndTimeChage = (event) => {
         var selectedTime = new Date(event.nativeEvent.timestamp);
         selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
-        blockEndTime = selectedTime;
+        blockEndTime = new Date(selectedTime.toISOString());
+    
     }
 
-
+    //Check if time range is valid -> start time is before end time
+    //Check if time range is occupied -> another event is in those hours
+    //If all good -> add unavailable event in the selected hours range
     const handleBlockTimeSubmit = () => {
-        console.log(blockStartTime.getTime());
-        console.log(blockEndTime.getTime());
-
-        if (blockStartTime.getTime() >= blockEndTime.getTime() ) {
+        if (blockStartTime.getTime() >= blockEndTime.getTime()) {
+            //time range isn't valid
             Alert.alert(
                 'Invalid times',
                 'Start time must be before end time',
@@ -533,6 +539,7 @@ const TrainerCalendar = ({navigation}) => {
                   { cancelable: false }
                 )
         } else {
+            //time range is valid
             var fullDate = currentDisplayedDate;
             var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
 
@@ -541,13 +548,16 @@ const TrainerCalendar = ({navigation}) => {
 
             var addAbleEvent =  {start: fullDate+' '+ startTime, end: fullDate+' '+ endTime, title: 'UNAVAILABLE', color: 'lightgrey'};
             if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
+                //hours are empty of events
                 var events = [...allEvents];
                 events.push(addAbleEvent);
                 updateTrainerUnavailable(events);
+                setModalVisible(!modalVisible);
             } else {
+                //the hours range collide with an event
                 Alert.alert(
                     'Invalid times',
-                    'Start time must be before end time',
+                    'The selected time is occupied',
                     [
                         {text: 'Okay'},
                       ],
