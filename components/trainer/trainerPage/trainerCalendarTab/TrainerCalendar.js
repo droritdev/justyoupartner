@@ -1,10 +1,10 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 // import EventCalendar from 'react-native-events-calendar';
 import EventCalendar from '../../../globalComponents/calendar/EventCalendar';
 import Dialog from "react-native-dialog";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
@@ -42,10 +42,15 @@ const TrainerCalendar = ({navigation}) => {
     const {trainerID, dispatchTrainerID} = useContext(IdContext);
     const {calendar, dispatchCalendar} = useContext(CalendarContext);
     const [allEvents, setAllEvents] = useState([]);
-    const [datePickerVisible, setDatePickerVisible] = useState(false);
     const [makeAvailableVisible, setMakeAvailableVisible] = useState(false);
+    const [makeUnavailableVisible, setMakeUnavailableVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
-    const forceUpdate = React.useReducer(bool => !bool)[1]; 
+    const [currentDisplayedDate, setCurrentDisplayedDate] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+
+    var blockStartTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
+    var blockEndTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
+    // const forceUpdate = React.useReducer(bool => !bool)[1]; 
 
     
     const config = {
@@ -58,15 +63,17 @@ const TrainerCalendar = ({navigation}) => {
 
     //When window is focused. load all events.
     React.useEffect(() => {
+        setCurrentDisplayedDate(getCurrentDate());
+        
         const unsubscribe = navigation.addListener('focus', () => {
-            getTrainerCalendar();
+            deleteOldEvents();
         });
     
         
         return unsubscribe;
       }, [navigation]);
 
-     
+
       //Get current trainer calendar from MongoDB and update UI
       const getTrainerCalendar =  async () => { 
         axios
@@ -145,7 +152,6 @@ const TrainerCalendar = ({navigation}) => {
         .then((res) => {
             if (res.data.type === "success") {
                 getTrainerCalendar();
-                alert("Updated");
             }
         })
         .catch((err) =>  {
@@ -158,7 +164,9 @@ const TrainerCalendar = ({navigation}) => {
 
 
     //Update trainer calendar with the new order 
-    const updateTrainerUnavailable = async () => {
+    const updateTrainerUnavailable = async (allEvents) => {
+        await getTrainerCalendar();
+
         var tempCalendar = calendar;
         var isEventInCalendar = false;
 
@@ -194,9 +202,9 @@ const TrainerCalendar = ({navigation}) => {
 
 
 
-    //Hides the Date picker when user close/confirm
-    const hideDatePicker = () => {
-        setDatePickerVisible(false);
+    //Hides the confirmation pop-up for block day
+    const handleBlockDayCancel = () => {
+        setMakeUnavailableVisible(false);
     };
 
 
@@ -228,9 +236,14 @@ const TrainerCalendar = ({navigation}) => {
     }
 
 
-    //Show date picker
+    //Show confirmation pop-up to block all day
     const handleBlockDay = () => {
-        setDatePickerVisible(true);
+        setMakeUnavailableVisible(true);
+    }
+
+    //Show confirmation pop-up to block specific time ranges
+    const handleBlockTime = () => {
+        setModalVisible(true);
     }
 
 
@@ -322,11 +335,12 @@ const TrainerCalendar = ({navigation}) => {
 
 
     //Blocks the entire calendar for the picked date, only on available times
-    const handleBlockDayConfirm = (date) => {
-        setDatePickerVisible(false);
+    const handleBlockDayConfirm = async () => {
+        setMakeUnavailableVisible(false);
 
-        var fullDate = getFullDateFormat(date);
-        var events = allEvents;
+        var fullDate = currentDisplayedDate;
+        // var events = allEvents;
+        var events = [];
         var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
         var addAbleEvent = {};
 
@@ -348,10 +362,96 @@ const TrainerCalendar = ({navigation}) => {
                 }
             }
         }
-        setAllEvents(events);
-        updateTrainerUnavailable();
+        
+        //Get all currently displayed events on this date
+        var eventsOnPickedDate = getEventsFromDate(fullDate);
+
+        //Merge the current events and our 'addable' unavailable events into an array
+        var allDayEvents = [...eventsOnPickedDate, ...events];
+
+        //Get all unavailable events from the day
+        var unavailableEvents = uniteAllUnavailable(allDayEvents);
+
+        events = [...allEvents, ...unavailableEvents];
+        
+        updateTrainerUnavailable(events);
     }
 
+
+
+    //Get all the events in a day (real events + addable event) 
+    //and return an array with all the unavailable events united
+    const uniteAllUnavailable = (allDayEvents) => {
+        //Create customevent for future usage
+        var customEvent = {};
+
+        //Sort all the events by time in the array
+        allDayEvents = bubbleSort(allDayEvents);
+
+        for (let index = 0; index < allDayEvents.length-1;) {
+            const firstEvent = allDayEvents[index]; //00:00:00
+            const secondEvent = allDayEvents[index+1]; //01:00:00
+            
+            if(firstEvent.color === 'lightgrey' && secondEvent.color === 'lightgrey') {
+                customEvent = {start: firstEvent.start, end: secondEvent.end, title: 'UNAVAILABLE', color: 'lightgrey'};
+                allDayEvents.splice(index, 1);
+                allDayEvents[index] = customEvent;
+            }  else {
+                index++;
+            }
+        }
+        
+        var unavailableEvents = removeCustomerEvents(allDayEvents);
+        return unavailableEvents;
+    }
+
+
+
+
+    //Remove all real events (deepskyblue events) from the array
+    const removeCustomerEvents = (allDayEvents) => {
+        for (let index = 0; index < allDayEvents.length; index++) {
+            const singleEvent = allDayEvents[index];
+
+            if (singleEvent.color === 'deepskyblue') {
+                allDayEvents.splice(index, 1);
+            }  
+        }
+
+        return allDayEvents;
+    }
+
+
+
+        // Swap Numbers
+    const swapNumbers = (array, i, j) => {
+        // Save Element Value (Because It Will Change When We Swap/Reassign)
+        let temp = array[i];
+        // Assign Element2 To Element1
+        array[i] = array[j];
+        // Assign Element1 To Element2
+        array[j] = temp;
+    };
+
+    //Sort events array by time
+    const bubbleSort = (array) => {
+        // Iterate Over Array From First Element
+        for (let i = 0; i < array.length; i++) {
+        // Iterate Over Array From Succeeding Element
+        for (let j = 1; j < array.length; j++) {
+            // Check If First Element Is Greater Proceeding Element
+            const firstEvent = new Date(getDateInFormat(array[j - 1].start));
+            const secondEvent = new Date(getDateInFormat(array[j].start));
+
+            if (firstEvent.getTime() > secondEvent.getTime()) {
+                // Swap Numbers
+                swapNumbers(array, j - 1, j);
+            }
+        }
+        }
+        // Return Array
+        return array;
+    };
 
 
     //Cancel make available picker
@@ -361,42 +461,107 @@ const TrainerCalendar = ({navigation}) => {
 
     
 
-    // const deleteOldEvents = () => {
-    //     var tempCalendar = calendar;
-    //     var isEventInCalendar = false;
-    //     var tempIndex = -1;
+    //Convert  2021-01-03 07:00:00 to 2021-01-03T07:00:00.000Z
+    const getDateInFormat = (dateString) => {
+        return ((dateString.replace(/ /g, 'T'))+ '.000Z');
+    }
 
-    //     //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
-    //     for (let j = 0; j < tempCalendar.length; j++) {
-    //         const singleCalendarData = tempCalendar[j];
-    //         //Check if the event is already inside the claendar object from mongo
-    //         if(eventToRemove === singleCalendarData.event) {
-    //             tempIndex = j;
-    //             isEventInCalendar = true;
-    //             break;
-    //         }
-    //     }
+    
+    //Delete all events from calendar that are 30 days ago or more
+    const deleteOldEvents = async () => {
+        await getTrainerCalendar();
 
-    //     //Push the calendar object into our temp calendar
-    //     if(isEventInCalendar === true) {
-    //         tempCalendar.splice(tempIndex, 1);
-    //         await updateCalendarToMongoDB(tempCalendar);
-    //     }
-    // }
+        var tempCalendar = calendar;
+        var isEventOld = false;
+
+        //30 days time stamp
+        var timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000);
+
+        for (let index = 0; index < tempCalendar.length; index++) {
+            isEventOld = false;
+            const singleCalendarData = tempCalendar[index];
+            const singleEventDate = new Date(getDateInFormat(singleCalendarData.event.start));
+            // const singleEventDate =  new Date((singleCalendarData.event.start.replace(/ /g, 'T')) + '.000Z'); //2021-01-03T07:00:00.000Z
+
+             ///Check if event date is older than 30 days
+             if (timestamp > singleEventDate.getTime()) {
+                // The selected time is more than 30 days ago
+                isEventOld = true;
+            }
+
+            //Remove event from our temp calendar object 
+            if(isEventOld === true) {
+                tempCalendar.splice(index, 1);
+            }
+        }
+        await updateCalendarToMongoDB(tempCalendar);
+    }
+
+
+    //Update current displayed date
+    const handleOnDateChange = (date) => {
+        setCurrentDisplayedDate(date);
+    }
+
+    
+
+    const onStartTimeChage = (event) => {
+        var selectedTime = new Date(event.nativeEvent.timestamp);
+        selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+        blockStartTime = selectedTime;
+    }
+
+
+    const onEndTimeChage = (event) => {
+        var selectedTime = new Date(event.nativeEvent.timestamp);
+        selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+        blockEndTime = selectedTime;
+    }
+
+
+    const handleBlockTimeSubmit = () => {
+        console.log(blockStartTime.getTime());
+        console.log(blockEndTime.getTime());
+
+        if (blockStartTime.getTime() >= blockEndTime.getTime() ) {
+            Alert.alert(
+                'Invalid times',
+                'Start time must be before end time',
+                [
+                    {text: 'Okay'},
+                  ],
+                  { cancelable: false }
+                )
+        } else {
+            var fullDate = currentDisplayedDate;
+            var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
+
+            var startTime = blockStartTime.toISOString().slice(11, 19);
+            var endTime = blockEndTime.toISOString().slice(11, 19);
+
+            var addAbleEvent =  {start: fullDate+' '+ startTime, end: fullDate+' '+ endTime, title: 'UNAVAILABLE', color: 'lightgrey'};
+            if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
+                var events = [...allEvents];
+                events.push(addAbleEvent);
+                updateTrainerUnavailable(events);
+            } else {
+                Alert.alert(
+                    'Invalid times',
+                    'Start time must be before end time',
+                    [
+                        {text: 'Okay'},
+                      ],
+                      { cancelable: false }
+                    )
+            }
+        }
+    }
 
 
     
+
     return(
         <SafeAreaView style={styles.pageContainer}>
-
-            <DateTimePickerModal
-              isVisible={datePickerVisible}
-              mode="date"
-              onConfirm={(date) => handleBlockDayConfirm(date)}
-              onCancel={hideDatePicker}
-              headerTextIOS="Pick a date to block"
-            />
-
 
             <View>
                 <Dialog.Container visible={makeAvailableVisible}>
@@ -407,12 +572,91 @@ const TrainerCalendar = ({navigation}) => {
                 </Dialog.Container>
             </View>
 
+
+            <View>
+                <Dialog.Container visible={makeUnavailableVisible}>
+                    <Dialog.Title>Change availability</Dialog.Title>
+                    <Dialog.Description>Make all remaining hours unavailable for customers ?</Dialog.Description>
+                    <Dialog.Button label="Cancel" onPress={handleBlockDayCancel} />
+                    <Dialog.Button label="Accept" onPress={handleBlockDayConfirm} />
+                </Dialog.Container>
+            </View>
+
+
+            <Modal
+
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Block time range</Text>
+
+                        <Text style={styles.subtitleText}>Start time</Text>
+                        <DateTimePicker
+                            style={styles.pickerStyle}
+                            testID="dateTimePicker"
+                            minuteInterval={10}
+                            value={new Date(currentDisplayedDate)}
+                            mode={'time'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(time) => onStartTimeChage(time)}
+                           
+                        />
+
+                        <Text style={styles.subtitleText}>End time</Text>
+                        <DateTimePicker
+                            style={styles.pickerStyle}
+                            testID="dateTimePicker"
+                            minuteInterval={10}
+                            value={new Date(currentDisplayedDate)}
+                            mode={'time'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(time) => onEndTimeChage(time)}
+                        />
+                        <View style={styles.buttonsRow}> 
+                            <TouchableOpacity
+                                style={styles.cancelButton}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible);
+                                }}
+                            >
+                                <Text style={styles.cancelTextStyle}>Cancel</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.submitButton}
+                                onPress={() => {
+                                    handleBlockTimeSubmit();
+                                    // setModalVisible(!modalVisible);
+                                }}
+                            >
+                                <Text style={styles.submitTextStyle}>Submit</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
+
             <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
-                    <Text style={styles.partnerText}>Partner</Text>
+                    <Text style={styles.partnerText}>Calendar</Text>
             </View>
         <View style={styles.buttonsContainer}>
-            <Text style={styles.calendarTitle}>My Calendar</Text>
+            {/* <Text style={styles.calendarTitle}>My Calendar</Text> */}
+            <TouchableOpacity
+                style={styles.blockTimeButton}
+                onPress={() => handleBlockTime()}
+                >
+                <Text style={styles.blockTimeText}> Block Time </Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.blockDayButton}
@@ -423,14 +667,13 @@ const TrainerCalendar = ({navigation}) => {
         </View>
 
 
-       
-
              <EventCalendar
                 events={allEvents}
                 eventTapped={(event)=>handleEventTapped(event)}
                 width={Dimensions.get('window').width}
                 style ={styles.event}
                 initDate={getCurrentDate()}
+                dateChanged={(date)=> handleOnDateChange(date)}
                 upperCaseHeader
                 uppercase
                 scrollToFirst
@@ -463,7 +706,7 @@ const styles = StyleSheet.create({
         },
         calendarTitle: {
             color: 'black',
-            fontFamily: 'Noteworthy',
+            fontFamily: 'Arial',
             fontSize: Dimensions.get('window').height * .030,
             marginLeft: Dimensions.get('window').width * .010,
             fontWeight: 'bold'
@@ -472,8 +715,15 @@ const styles = StyleSheet.create({
             marginTop: Dimensions.get('window').width * .020,
             color: 'red',
             fontSize: Dimensions.get('window').height * .020,
+            marginRight: Dimensions.get('window').width * .010,
+            fontWeight: 'bold',
+        },
+        blockTimeText: {
+            marginTop: Dimensions.get('window').width * .020,
+            color: 'red',
+            fontSize: Dimensions.get('window').height * .020,
             marginLeft: Dimensions.get('window').width * .010,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
         },
         headerContainer: {
             alignItems: 'center'
@@ -487,6 +737,77 @@ const styles = StyleSheet.create({
             fontWeight: 'bold',
             fontSize: Dimensions.get('window').height * .018
         },
+        centeredView: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 22
+          },
+          modalView: {
+            margin: 20,
+            backgroundColor: "white",
+            borderRadius: 20,
+            height: Dimensions.get('window').height * .5,
+            width: Dimensions.get('window').width * .8,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5
+          },
+          cancelButton: {
+            marginLeft: Dimensions.get('window').width * .04,
+            backgroundColor: "lightgrey",
+            width: Dimensions.get('window').width * .25,
+            height: Dimensions.get('window').height * .05,
+            borderRadius: 20,
+            justifyContent: 'center'
+          },
+          cancelTextStyle: {
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center",
+          },
+          submitButton: {
+            marginRight: Dimensions.get('window').width * .04,
+            backgroundColor: "deepskyblue",
+            width: Dimensions.get('window').width * .25,
+            height: Dimensions.get('window').height * .05,
+            borderRadius: 20,
+            justifyContent: 'center'
+          },
+          submitTextStyle: {
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center",
+          },
+          modalText: {
+            marginTop:  Dimensions.get('window').height * .03,
+            fontWeight: "bold",
+            fontSize: Dimensions.get('window').height * .03,
+            textAlign: "center"
+          }, 
+          subtitleText: {
+            marginTop:  Dimensions.get('window').height * .025,
+            fontWeight: "bold",
+            fontSize: Dimensions.get('window').height * .02,
+            textAlign: "center"
+          },
+          buttonsRow: {
+            marginTop:  Dimensions.get('window').height * .03,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          },
+          pickerStyle: {
+            marginTop:  Dimensions.get('window').height * .025,
+            alignSelf: 'center',
+            width: Dimensions.get('window').width * .5,
+            height: Dimensions.get('window').height * .10,
+          }
+          
 });
 
 export default TrainerCalendar;
