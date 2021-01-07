@@ -24,6 +24,7 @@ const TrainerOrdersPage = ({navigation}) => {
           "Content-Type": "application/json",
         },
     };
+    
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {

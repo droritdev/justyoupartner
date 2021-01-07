@@ -492,14 +492,10 @@ const TrainerCalendar = ({navigation}) => {
         for (let j = 1; j < array.length; j++) {
             const firstEvent = new Date(getDateInFormat(array[j - 1].start));
             firstEvent.setHours(firstEvent.getHours()+firstEvent.getTimezoneOffset()/60);
-
-            // console.log("first " +firstEvent);
             
             const secondEvent = new Date(getDateInFormat(array[j].start));
             secondEvent.setHours(secondEvent.getHours()+secondEvent.getTimezoneOffset()/60);
-
-            // console.log("second " +secondEvent);
-
+            
             // Check If First Element Is Greater Proceeding Element
             if (firstEvent.getTime() > secondEvent.getTime()) {
                 // Swap Numbers
