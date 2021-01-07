@@ -1,11 +1,50 @@
 import React, {useContext, useState} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import axios from 'axios';
+
 
 //The trainer's order page - pennding + stats
 const StatsAndIncomes = ({navigation}) => {
 
     const [isIncome, setIsIncome] = useState(true);
+    const [completedOrders, setCompletedOrders] = useState([]);
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // getTrainerOrders();
+        });
+    
+        
+        return unsubscribe;
+      }, [navigation]);
+
+
+    // //Get all orders by trainer ID, sort by time created, assaign to designated const
+    // const getTrainerOrders = () => {
+    //     axios
+    //     .get('/orders/by-trainer-id/'+trainerID, 
+    //     config
+    //     )
+    //     .then((doc) => {
+    //         var allOrders = doc.data;
+    //         var completedOrders = [];
+
+    //         for (let index = 0; index < allOrders.length; index++) {
+    //             const singleOrder = allOrders[index];
+    //             if (singleOrder.status === "completed") {
+    //                 completedOrders.push(singleOrder);
+    //             } 
+    //         }
+
+    //         pendingOrders = sortOrders(pendingOrders);
+
+
+    //         setPendingOrders(pendingOrders);
+    //         setApprovedOrders(approvedOrders);
+    //     })
+    //     .catch((err) => alert(err));
+    // }
 
     //Sets the single/couple flipToggle value
     const handleFlipToggle = () => {

@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import {Alert, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import {OrderContext} from '../../../../context/orderContexts/OrderContext';
@@ -17,6 +17,7 @@ const PendingApprovalOrder = ({navigation}) => {
     const {orderObject} = useContext(OrderContext);
     const [approveClicked, setApproveClicked] = useState(false);
     const [declineClicked, setDeclineClicked] = useState(false);
+    // const [timeOccupiedMessage, setTimeOccupiedMessage] = useState(false);
 
     //Format the categories list to lower case with first letter upper case
     const textDisplayFormat = (str) => {
@@ -32,7 +33,6 @@ const PendingApprovalOrder = ({navigation}) => {
     }, []);
 
 
-
     //Axios post config
     const config = {
         withCredentials: true,
@@ -41,7 +41,6 @@ const PendingApprovalOrder = ({navigation}) => {
           "Content-Type": "application/json",
         },
     };
-
 
 
     //Show bottom navgation UI
@@ -60,8 +59,132 @@ const PendingApprovalOrder = ({navigation}) => {
 
 
 
-    //Update order status to approved
+    // Return an array of all occupied hours on the calendar
+    const getOccupiedHours = (events) => {
+        var occupiedHours = [];
+
+        for (let index = 0; index < events.length; index++) {
+            const singleEvent = events[index];            
+            const startTime = singleEvent.start.slice(11);
+            const endTime = singleEvent.end.slice(11);
+            occupiedHours.push(startTime+'-'+endTime);
+         }
+        return occupiedHours;
+    }
+
+
+    //Get all events on a certain date
+    const getEventsFromDate = (date) => {
+        var events = [];
+        
+        for (let index = 0; index < calendar.length; index++) {
+            const singleCalendarData = calendar[index];
+            events.push(singleCalendarData.event);
+        }
+
+        var eventsOnDate = [];
+
+        for (let index = 0; index < events.length; index++) {
+            const singleEvent = events[index];
+            const eventDate = singleEvent.start.slice(0, 10);
+
+            if (date === eventDate) {
+                eventsOnDate.push(singleEvent);
+            }
+        }
+
+        return eventsOnDate;
+    }
+
+
+
+        //Return if the addAbleEvent is on occupiedHours and can't add him
+        const checkIfTimeIsOccupied = (event, occupiedHours) => {
+            var isOccupied = false;
+            
+            if (occupiedHours === []) {
+                return false;
+            }
+
+            //Full date + time of the start of the addAbleEvent
+            var eventStartDate = new Date((event.start.replace(/ /g, 'T')) + '.000Z'); //2021-01-03T07:00:00.000Z
+            //Full date + time of the end of the addAbleEvent
+            var eventEndDate = new Date((event.end.replace(/ /g, 'T')) + '.000Z'); // 2021-01-03T08:00:00.000Z
+
+            //Set time according to Timezone
+            eventStartDate.setHours(eventStartDate.getHours()+eventStartDate.getTimezoneOffset()/60);
+            eventEndDate.setHours(eventEndDate.getHours()+eventStartDate.getTimezoneOffset()/60);
+
+            for (let index = 0; index < occupiedHours.length; index++) {
+                const hoursRange = occupiedHours[index]; //example: "05:00:00-06:00:00"
+
+                var occupiedEventStartDate = new Date(event.start.slice(0, 10));  // 2021-01-03T00:00:00.000Z
+                var occupiedEventEndDate = new Date(event.start.slice(0, 10)); // 2021-01-03T00:00:00.000Z
+                
+                var startTime = hoursRange.slice(0, 8); //example: "05:00:00"
+                var endTime = hoursRange.slice(9); //example: "06:00:00"
+
+                //example: 2021-01-03T05:00:00.000Z
+                occupiedEventStartDate.setHours(startTime.split(":")[0]);
+                occupiedEventStartDate.setMinutes(startTime.split(":")[1]);
+                occupiedEventStartDate.setSeconds(startTime.split(":")[2]);
+
+                //example: 2021-01-03T06:00:00.000Z
+                occupiedEventEndDate.setHours(endTime.split(":")[0]);
+                occupiedEventEndDate.setMinutes(endTime.split(":")[1]);
+                occupiedEventEndDate.setSeconds(endTime.split(":")[2]);
+
+                isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() > occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() < occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() >= occupiedEventEndDate.getTime())
+                || (eventStartDate.getTime() < occupiedEventStartDate.getTime() && eventEndDate.getTime() > occupiedEventStartDate.getTime() && eventEndDate.getTime() < occupiedEventEndDate.getTime());
+                //Break loop and return answer if time is occupied (no need to continue)
+                if (isOccupied) {
+                    break;
+                }
+            }
+
+            return isOccupied;
+    }
+
+
+
+
+
+    //Check if the time range is available on the trainer calendar
     const handleApproveClicked = () => {
+        //Get currently occupied hours (array) from according to the training date
+        var occupiedHours = getOccupiedHours(getEventsFromDate(orderObject.trainingDate.startTime.slice(0, 10)));
+
+        //Event to be added if time is available
+        var addAbleEvent = 
+        { 
+            start: orderObject.trainingDate.startTime,
+            end: orderObject.trainingDate.endTime,
+            title: orderObject.client.firstName + ' ' + orderObject.client.lastName + ' - ' + textDisplayFormat(orderObject.category),
+            summary: textDisplayFormat(orderObject.type) + ' - ' + orderObject.location.address,
+            color: 'deepskyblue'  
+        }
+
+        //Check if the event can be added to the current time (is time occupied)
+        if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
+            approveWorkout();
+        } else {
+            Alert.alert(
+                'Occupied time',
+                'The training date and time is currenly occupied. \n Please check your calendar.',
+                [
+                    {text: 'Okay', onPress: ()=> handleDismiss()},
+                ],
+                    { cancelable: false }
+                )
+        }
+    }
+
+
+
+    //Update order status to approved
+    const approveWorkout = () => {
         axios  
         .post('/orders/update-status', {
             _id: orderObject._id,
@@ -79,6 +202,7 @@ const PendingApprovalOrder = ({navigation}) => {
             alert("Something went wrong, please try again later.");
         });
     }
+
 
 
     //Create an event object to add to the calendar

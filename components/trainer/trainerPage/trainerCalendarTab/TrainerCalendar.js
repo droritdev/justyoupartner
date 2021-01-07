@@ -66,7 +66,7 @@ const TrainerCalendar = ({navigation}) => {
         setCurrentDisplayedDate(getCurrentDate());
         
         const unsubscribe = navigation.addListener('focus', () => {
-            deleteOldEvents();
+            getTrainerCalendar();
         });
     
         
@@ -80,16 +80,16 @@ const TrainerCalendar = ({navigation}) => {
         .get('/trainers/'+auth().currentUser.email,
         config
         )
-        .then((doc) => {
+        .then(async (doc) => {
             var calendar = doc.data[0].calendar;
             var allEvents = [];
             for (let index = 0; index < calendar.length; index++) {
                 const singleCalendarData = calendar[index];
                 allEvents.push(singleCalendarData.event);
             }
-            setAllEvents(allEvents);
+           setAllEvents(allEvents);
     
-            dispatchCalendar({
+           await dispatchCalendar({
                 type: 'SET_CALENDAR',
                 calendar: calendar
             });
@@ -117,26 +117,39 @@ const TrainerCalendar = ({navigation}) => {
     //Remove a given event from the calendar object of trainer in database
     const removeEventFromMongoDB = async (eventToRemove) => {
         var tempCalendar = calendar;
-        var isEventInCalendar = false;
-        var tempIndex = -1;
 
-        //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
-        for (let j = 0; j < tempCalendar.length; j++) {
-            const singleCalendarData = tempCalendar[j];
-            //Check if the event is already inside the claendar object from mongo
-            if(eventToRemove === singleCalendarData.event) {
-                tempIndex = j;
-                isEventInCalendar = true;
-                break;
-            }
-        }
-
+        var result = await checkIfEventIsOnCalendar(eventToRemove);
+        
         //Push the calendar object into our temp calendar
-        if(isEventInCalendar === true) {
-            tempCalendar.splice(tempIndex, 1);
+        if(result[0] === true) {
+            tempCalendar.splice(result[1], 1);
             await updateCalendarToMongoDB(tempCalendar);
         }
     }
+
+
+
+        //Check if a given event is on the calendar
+        //Returns an array: boolean and index of event on the calendar
+        const checkIfEventIsOnCalendar = async (eventToRemove) => {
+            var tempCalendar = calendar;
+            var isEventInCalendar = false;
+            var tempIndex = -1;
+    
+            //Run over all the objects on the calendar object from mongo ( {usersinvolved, event})
+            for (let j = 0; j < tempCalendar.length; j++) {
+                const singleCalendarData = tempCalendar[j];
+                //Check if the event is already inside the claendar object from mongo
+                if(eventToRemove === singleCalendarData.event) {
+                    tempIndex = j;
+                    isEventInCalendar = true;
+                    break;
+                }
+            }
+
+            return [isEventInCalendar, tempIndex];
+        }
+
 
 
     //Update calendar to mongodb
@@ -318,11 +331,6 @@ const TrainerCalendar = ({navigation}) => {
                 occupiedEventEndDate.setMinutes(endTime.split(":")[1]);
                 occupiedEventEndDate.setSeconds(endTime.split(":")[2]);
 
-                //example 1609707700000 >=  1609707600000 && 1609711000000 <= 1609711200000 
-                // isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
-                //  || (eventStartDate.getTime() > occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime())
-                //  || (eventEndDate.getTime() > occupiedEventStartDate.getTime() && eventEndDate.getTime() < occupiedEventEndDate.getTime());
-
                 isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
                 || (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() > occupiedEventEndDate.getTime())
                 || (eventStartDate.getTime() < occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() >= occupiedEventEndDate.getTime())
@@ -342,12 +350,17 @@ const TrainerCalendar = ({navigation}) => {
     const handleBlockDayConfirm = async () => {
         setMakeUnavailableVisible(false);
 
+        await getTrainerCalendar(); 
+
+        //Get the date that the trainer is curretly looking at on the calendar
         var fullDate = currentDisplayedDate;
-        // var events = allEvents;
         var events = [];
+        //Get occupied hours (hours that have events on) on this date
         var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
         var addAbleEvent = {};
 
+        //Run through a 24 hour period, and check if the hours are available
+        //If they are, create an unavailable event
         for (let index = 0; index < 24; index++) {
             if(index<9) {
                 addAbleEvent = {start: fullDate+' 0'+index+':00:00', end: fullDate+' 0'+(index+1)+':00:00', title: 'UNAVAILABLE', color: 'lightgrey'};
@@ -366,50 +379,84 @@ const TrainerCalendar = ({navigation}) => {
                 }
             }
         }
-        
+
+
         //Get all currently displayed events on this date
         var eventsOnPickedDate = getEventsFromDate(fullDate);
+
 
         //Merge the current events and our 'addable' unavailable events into an array
         var allDayEvents = [...eventsOnPickedDate, ...events];
 
-        //Get all unavailable events from the day
-        var unavailableEvents = uniteAllUnavailable(allDayEvents);
+        //Sort the events by their start time
+        allDayEvents = bubbleSort(allDayEvents);
 
-        events = [...allEvents, ...unavailableEvents];
+
+        //Get all unavailable events from the day
+        var unavailableEvents = await uniteAllUnavailable(allDayEvents);
+
+        events = [...unavailableEvents];
         
         updateTrainerUnavailable(events);
     }
 
 
 
+
+
     //Get all the events in a day (real events + addable event) 
     //and return an array with all the unavailable events united
-    const uniteAllUnavailable = (allDayEvents) => {
+    const uniteAllUnavailable = async (allDayEvents) => {
+
         //Create customevent for future usage
         var customEvent = {};
+        var eventsToRemove = [];
 
-        //Sort all the events by time in the array
-        allDayEvents = bubbleSort(allDayEvents);
-
+        //Run through all the events on the day
         for (let index = 0; index < allDayEvents.length-1;) {
             const firstEvent = allDayEvents[index]; //00:00:00
             const secondEvent = allDayEvents[index+1]; //01:00:00
             
+            //If the first event and second event are unavailable
             if(firstEvent.color === 'lightgrey' && secondEvent.color === 'lightgrey') {
+
+                //Check if the event is on the calendar (returns array [bool, index])
+                var firstResult = await checkIfEventIsOnCalendar(firstEvent);
+                var secondResult = await checkIfEventIsOnCalendar(secondEvent);
+
+                //If the event is on the calendar, add the event to the eventsToRemove
+                if (firstResult[0]) {
+                    eventsToRemove.push(firstEvent);
+                }
+                //If the event is on the calendar, add the event to the eventsToRemove
+                if (secondResult[0]) {
+                    eventsToRemove.push(secondEvent);
+                }
+                //Create custom event, from the first event start until the second event end
                 customEvent = {start: firstEvent.start, end: secondEvent.end, title: 'UNAVAILABLE', color: 'lightgrey'};
+                //Remove the first elemnt on the array and change the second
                 allDayEvents.splice(index, 1);
                 allDayEvents[index] = customEvent;
             }  else {
                 index++;
             }
         }
-        
+        //Remove all the eventsToRemove array from the database
+        await removeUnecessaryEvents(eventsToRemove);
+      
         var unavailableEvents = removeCustomerEvents(allDayEvents);
         return unavailableEvents;
     }
 
 
+    //Remove the old unavailable events
+    const removeUnecessaryEvents = async (eventsToRemove) => {
+        //Run over all the events needed to remove, and remove them
+        for (let index = 0; index < eventsToRemove.length; index++) {
+            const eventToRemove = eventsToRemove[index];
+            await removeEventFromMongoDB(eventToRemove);
+        }
+    }
 
 
     //Remove all real events (deepskyblue events) from the array
@@ -443,10 +490,17 @@ const TrainerCalendar = ({navigation}) => {
         for (let i = 0; i < array.length; i++) {
         // Iterate Over Array From Succeeding Element
         for (let j = 1; j < array.length; j++) {
-            // Check If First Element Is Greater Proceeding Element
             const firstEvent = new Date(getDateInFormat(array[j - 1].start));
-            const secondEvent = new Date(getDateInFormat(array[j].start));
+            firstEvent.setHours(firstEvent.getHours()+firstEvent.getTimezoneOffset()/60);
 
+            // console.log("first " +firstEvent);
+            
+            const secondEvent = new Date(getDateInFormat(array[j].start));
+            secondEvent.setHours(secondEvent.getHours()+secondEvent.getTimezoneOffset()/60);
+
+            // console.log("second " +secondEvent);
+
+            // Check If First Element Is Greater Proceeding Element
             if (firstEvent.getTime() > secondEvent.getTime()) {
                 // Swap Numbers
                 swapNumbers(array, j - 1, j);
