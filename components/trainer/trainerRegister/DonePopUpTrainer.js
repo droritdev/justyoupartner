@@ -98,10 +98,10 @@ const DonePopUpTrainer = ({navigation}) => {
     //Upload all media to firebase
     const uploadMedia = async (userRef) => {
         for (let i = 0; i < mediaPictures.length; i++) {
-            uploadImage(userRef, mediaPictures[i].uri, i);
+            uploadImage(userRef, mediaPictures[i], i);
         }   
         for (let i = 0; i < mediaVideos.length; i++) {
-            uploadVideo(userRef, mediaVideos[i].uri, i);
+            uploadVideo(userRef, mediaVideos[i], i);
          }        
     }
 
@@ -110,11 +110,12 @@ const DonePopUpTrainer = ({navigation}) => {
     const uploadImage = async (userRef, imageUri, imageNum) => {
         let ref = storage().ref(userRef+"images/trainerImage"+imageNum+getFormat(imageUri));
         await ref.putFile(imageUri).then((snapshot) => {
-            ref.getDownloadURL().then((url) => {
-                picturesURL.push(url);
-            })
         })
           .catch((e) => console.log("fail"));
+
+        await ref.getDownloadURL().then((url) => {
+            picturesURL.push(url);
+        })
     }
 
 
@@ -123,11 +124,13 @@ const DonePopUpTrainer = ({navigation}) => {
     const uploadVideo = async (userRef, videoUri, videoNum) => {
         let ref = storage().ref(userRef+"videos/trainerVideo"+videoNum+getFormat(videoUri));
         await ref.putFile(videoUri).then((snapshot) => {
-            ref.getDownloadURL().then((url) => {
-                videosURL.push(url);
-            })
+
           })
           .catch((e) => console.log("fail"));
+
+        await ref.getDownloadURL().then((url) => {
+            videosURL.push(url);
+        })
     }
 
 

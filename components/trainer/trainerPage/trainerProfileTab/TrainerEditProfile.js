@@ -555,14 +555,14 @@ const TrainerEditProfile = ({navigation}) => {
               <Text style={styles.birthdayErrorMessage}>{birthdayErrorMessage}</Text>
             : null}
           </View>
-          <Text style={styles.emailAddressText}>Email Address</Text>
+          {/* <Text style={styles.emailAddressText}>Email Address</Text>
           <TextInput 
             editable={false}
             placeholder={emailAddress}
             placeholderTextColor='black'
             style={styles.emailAddressButton}
           />
-          <Text style={styles.emailExplanationText}>We use your email to send you reciepts.</Text>
+          <Text style={styles.emailExplanationText}>We use your email to send you reciepts.</Text> */}
           <Text style={styles.categoryTitle}>Category</Text>
           <View style={styles.categoryContainer}>
             <View style={styles.categoryBoxContainer}>
@@ -949,7 +949,7 @@ const TrainerEditProfile = ({navigation}) => {
     inputsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .3,
-      marginTop: Dimensions.get('window').height * .044
+    
     },
     aboutMeContainer: {
       marginTop: Dimensions.get('window').height * .010,

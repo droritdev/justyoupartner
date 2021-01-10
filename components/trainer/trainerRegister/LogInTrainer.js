@@ -5,6 +5,7 @@ import auth from '@react-native-firebase/auth';
 
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
+import { Base64 } from 'js-base64';
 
 import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
@@ -53,8 +54,9 @@ const LogInTrainer = ({navigation}) => {
     //Auth user with Firebase after validation and login button click
     //After auth is complete, navigate to welcome page
     const authUser = () => {
+        var encodedPass = Base64.encode(passwordInput);
         auth()
-        .signInWithEmailAndPassword(emailAddressInput, passwordInput)
+        .signInWithEmailAndPassword(emailAddressInput, encodedPass)
         .then(() => {
             dispatchEmail({
                 type: 'SET_EMAIL_ADDRESS',
@@ -62,7 +64,7 @@ const LogInTrainer = ({navigation}) => {
               });
               dispatchPassword({
                 type: 'SET_PASSWORD',
-                password: passwordInput
+                password: encodedPass
               });
             navigation.navigate('WelcomeTrainer');
         })

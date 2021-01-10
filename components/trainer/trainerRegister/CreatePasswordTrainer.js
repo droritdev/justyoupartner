@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView} fro
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
+import { Base64 } from 'js-base64';
 
 import AppButton from '../../globalComponents/AppButton';
 
@@ -40,9 +41,10 @@ const CreatePasswordTrainer = ({navigation}) => {
           setIsPasswordsNotMatch(true);
         }
         else{
+          var encodedPass = Base64.encode(passwordInput);
           dispatchPassword({
             type: 'SET_PASSWORD',
-            password: passwordInput
+            password: encodedPass
           });
           setPasswordInput("");
           setConfirmedPassword("");
