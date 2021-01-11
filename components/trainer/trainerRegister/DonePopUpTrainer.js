@@ -64,7 +64,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
 
     //Check if the upload to Firebase is finished
-    const checkFinishFirebaseUpload = () => {
+    const checkFinishFirebaseUpload = async () => {
         if (mediaPictures.length === picturesURL.length && mediaVideos.length == videosURL.length) {
             clearInterval(checkFinishInterval);
             registerTrainer();
@@ -90,7 +90,7 @@ const DonePopUpTrainer = ({navigation}) => {
                     console.log('That email address is invalid!');
                 }
 
-                console.error(error);
+                // console.error(error);
             });
     }
 
@@ -143,8 +143,51 @@ const DonePopUpTrainer = ({navigation}) => {
 
 
 
+    //FAKE INFO FOR DEBUGGING
+    // name: {
+    //     first: "lala",
+    //     last: "lala"
+    // },
+    // birthday: "1/1/2021",
+    // email: "testing234@gmail.com",
+    // password: "MTIzNDU2",
+    // country: "United States",
+    // categories: ['swim', 'hunt', 'poop'],
+    // about: 'asdasdasdsa',
+    // certifications: 'asdasdasdsa',
+    // maximumDistance: 50,
+    // prices: { 
+    //     single: {
+    //         singleAtTrainer: '25', 
+    //         singleOutdoor: '35'
+    //     }, 
+    //     couple: {
+    //         coupleAtTrainer: '40', 
+    //         coupleOutdoor: '50'
+    //     } 
+    // }, 
+    // phone: {
+    //     areaCode: '001', 
+    //     phoneNumber: '1234567'
+    // },
+    // location: {
+    //     trainingSite1: {
+    //         address: 'lala street',
+    //         coordinates: [32.211, 32.4343]
+    //     },
+    //     trainingSite2: {
+    //         address: 'lala street',
+    //         coordinates: [32.211, 32.4343]
+    //     }
+    // },
+    // media: {
+    //     images: [],
+    //     videos: []
+    // }
+
+
     //Register trainer to mongodb
-    const registerTrainer = () => {
+    const registerTrainer = async () => {
         axios  
         .post('/trainers/register', {
             name: {
@@ -192,7 +235,7 @@ const DonePopUpTrainer = ({navigation}) => {
         )
         .then((res) => {
             setIsLoading(false);
-            setTimeout(() => navigation.navigate('WelcomeTrainer'), 1570);
+            setTimeout(function(){navigation.navigate('WelcomeTrainer')}, 2000);
         })
         .catch((err) => alert(err.data));
     }

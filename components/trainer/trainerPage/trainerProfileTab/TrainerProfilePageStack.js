@@ -15,6 +15,8 @@ import TrainerSettings from './TrainerSettings';
 import ChangeEmailAddress from './ChangeEmailAddres';
 import ChangePhoneNumber from './ChangePhoneNumber';
 import CustomerService from './CustomerService';
+import PrivacyPolicy from './PrivacyPolicy';
+import TermsConditions from './TermsConditions';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +39,8 @@ const TrainerProfilePageStack = ({navigation}) => {
             <Stack.Screen name='ChangeEmailAddress' component={ChangeEmailAddress}/>
             <Stack.Screen name='ChangePhoneNumber' component={ChangePhoneNumber}/>
             <Stack.Screen name='CustomerService' component={CustomerService}/>
+            <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy}/>
+            <Stack.Screen name='TermsConditions' component={TermsConditions}/>
         </Stack.Navigator>
     )
 }

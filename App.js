@@ -23,6 +23,7 @@ import WelcomeTrainer from './components/trainer/trainerRegister/WelcomeTrainer'
 import LogInTrainer from './components/trainer/trainerRegister/LogInTrainer';
 import AddPhotosTrainer from './components/trainer/trainerRegister/AddPhotosTrainer';
 import ForgotPasswordTrainer from './components/trainer/trainerRegister/ForgotPasswordTrainer';
+import TermsConditionsTrainer from './components/trainer/trainerRegister/TermsConditionsTrainer';
 import TrainerContainer from './components/trainer/trainerPage/TrainerContainer';
 
 import SignUpPlace from './components/place/placeRegister/SignUpPlace';
@@ -41,6 +42,7 @@ import RegisteringAccountPopUpPlace from './components/place/placeRegister/Regis
 import DetailsSuccessfullyPlace from './components/place/placeRegister/DetailsSuccessfullyPlace';
 import PhoneNumberVerificationPlace from './components/place/placeRegister/PhoneNumberVerificationPlace';
 import DonePopUpPlace from './components/place/placeRegister/DonePopUpPlace';
+
 
 import GlobalStore from './context/GlobalStore';
 
@@ -86,6 +88,7 @@ const App = () => {
           <Stack.Screen name='LogInTrainer' component={LogInTrainer} />
           <Stack.Screen name='ForgotPasswordTrainer' component={ForgotPasswordTrainer} />
           <Stack.Screen name='ResetPasswordTrainer' component={ResetPasswordTrainer} />
+          <Stack.Screen name='TermsConditionsTrainer' component={TermsConditionsTrainer} />
           <Stack.Screen name='TrainerContainer' component={TrainerContainer} />
 
           <Stack.Screen name='SignUpPlace' component={SignUpPlace} />

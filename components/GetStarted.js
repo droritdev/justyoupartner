@@ -7,7 +7,7 @@ const GetStarted = ({navigation}) => {
 
     //User nevigates to SignUp page after pressing the get started button
     const handleGetStartedButton = () => {
-        navigation.navigate('SignUpAs');
+        navigation.navigate('SignUpTrainer');
     }
     return(
         <SafeAreaView style={styles.welcomePage2}>

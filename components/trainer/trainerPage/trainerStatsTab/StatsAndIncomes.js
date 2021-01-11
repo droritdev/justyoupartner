@@ -373,7 +373,18 @@ const StatsAndIncomes = ({navigation}) => {
             </View> */}
             {isIncome?
                 <View>
-                    <View style={styles.tableHeaders}>
+                    {totalCompletedOrders.length === 0?
+                        <View> 
+                            <Image
+                                source={require('../../../../images/noReceipts.png')}
+                                style={styles.noOrdersImage}
+                            />
+                            <Text style={styles.noOrdersTitle}>{"NO RECEIPTS FOUND"}</Text>
+                            <Text style={styles.noOrdersMessage}>{"Looks like you haven't completed an order yet."}</Text>
+                        </View>
+                    :
+                    <View>
+                        <View style={styles.tableHeaders}>
                         <View style={styles.tableHeadersRow}>
                             <Text style={styles.headerTitle}>Name</Text>
                             <Text style={styles.headerTitle}>Date</Text>
@@ -381,10 +392,12 @@ const StatsAndIncomes = ({navigation}) => {
                             <Text style={styles.headerTitle}>Type</Text>
                             <Text style={styles.headerTitle}>Income</Text>
                         </View>
+                        </View>
+                        <View style={styles.incomesTableContainer}>
+                            {getCompletedOrders()}
+                        </View>
                     </View>
-                    <View style={styles.incomesTableContainer}>
-                        {getCompletedOrders()}
-                    </View>
+                    }
                 </View>
             :
                 <View>
@@ -472,7 +485,7 @@ const StatsAndIncomes = ({navigation}) => {
                             <Text style={styles.underGraphRowInformation} >{'Income : '+totalIncome +'$'}</Text>
                         </View>
                         <View style={styles.infoRow}>
-                            <Text style={styles.underGraphRowInformation} >{'Average order price : '+(totalIncome/totalCompletedOrders.length) +'$'}</Text>
+                            <Text style={styles.underGraphRowInformation} >{'Average order price : '+((totalIncome === 0 && totalCompletedOrders.length === 0) ? 0 : totalIncome/totalCompletedOrders.length) +'$'}</Text>
                         </View> 
                     </View>
                     :
@@ -774,6 +787,23 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'lightgrey',
     },
+    noOrdersTitle: {
+        marginTop: Dimensions.get('window').height * .02,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .03,
+        fontWeight: '600'
+    },
+    noOrdersMessage: {
+        marginTop: Dimensions.get('window').height * .01,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .02,
+    },
+    noOrdersImage: {
+        marginTop: Dimensions.get('window').height * .02,
+        alignSelf: 'center',
+        width: Dimensions.get('window').width * .9,
+        height: Dimensions.get('window').height * .4,
+    }
 });
 
 export default StatsAndIncomes;

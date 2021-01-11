@@ -23,6 +23,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     const {country, dispatchCountry} = useContext(CountryContext);
     const [isLocationPermission, setIsLocationPermission] = useState(false);
     const [isPushPermission, setIsPushPermission] = useState(false);
+    const [isTermsConditions, setIsTermsConditions] = useState(true);
     const [isPermissionsNotConfirmed, setIsPermissionsNotConfirmed] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("Pick a country");
     const [selectedCountryName, setSelectedCountryName] = useState("");
@@ -42,6 +43,12 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     const handleArrowButton = () => {
       navigation.navigate('CreatePasswordTrainer');
     }
+
+    //Navigates to terms and conditions page
+    const handleReadMore = () => {
+      navigation.navigate('TermsConditionsTrainer');
+    }
+    
 
     //Sets the selected country array to the value
     const handleOnChangeCountry = (value) => {
@@ -72,6 +79,11 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
         //toogle is off
         setIsLocationPermission(newState);
       }
+    }
+    
+    //Sets the terms and conditions to the value
+    const handleTermsToggleChange = (newState) => {
+      setIsTermsConditions(newState);
     }
 
 
@@ -194,6 +206,8 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       }
       else if(!isLocationPermission || !isPushPermission){
         setIsPermissionsNotConfirmed(true);
+      } else if (!isTermsConditions) {
+        
       }
       else{
         setIsPermissionsNotConfirmed(false);
@@ -242,6 +256,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
             </View>
             <Text style={{color: 'grey'}}>By sharing your location you'll see which instructors and sport clubs are next to you
             </Text>
+
             <View style={styles.permissionsSection}>
               <Text 
                 style={{fontWeight: 'bold', fontSize: 20}}
@@ -255,9 +270,39 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
               We'll let you know how your order is doing
             </Text>
           </View>
+
+          <View style={styles.termsContainer}>
+            <Text style={styles.termsText}>Terms & Conditions </Text>
+            <View style={styles.termsSection}>
+                <Text 
+                  style={styles.policyText}
+                >
+                  I have read and agree with the user terms of service and I understand that my personal data will be processed in accordance with Just You privacy statment.  
+                </Text> 
+              <FlipToggleButton
+                value={isTermsConditions}
+                onToggle={(newState) => handleTermsToggleChange(newState)}
+              />
+            </View>      
+          </View>
+          <TouchableOpacity
+                  onPress={()=>handleReadMore()}
+                  style={styles.readMoreContainer}
+              >
+                  <Text style={styles.readMoreText}>
+                      Read more
+                  </Text>
+              </TouchableOpacity>  
+
+          
           {isPermissionsNotConfirmed ?
           <Text style={styles.permissionsErrorText}>Please allow both permissions to continue the registration</Text>
           :null}
+
+        {!isTermsConditions && !isPermissionsNotConfirmed ?
+          <Text style={styles.permissionsErrorText}>Please aggre to our terms & conditions </Text>
+          :null}
+
           <View style={styles.nextButtonContainer}>
           <AppButton 
               title="Next"
@@ -279,8 +324,6 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       marginLeft: Dimensions.get('window').width * .0483
     },
     upperContainer: {
-      marginTop: Dimensions.get('window').height * .0278,
-      justifyContent: 'space-between',
       height: Dimensions.get('window').height * .275,
     },
     profileDetailesText: {
@@ -289,10 +332,12 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       marginLeft: Dimensions.get('window').width * .0483
     },
     fillTheFieldsText: {
+      marginTop: Dimensions.get('window').height * .01,
       fontSize: Dimensions.get('window').height * .025,
       marginLeft: Dimensions.get('window').width * .0483
     },
     countryContainer: {
+      marginTop: Dimensions.get('window').height * .022,
       height: Dimensions.get('window').height * .11,
     },
     countryTitle: {
@@ -308,7 +353,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
-      marginTop: Dimensions.get('window').height * .077,
+      marginTop: Dimensions.get('window').height * .01,
       marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {
@@ -326,8 +371,23 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       textAlign:'center',
       color: 'red',
       fontSize: Dimensions.get('window').height * .018,
-      marginTop: Dimensions.get('window').height * .0278
+      marginTop: Dimensions.get('window').height * .015
     }, 
+    termsContainer: {
+      justifyContent: 'space-between',
+      height: Dimensions.get('window').height * .15,
+      marginTop: Dimensions.get('window').height * .03,
+      marginLeft: Dimensions.get('window').width * .0483
+    },
+    termsText: {
+      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .029
+    },
+    termsSection: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginRight: Dimensions.get('window').width * .0483,
+    },
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
@@ -347,6 +407,21 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       fontWeight: 'bold',
       color: 'white'
     },
+    policyText: {
+      marginTop: Dimensions.get('window').height * .01,
+      width: Dimensions.get('window').width * .7,
+      fontWeight: 'bold',
+      fontSize: Dimensions.get('window').height * .017
+  },
+  readMoreText: {
+    color: 'deepskyblue',
+    fontWeight: 'bold',
+    fontSize: Dimensions.get('window').height * .015,
+  },
+  readMoreContainer: {
+    marginTop: Dimensions.get('window').height * .01,
+    marginLeft: Dimensions.get('window').width * .0483
+  }
   });
 
   export default ProfileDetailsPage1Trainer;

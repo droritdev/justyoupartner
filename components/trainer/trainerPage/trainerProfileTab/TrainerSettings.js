@@ -10,8 +10,18 @@ const TrainerSettings = ({navigation}) => {
 
     const [dialogVisible, setDialogVisible] = useState(false);
 
+    useEffect (() => {
+        //Hide bottom navigation UI
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: false
+        })
+    }, []);
+
     //Navigates back to the profile page
     const handleOnArrowPress = () => {
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: true
+        })
         navigation.navigate('TrainerProfilePage');
     }
 
@@ -19,7 +29,7 @@ const TrainerSettings = ({navigation}) => {
         setDialogVisible(false);
         auth()
         .signOut()
-        .then(() => console.log('User signed out!'));
+        .then(() => navigation.navigate('GetStarted'));
     };
 
     const handleNoDialog = () => {
@@ -33,9 +43,17 @@ const TrainerSettings = ({navigation}) => {
     const handleOnChangeEmailPress = () => {
         navigation.navigate('ChangeEmailAddress');
     }
-
+    
     const handleOnChangePhonePressed = () => {
         navigation.navigate('ChangePhoneNumber');
+    }
+
+    const handlePrivacyPolicy = () => {
+        navigation.navigate('PrivacyPolicy');
+    }
+
+    const handleTermsConditions = () => {
+        navigation.navigate('TermsConditions');
     }
 
     return(
@@ -115,7 +133,7 @@ const TrainerSettings = ({navigation}) => {
                 <View style={styles.settingsContainer2}>
                     <View style={styles.policyrow}>
                         <TouchableOpacity
-                            //onPress={() => handleOnEditProfilePressed()}
+                            onPress={() => handlePrivacyPolicy()}
                         >
                             <Text style={styles.policytitle}>Privacy policy</Text>
                         </TouchableOpacity>
@@ -130,7 +148,9 @@ const TrainerSettings = ({navigation}) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.termsRow}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => handleTermsConditions()}
+                        >
                             <Text style={styles.termsTitle}>Terms & Conditions</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.arrowButton}>

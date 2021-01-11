@@ -218,14 +218,35 @@ const TrainerOrdersPage = ({navigation}) => {
                 {isPending ?
                     <View style={styles.pendingContainer}>
                         <View style={styles.pendingOrderView}>
-                            {getPendingOrdersPattern()}
+                            {pendingOrders.length === 0 ? 
+                            <View> 
+                                    <Image
+                                        source={require('../../../../images/noOrders.png')}
+                                        style={styles.noOrdersImage}
+                                    />
+                                  <Text style={styles.noOrdersTitle}>{"NO PENDING ORDERS"}</Text>
+                                  <Text style={styles.noOrdersMessage}>{"Looks like you haven't received orders yet."}</Text>
+                            </View>
+                            :
+                            getPendingOrdersPattern()}
                         </View>
                     </View>
                     : 
                     <View style={styles.pendingContainer}>
                         <View style={styles.pendingOrderView}>
-                            {getApprovedOrdersPattern()}
+                            {approvedOrders.length === 0 ? 
+                            <View> 
+                                <Image
+                                    source={require('../../../../images/noOrders.png')}
+                                    style={styles.noOrdersImage}
+                                />
+                                <Text style={styles.noOrdersTitle}>{"NO APPROVED ORDERS"}</Text>
+                                <Text style={styles.noOrdersMessage}>{"Looks like you haven't approved orders yet."}</Text>
+                            </View>
+                            :
+                            getApprovedOrdersPattern()}
                         </View>
+
                     </View>
                     }
             </ScrollView>
@@ -392,6 +413,23 @@ const styles = StyleSheet.create({
     },
     arrowButton: {
     },
+    noOrdersTitle: {
+        marginTop: Dimensions.get('window').height * .02,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .03,
+        fontWeight: '600'
+    },
+    noOrdersMessage: {
+        marginTop: Dimensions.get('window').height * .01,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .02,
+    },
+    noOrdersImage: {
+        marginTop: Dimensions.get('window').height * .02,
+        alignSelf: 'center',
+        width: Dimensions.get('window').width * .9,
+        height: Dimensions.get('window').height * .4,
+    }
 });
 
 export default TrainerOrdersPage;

@@ -11,7 +11,7 @@ const ChangeEmailAddress = ({navigation}) => {
     const [emailAddressInput, setEmailAddressInput] = useState("");
     const [codeInput, setCodeInput] = useState("");
 
-    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCodeSent, setIsCodeSent] = useState('none');
     const [isEmailError, setIsEmailError] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
     const [isCodeError, setIsCodeError] = useState(false);
@@ -28,7 +28,6 @@ const ChangeEmailAddress = ({navigation}) => {
     const mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const sendVerifyEmail = () => {
         alert("Code sent");
-        // setIsCodeSent(true);
         //   axios
         //     .post('/send-verification-code', {
         //       to: emailAddress,
@@ -75,7 +74,7 @@ const ChangeEmailAddress = ({navigation}) => {
         //     setEmailErrorMessage("Enter your current email address");
         // }
         else{
-            setIsCodeSent(true);
+            setIsCodeSent('flex');
             sendVerifyEmail();
         }
     }
@@ -175,31 +174,34 @@ const ChangeEmailAddress = ({navigation}) => {
                 style={styles.getCodeButton}
                 onPress={() => handleGetCodePressed()}
                 >
-                <Text style={styles.getcodeButtonText}>Get Code</Text>
+                <Text style={styles.getcodeButtonText}>Send code</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.codeAndErrorContainer}>
-                <View style={styles.codelInput}>
-                    <TextInput
-                        style={{fontSize: 25}}
-                        textAlign='center'
-                        placeholder='Enter your code'
-                        onChangeText={text => handleOnCodeInputChange(text)}
-                    />
+            <View display={isCodeSent}>
+                <View style={styles.codeAndErrorContainer}>
+                    <View style={styles.codelInput}>
+                        <TextInput
+                            style={{fontSize: 25}}
+                            textAlign='center'
+                            placeholder='Enter your code'
+                            onChangeText={text => handleOnCodeInputChange(text)}
+                        />
+                    </View>
+                    {isCodeError ? 
+                        <Text style={styles.codeErrorMessage}>{codeErrorMessage}</Text>
+                    : null}
                 </View>
-                {isCodeError ? 
-                    <Text style={styles.codeErrorMessage}>{codeErrorMessage}</Text>
-                : null}
+                <Text style={styles.codeExplination2}>Enter the code you recived to approve your new address</Text>
+                <View style={styles.approveCodeButtonContainer}>
+                    <TouchableOpacity
+                    style={styles.approveCodeButton}
+                    onPress={() => handleApprovePressed()}
+                    >
+                    <Text style={styles.approveButtonText}>Approve</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <Text style={styles.codeExplination2}>Enter the code you recived to approve your new address</Text>
-            <View style={styles.approveCodeButtonContainer}>
-                <TouchableOpacity
-                style={styles.approveCodeButton}
-                onPress={() => handleApprovePressed()}
-                >
-                <Text style={styles.approveButtonText}>Approve</Text>
-                </TouchableOpacity>
-            </View>
+        
         </SafeAreaView>
     )
 } 
@@ -302,9 +304,9 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .011
     },
     approveCodeButtonContainer: {
+        marginTop: Dimensions.get('window').height * .011,
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 100
     },
     approveCodeButton: {
         width: Dimensions.get('window').width * .9,

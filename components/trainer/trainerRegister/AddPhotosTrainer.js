@@ -21,7 +21,6 @@ const AddPhotosTrainer = ({navigation}) => {
     const [visible, setVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState("");
     const [selectedType, setSelectedType] = useState("");
-    const [numOfElements, setNumOfElements] = useState(8);
     const [isError, setIsError] = useState(false); 
     const [errorMessage ,setErrorMessage] = useState("");
   
@@ -69,17 +68,6 @@ const AddPhotosTrainer = ({navigation}) => {
     }
 
 
-    const uploadTest = async (uri, i) => {
-      await storage().ref("/alot/test"+i).putFile(uri).then((snapshot) => {
-          console.log(snapsoht);
-        })
-        .catch((e) => alert("fail"));
-    }
-
-    // for (let i = 0; i < pictures; i++) {
-    //     uploadTest(pictures[i].uri, i);
-    // }
-
 
     //Show image picker with crop and set image to the cropped image
     const handleImage = (index) => {
@@ -91,7 +79,7 @@ const AddPhotosTrainer = ({navigation}) => {
           }).then(image => {
             const source = {uri: "file://"+image.path};
             let picturesTemp = [...pictures];
-            picturesTemp[index] = source;
+            picturesTemp[index] = source.uri;
             picturesTemp = bubbleSort(picturesTemp);
             setPictures(picturesTemp);
             setIsError(false);
@@ -134,7 +122,7 @@ const AddPhotosTrainer = ({navigation}) => {
           }).then((video) => {
             const source = {uri: video.sourceURL};
             let videosTemp = [...videos];
-            videosTemp[index] = source;
+            videosTemp[index] = source.uri;
             videosTemp = bubbleSort(videosTemp);
             setVideos(videosTemp);
         }).catch(err => {
@@ -189,65 +177,73 @@ const AddPhotosTrainer = ({navigation}) => {
     //Sets the view to rows and cols for the images
     const getImagePattern = () => {
         let repeats = [];
-        for(let i = 0; i < numOfElements; i+=2) {
+        for(let i = 0; i < pictures.length; i++) {
             repeats.push(
                 <View style={styles.rowPicturesContainer}>
                     <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
+                    onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
+                    style={styles.shadowContainer}
                     >
-                        <Image
-                            source={pictures[i]}
-                            style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            key={i}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("pic", i+1) : handleImage(i+1)}
-                    >
-                        <Image
-                            source={pictures[i+1]}
-                            style={isPencilPressed ? styles.deletePicture : styles.picture}
-                            key={i+1}
-                        />
-                    </TouchableOpacity>
+                    <Image
+                        source={{uri: pictures[i]}}
+                        style={isPencilPressed ? styles.deletePicture : styles.picture}
+                        key={'image'+i}
+                    />
+                </TouchableOpacity>
                 </View>
-            )
+            ) 
         }
+        repeats.push(
+            <View style={styles.rowPicturesContainer}>
+                <TouchableOpacity
+                onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
+                >
+                <Image
+                    source={require('../../../images/plusIcon.png')}
+                    style={styles.plusPicture}
+                    key={'addImage'}
+                />
+            </TouchableOpacity>
+            </View>
+        )
         return repeats;
     }
 
     //Sets the view to rows and cols for the videos 
     const getVideoPattern = () => {
         let repeats = [];
-        for(let i = 0; i < numOfElements; i+=2) {
+        for(let i = 0; i < videos.length; i++) {
             repeats.push(
                 <View style={styles.rowPicturesContainer}>
                     <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
+                        style={styles.shadowContainer}
                     >
                         <Video 
                             resizeMode="cover"  
                             controls={videos[i]=== undefined?  false : !isPencilPressed}
-                            source={videos[i]}
+                            source={{uri: videos[i]}}
                             style={isPencilPressed ? styles.deletePicture : styles.video}
-                            key={i}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => isPencilPressed ? handlePencilPressed("vid", i+1) : handleVideo(i+1)}
-                    >
-                        <Video
-                            resizeMode="cover"  
-                            controls={videos[i+1]=== undefined? false : !isPencilPressed}
-                            source={videos[i+1]}
-                            fullscreen={true}
-                            style={isPencilPressed ? styles.deletePicture : styles.video}
-                            key={i+1}
+                            key={'video'+i}
                         />
                     </TouchableOpacity>
                 </View>
             )
         }
+
+        repeats.push(
+            <View style={styles.rowPicturesContainer}>
+                <TouchableOpacity
+                onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
+                >
+                <Image
+                    source={require('../../../images/plusIcon.png')}
+                    style={styles.plusPicture}
+                    key={'addVideo'}
+                />
+            </TouchableOpacity>
+            </View>
+        )
         return repeats;
     }
 
@@ -261,6 +257,8 @@ const AddPhotosTrainer = ({navigation}) => {
                     <Dialog.Button label="Delete" onPress={handleDelete} />
                 </Dialog.Container>
             </View>
+
+
             <View style={styles.headerContainer}>
             <ArrowBackButton
                 onPress={handleArrowButton}
@@ -278,21 +276,25 @@ const AddPhotosTrainer = ({navigation}) => {
 
 
 
-            <ScrollView ref={scrollRef} style={styles.mainScrollContainer} >
-                <ScrollView ref={scrollRef} style={styles.photoScrollContainer}>
-                    <View style={styles.picturesListContainer}>
-                        <Text style={styles.photoTitle}>Photos</Text>
-                        <Text style={styles.profilePictureText}>Profile Picture</Text>
-                        {getImagePattern()}
-                    </View>
+            
+            <Text style={styles.photoTitle}>Photos</Text>
+                <ScrollView style={styles.photoScrollContainer}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    >
+                    {getImagePattern()}
                 </ScrollView>
-                <ScrollView  ref={scrollRef} style={styles.videoScrollContainer}>
-                    <View style={styles.videosListContainer}>
-                        <Text style={styles.videoTitle}>Videos</Text>
-                        {getVideoPattern()}
-                    </View>
-                </ScrollView>
-            </ScrollView>
+
+                <Text style={styles.videoTitle}>Videos</Text>
+
+                <ScrollView style={styles.videoScrollContainer}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    >
+                    {getVideoPattern()}
+                </ScrollView>            
 
             <View style={styles.submitButtonContainer}>
             {isError ?
@@ -344,28 +346,29 @@ const styles = StyleSheet.create ({
     photoTitle: {
         fontSize: Dimensions.get('window').height * .030,
         fontWeight: 'bold',
-        marginTop: Dimensions.get('window').height * .008,
+        marginTop: Dimensions.get('window').height * .08,
         marginBottom: Dimensions.get('window').height * .03,
         alignSelf: 'center',
         color: "deepskyblue"
     },
     photoScrollContainer: {
-        marginTop: Dimensions.get('window').height * .02,
+        height: Dimensions.get('window').height * .0005,
     },
     picturesListContainer: {
         marginTop: Dimensions.get('window').height * .040,
         
     },
     videoScrollContainer: {
-        marginTop: Dimensions.get('window').height * .040,
+        height: Dimensions.get('window').height * .0005,
+        marginTop: Dimensions.get('window').height * .03,
     },
     videosListContainer: {
     
     },
     videoTitle: {
+        marginTop: Dimensions.get('window').height * .08,
         fontSize: Dimensions.get('window').height * .030,
         fontWeight: 'bold',
-        marginBottom: Dimensions.get('window').height * .03,
         alignSelf: 'center',
         color: "deepskyblue"
     },
@@ -374,22 +377,36 @@ const styles = StyleSheet.create ({
         marginBottom: Dimensions.get('window').height * .005
     },
     rowPicturesContainer: {
+        height: Dimensions.get('window').height * .15,
         marginLeft: Dimensions.get('window').width * .050,
-        marginRight: Dimensions.get('window').width * .050,
-        marginBottom: Dimensions.get('window').height * .015,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    picture: {
-        borderRadius: 3,
-        height: Dimensions.get('window').height * .15,
-        width: Dimensions.get('window').width * .43,
-        backgroundColor: 'lightgrey'
+    shadowContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        overflow: 'visible'
     },
-    video: {
+    picture: {
         height: Dimensions.get('window').height * .15,
         width: Dimensions.get('window').width * .43,
-        backgroundColor: 'lightgrey'
+        borderRadius: 16,
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,    
+        elevation: 24,
+    },
+    plusPicture: {
+        height: Dimensions.get('window').height * .15,
+        width: Dimensions.get('window').width * .43,
+        borderRadius: 16,
+        backgroundColor: 'whitesmoke',
+        resizeMode: 'stretch'
     },
     deletePicture: {
         height: Dimensions.get('window').height * .15,
@@ -397,6 +414,20 @@ const styles = StyleSheet.create ({
         backgroundColor: 'lightgrey',
         borderColor: 'deepskyblue',
         borderWidth: 3
+    },
+    video: {
+        height: Dimensions.get('window').height * .15,
+        width: Dimensions.get('window').width * .43,
+        borderRadius: 16,
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,    
+        elevation: 24,
     },
     footerContainer:{
     },
@@ -408,7 +439,8 @@ const styles = StyleSheet.create ({
         marginTop: Dimensions.get('window').height * .020,
     },
     submitButtonContainer: {
-        marginTop: Dimensions.get('window').height * .066,
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .05,
         alignItems: 'center'
       },
     submitButton: {

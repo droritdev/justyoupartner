@@ -64,7 +64,7 @@ const TrainerProfilePage = ({navigation}) => {
     };
 
      //Load all trainer info from mongodb to the dispatch
-    const getInfoFromMongoDB = () => {
+    const getInfoFromMongoDB = async () => {
         axios
         .get('/trainers/'+auth().currentUser.email,
         config

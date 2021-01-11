@@ -19,45 +19,43 @@ const trainerProfileSchema = new Schema(
            }
        },
        calendar: {
-            usersInvolved :{
-                    trainerID: {
-                        type: String,
-                        required: true,
-                        trim: true
-                    },
-                    clinetID:{
-                        type: String,
-                        required: true,
-                        trim: true
+            type: 
+            [
+                {
+                    usersInvolved :{
+                            trainerID: {
+                                type: String,
+                                trim: true
+                            },
+                            clinetID:{
+                                type: String,
+                                trim: true
+                            }
+                        },
+                    event:{
+                        start: {
+                            type: String,
+                            trim: true
+                        },
+                        end:{
+                            type: String,
+                            trim: true
+                        },
+                        title:{
+                            type: String,
+                            trim: true
+                        },
+                        summary:{
+                            type: String,
+                            trim: true
+                        },
+                        color:{
+                            type: String,
+                            trim: true
+                        }
                     }
-                },
-            event:{
-                start: {
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                end:{
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                title:{
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                summary:{
-                    type: String,
-                    required: true,
-                    trim: true
-                },
-                color:{
-                    type: String,
-                    required: true,
-                    trim: true
                 }
-            }
+            ]
         },
        birthday: {
            type: String,
@@ -179,16 +177,6 @@ const trainerProfileSchema = new Schema(
                type: Number,
                default: 0
            }
-       },
-       incomes: {
-           type:
-           [
-               {
-                    orderId: {
-                        type: String 
-                    }
-               }
-           ]
        },
        location: {
             trainingSite1: {

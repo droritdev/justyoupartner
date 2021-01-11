@@ -7,21 +7,17 @@ import auth from '@react-native-firebase/auth';
 const WelcomePopUpTrainer = ({navigation}) => {
 
 
-    //Check if user is already logged in
-    //If logged -> move to home page
-    //If not -> move to get started
-    const checkIfUserLogged = () => {
-        auth().onAuthStateChanged((user) => {
+    React.useEffect(() => {
+        const unsubscribe = auth().onAuthStateChanged((user) => {
             if (user) {
-                navigation.navigate('WelcomeTrainer');
+                unsubscribe();
+                navigation.navigate('TrainerContainer');
             } else {
-                navigation.navigate('GetStarted');
+                unsubscribe();
+                navigation.navigate('GetStarted');          
             }
-         });
-    }
-
-    //Automatically navigates to the next page in 4 seconds (4 * 1000 milli secons = 4000)
-    setTimeout(() => checkIfUserLogged(), 4000);
+        });
+    }, []);
 
 
     return(

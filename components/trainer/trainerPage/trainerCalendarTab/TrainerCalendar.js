@@ -566,6 +566,7 @@ const TrainerCalendar = ({navigation}) => {
         blockStartTime = new Date(selectedTime.toISOString());
     }
 
+    
     //Save value from end time picker
     const onEndTimeChage = (event) => {
         var selectedTime = new Date(event.nativeEvent.timestamp);

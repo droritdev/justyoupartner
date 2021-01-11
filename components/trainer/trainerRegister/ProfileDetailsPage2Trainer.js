@@ -435,10 +435,18 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               <View style={styles.nameAndImageContanier}>
               <TouchableOpacity 
                   onPress={handleProfileImage}>
-                  <Image
+                  {profileImage === require('../../../images/profileImage.jpeg')?
+                    <Image
                     source={profileImage}
                     style={styles.profileImage}
-                  />
+                    />
+                  :
+                    <Image
+                    source={{uri: profileImage}}
+                    style={styles.profileImage}
+                    />
+                  }
+
                 </TouchableOpacity>
                 <TextInput
                   style={styles.textInput}
