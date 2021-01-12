@@ -20,6 +20,8 @@ import {TrainingPriceContext} from '../../../../context/trainerContextes/Trainin
 import {PasswordContext} from '../../../../context/trainerContextes/PasswordContext';
 import {PhoneContext} from '../../../../context/trainerContextes/PhoneContext';
 import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
+import {ReviewsContext} from '../../../../context/trainerContextes/ReviewsContext';
+
 
 //The trainer main profile page - profile area
 const TrainerProfilePage = ({navigation}) => {
@@ -45,6 +47,8 @@ const TrainerProfilePage = ({navigation}) => {
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
     const {calendar, dispatchCalendar} = useContext(CalendarContext);
+    const {reviews, dispatchReviews} = useContext(ReviewsContext);
+
 
     const [age, setAge] = useState();
     const [starRating ,setStarRating] = useState();
@@ -97,6 +101,11 @@ const TrainerProfilePage = ({navigation}) => {
                 dispatchBirthday({
                     type: 'SET_BIRTHDAY',
                     birthday: doc.data[0].birthday
+                })
+
+                dispatchReviews({
+                    type: 'SET_REVIEWS',
+                    reviews: doc.data[0].reviews
                 })
 
                 dispatchCategories({
@@ -191,10 +200,18 @@ const TrainerProfilePage = ({navigation}) => {
 
     //Load trainer star rating
     const loadStarRating = (doc) => {
-        var numberOfStars = doc.data[0].starCounter.numberOfStars;
-        var numberOfStarComments = doc.data[0].starCounter.numberOfStarComments;
-        var starRating = numberOfStarComments === 0 ? 0 : numberOfStars/numberOfStarComments
-        setStarRating(starRating);
+        var reviews = doc.data[0].reviews;
+
+        if (reviews.length === 0) {
+            setStarRating(0);
+        } else {
+            var sumStars = 0;
+            for (let index = 0; index < reviews.length; index++) {
+                const singleReviewStar = reviews[index].stars;
+                sumStars += Number(singleReviewStar);
+            }
+            setStarRating((sumStars/reviews.length).toFixed(1));
+        }
     }
 
 
@@ -243,6 +260,10 @@ const TrainerProfilePage = ({navigation}) => {
 
     const handleOnSettingsPress = () => {
         navigation.navigate('TrainerSettings');
+    }
+
+    const handleOnReviewsPressed = () => {
+        navigation.navigate('TrainerReviews');
     }
 
     return(
@@ -369,10 +390,15 @@ const TrainerProfilePage = ({navigation}) => {
                     </View>
                     <View style={styles.rowContainer}>
                         <View style={styles.reviewsRow}>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                            onPress={() => handleOnReviewsPressed() }
+                            >
                                 <Text style={styles.reviewsTitle}>Reviews</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.arrowButton}>
+                            <TouchableOpacity 
+                            style={styles.arrowButton} 
+                            onPress={() => handleOnReviewsPressed() }
+                            >
                                 <Image
                                     source={require('../../../../images/arrowButton.png')}
                                     style={styles.arrowImage}

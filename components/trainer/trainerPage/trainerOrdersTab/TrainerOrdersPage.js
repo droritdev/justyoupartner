@@ -71,7 +71,7 @@ const TrainerOrdersPage = ({navigation}) => {
             setPendingOrders(pendingOrders);
             setApprovedOrders(approvedOrders);
         })
-        .catch((err) => alert(err));
+        .catch((err) => {});
     }
 
 

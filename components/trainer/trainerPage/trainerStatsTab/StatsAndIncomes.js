@@ -220,7 +220,7 @@ const StatsAndIncomes = ({navigation}) => {
             updateData(incomesByMonth, "monthlyIncome");
 
         })
-        .catch((err) => alert(err));
+        .catch((err) => {});
     }
 
 

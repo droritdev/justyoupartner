@@ -18,6 +18,38 @@ const trainerProfileSchema = new Schema(
                trim: true
            }
        },
+       reviews: {
+            type:
+            [
+                {
+                    review : {
+                        userID: {
+                            type: String,
+                            trim: true
+                        },
+                        userImage: {
+                            type: String,
+                            trim: true
+                        },
+                        userFirstName: {
+                            type: String,
+                            trim: true
+                        },
+                        userLastName: {
+                            type: String,
+                            trim: true
+                        },
+                        stars: {
+                            type: Number
+                        },
+                        reviewContent: {
+                            type: String,
+                            trim: true
+                        }
+                    }
+                }
+            ]
+       },
        calendar: {
             type: 
             [
@@ -27,7 +59,7 @@ const trainerProfileSchema = new Schema(
                                 type: String,
                                 trim: true
                             },
-                            clinetID:{
+                            clinetID: {
                                 type: String,
                                 trim: true
                             }
@@ -132,50 +164,6 @@ const trainerProfileSchema = new Schema(
                type: String,
                required: true,
                trim: true
-           }
-       },
-       commentReviews: {
-           type: 
-           [
-               {
-                   clientId: {
-                       type: String,
-                       trim: true
-                   },
-                   trainerId: {
-                       type: String,
-                       trim: true
-                   },
-                   clientComment: {
-                       type: String,
-                       trim: true
-                   }
-               }
-            ]
-       },
-       starReviews: {
-           type:
-           [
-               {
-                    clientId: {
-                       type: String,
-                       trim: true
-                    },
-                    clientStarReview: {
-                        type: Number,
-                        trim: true
-                    }
-                }
-            ]           
-       },
-       starCounter: {
-           numberOfStars: {
-               type: Number,
-               default: 0
-           },
-           numberOfStarComments: {
-               type: Number,
-               default: 0
            }
        },
        location: {

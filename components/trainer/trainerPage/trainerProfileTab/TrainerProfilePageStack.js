@@ -17,6 +17,8 @@ import ChangePhoneNumber from './ChangePhoneNumber';
 import CustomerService from './CustomerService';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsConditions from './TermsConditions';
+import TrainerReviews from './TrainerReviews';
+
 
 const Stack = createStackNavigator();
 
@@ -41,6 +43,8 @@ const TrainerProfilePageStack = ({navigation}) => {
             <Stack.Screen name='CustomerService' component={CustomerService}/>
             <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy}/>
             <Stack.Screen name='TermsConditions' component={TermsConditions}/>
+            <Stack.Screen name='TrainerReviews' component={TrainerReviews}/>
+
         </Stack.Navigator>
     )
 }

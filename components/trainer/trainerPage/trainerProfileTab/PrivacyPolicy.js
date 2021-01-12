@@ -5,6 +5,24 @@ import Dialog from "react-native-dialog";
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 
 
+
+// reviews []
+
+
+/*
+[
+    review: {
+        userID: String
+        userImage: String
+        stars: Number
+        reviewContent: String
+    }
+]
+*/
+
+
+
+
 //Privacy policy
 const PrivacyPolicy = ({navigation}) => {
 
