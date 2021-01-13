@@ -52,6 +52,11 @@ const PendingApprovalOrder = ({navigation}) => {
     }
 
 
+    const handleChatPressed = () => {
+        navigation.navigate('Chat', orderObject.client.id);
+    }
+
+
     //Prompt approve pop-up
     const handleApproveButton = () => {
         setApproveClicked(true);
@@ -344,7 +349,9 @@ const PendingApprovalOrder = ({navigation}) => {
                                         <Text style={styles.buttonTitle}>Call</Text>
                                     </View>
                                     <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity style={styles.iconBackStyle}>
+                                        <TouchableOpacity 
+                                        style={styles.iconBackStyle}
+                                        onPress={()=> handleChatPressed()}>
                                             <Icon name="message-circle" size={30} style={styles.messageIcon}/>
                                         </TouchableOpacity>
                                         <Text style={styles.buttonTitle}>Chat</Text>
