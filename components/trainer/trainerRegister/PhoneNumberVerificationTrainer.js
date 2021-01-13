@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
+import {StyleSheet, Alert, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -61,8 +61,8 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
     .catch((err) =>  {
       setIsPhoneError(false);
       setIsNextError(false);
-      setFullPhoneNumber("+"+(areaCodeInput.concat(phoneNumberInput)));
-      sendVerificationCode();
+      var fullPhone = '+'+areaCodeInput+phoneNumberInput;
+      sendVerificationCode(fullPhone);
     });
   }
 
@@ -78,8 +78,8 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
 
     //Sets the phoneNumebr object to the value
     const handleOnChangePhoneNumber = (value) => {
-      if (value.length > 7) {
-        value = value.slice(0, 7);
+      if (value.length > 10) {
+        value = value.slice(0, 10);
       }
       setIsNextError(false);
       setIsPhoneError(false);
@@ -118,7 +118,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setIsPhoneError(true);
         setIsNextError(true);
       }
-      else if(areaCodeInput.length != 3 || phoneNumberInput.length != 7){
+      else if(areaCodeInput.length != 3 || phoneNumberInput.length <= 6){
         setPhoneErrorMessage("Enter a valid phone number")
         setIsPhoneError(true);
         setIsNextError(true);
@@ -129,39 +129,45 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
     }
 
     //The function who sends the verify code to the user
-    const sendVerificationCode = () => {
+    const sendVerificationCode = (number) => {
       if(isPhoneError){
         setNextErrorMessage("You must set all valid fields to continue");
         setIsNextError(true);
       }
       else{
-        setIsCodeSent('flex');
-        alert("Code sent");
-        // alert(fullPhoneNumber)
-        // axios
-        //   .post('/send-verification-code', {
-        //     to: fullPhoneNumber,
-        //     channel: "sms"
-        //   },
-        //   config
-        //   )
-        //   .then((res) => {
-        //     if(res !== null) {
-        //       if(res.data.status === 'pending'){
-        //         alert("pending");
-        //       }
-        //       else{
-        //         alert("Error 1");
-        //       }
-        //     }
-        //     else{
-        //       alert("Error 2");
-        //     }
-        //   }
-        //   )
-        //   .catch((error) => {
-        //     alert(error)
-        //   })
+        setFullPhoneNumber(number);
+        axios
+          .post('/send-verification-code', {
+            to: number,
+            channel: "sms"
+          },
+          config
+          )
+          .then((res) => {
+            if(res !== null) {
+              if(res.data.status === 'pending'){
+                setIsCodeSent('flex');
+                Alert.alert(
+                    'Code sent',
+                    'Please check your phone for the verification code.',
+                    [
+                        {text: 'OK'},
+                      ],
+                      { cancelable: false }
+                    )
+              }
+              else{
+                alert("Couldn't send code to this number. Please try again.");
+              }
+            }
+            else{
+              alert("Couldn't send code to this number. Please try again.");
+            }
+          }
+          )
+          .catch((error) => {
+            alert(error)
+          })
         }
     }
 
@@ -189,41 +195,42 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
           type: 'SET_PHONE_NUMBER',
           phoneNumber: phoneNumberInput
         });
-        navigation.navigate('DonePopUpTrainer');
-        // axios
-        //   .post('/verify-code', {
-        //     to: fullPhoneNumber,
-        //     code: code
-        //   },
-        //   config
-        //   )
-        //   .then((res) => {
-        //     if(res !== null) {
-        //       if(res.data.status === 'approved'){
-        //         alert("approved");
-        //         dispatchArea({
-        //           type: 'SET_AREA_CODE',
-        //           areaCode: areaCodeInput
-        //         });
+
+        axios
+          .post('/verify-code', {
+            to: fullPhoneNumber,
+            code: code
+          },
+          config
+          )
+          .then((res) => {
+            if(res !== null) {
+              if(res.data.status === 'approved') {
+                dispatchArea({
+                  type: 'SET_AREA_CODE',
+                  areaCode: fullPhoneNumber.slice(1, 4)
+                });
         
-        //         dispatchNumber({
-        //           type: 'SET_PHONE_NUMBER',
-        //           phoneNumber: phoneNumberInput
-        //         })
-        //         navigation.navigate('DonePopUpTrainer');
-        //       }
-        //       else{
-        //         alert("Error 1");
-        //       }
-        //     }
-        //     else{
-        //       alert("Error 2");
-        //     }
-        //   }
-        //   )
-        //   .catch((error) => {
-        //     alert(error)
-        //   })
+                dispatchNumber({
+                  type: 'SET_PHONE_NUMBER',
+                  phoneNumber: fullPhoneNumber.slice(4)
+                })
+                navigation.navigate('DonePopUpTrainer');
+              }
+              else{
+                setNextErrorMessage("Incorrect code, please try again.");
+                setIsNextError(true);
+              }
+            }
+            else{
+              setNextErrorMessage("Incorrect code, please try again.");
+              setIsNextError(true);
+            }
+          }
+          )
+          .catch((error) => {
+            alert(error)
+          })
         }
     }
   
@@ -268,23 +275,47 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                     <Text style={styles.verifyButtonText}>Verify</Text>
                 </TouchableOpacity>
             </View>
+
+            <View  display={isCodeSent} style={styles.greyBorder}></View>
+
+            <View display={isCodeSent}>
+                <Text style={styles.verificationText}>
+                    We just sent you an SMS with a code.
+                </Text>
+
+                <Text style={styles.verificationText}>
+                    Please note that SMS delivery can take a minute or more.
+                </Text>
+
+
+                <Text style={styles.verificationTitle}>
+                    Enter your verification code  
+                </Text>
+            </View>
+
             <View display={isCodeSent} style={styles.codeTextInput}>
               <TextInput
                   style={{fontSize: 33}}
-                  placeholder='Enter your code'
+                  placeholder='00000'
                   textAlign='center'
                   onChangeText={text => handleOnChangeCode(text)}
               />
             </View>
-            <View display={isCodeSent}>
 
-                <TouchableOpacity 
-                  style={styles.sendAgainButton}
-                  onPress={() => sendVerificationCode()}
-                >
-                  <Text style={styles.resendCodeText}>No SMS? Tap to resend</Text> 
-                </TouchableOpacity>
+
+            <View display={isCodeSent} style={{flexDirection:'row'}}>
+                <View>
+                <Text style={styles.resendCodeText}>{"Didn't recive an SMS?"}</Text> 
+                </View>
+                <View>
+                    <TouchableOpacity 
+                    onPress={() => sendVerificationCode('+'+areaCodeInput+phoneNumberInput)}
+                    >
+                    <Text style={styles.resendButton}>{"resend"}</Text> 
+                    </TouchableOpacity>
+                </View>
             </View>
+
             <View display={isCodeSent} style={styles.nextButtonContainer}>
               {isNextError ?
               <Text style={styles.nextErrorMessage}>{nextErrorMessage}</Text>
@@ -385,25 +416,13 @@ const styles = StyleSheet.create({
       borderWidth: 3,
       height: Dimensions.get('window').height * .07,
       width: Dimensions.get('window').width * .9,
-      marginTop: Dimensions.get('window').height * .077,
+      marginTop: Dimensions.get('window').height * .015,
       justifyContent: 'center',
       fontSize: Dimensions.get('window').height * .025,
       alignSelf: 'center'
   },
   sendAgainButton: {
-    marginTop: Dimensions.get('window').height * .066,
-    width: Dimensions.get('window').width * .55,
-    height: Dimensions.get('window').height * .04,
-    backgroundColor: 'lightgrey',
-    borderRadius: 5,
-    justifyContent: 'center',
-    marginLeft: Dimensions.get('window').width * .0483
-  },
-  resendCodeText: {
-    color: 'deepskyblue', 
-    fontSize: Dimensions.get('window').height * .022,
-    fontWeight: '600',
-    alignSelf: 'center'
+    width: Dimensions.get('window').width * .3,
   },
   nextButtonContainer: {
     flex: 1,
@@ -428,6 +447,43 @@ const styles = StyleSheet.create({
       color: 'red',
       marginLeft: Dimensions.get('window').width * .0483,
       marginBottom: Dimensions.get('window').height * .022
+  },
+  greyBorder: {
+    marginTop: Dimensions.get('window').height * .04,
+    marginBottom: Dimensions.get('window').height * .04,
+    alignSelf: 'center',
+    width: Dimensions.get('window').width * .85,
+    borderTopWidth: 3,
+    borderTopColor: 'lightgrey',
+},
+verificationText: {
+    fontWeight: '500',
+    color: 'grey',
+    fontSize: Dimensions.get('window').height * .019,
+    alignSelf: 'center',
+    width: Dimensions.get('window').width * .8,
+  },
+  verificationTitle: {
+    marginTop: Dimensions.get('window').height * .04,
+    fontWeight: 'bold',
+    fontSize: Dimensions.get('window').height * .022,
+    alignSelf: 'center',
+  },
+  resendContainer: {
+      flexDirection: 'row',
+  },
+  resendCodeText: {
+    marginTop: Dimensions.get('window').height * .02,
+    marginLeft: Dimensions.get('window').width * .0483,
+    fontSize: Dimensions.get('window').height * .022,
+    fontWeight: '500',
+  },
+  resendButton: {
+    color: 'deepskyblue', 
+    marginTop: Dimensions.get('window').height * .02,
+    marginLeft: Dimensions.get('window').width * .01,
+    fontSize: Dimensions.get('window').height * .022,
+    fontWeight: '600',
   }
 });
 

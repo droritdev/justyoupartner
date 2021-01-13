@@ -1,6 +1,5 @@
         //**External imports**//
 require('dotenv').config();
-const stripe = require('stripe')('sk_test_51I70JfE4gBweVFNuAL2ZDDKzry9DuZNS3nqR4iOGHTMF1bD7HunKDPrfGVCnUpOdL8ydoqQuvG010ELrEgan9mnV007YqVAYED');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');

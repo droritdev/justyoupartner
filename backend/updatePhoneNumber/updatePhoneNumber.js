@@ -1,7 +1,6 @@
 //Import trainer/client profile model
 const trainerProfileModel = require('../models/trainerModels');
-const clientProfileModel = require('../models/clientModels');
-const placeModel = require('../models/placeModel');
+
 
 //Finding a trainer/costumer by unique id and update his phone number
 exports.updatePhoneNumber = (req, res) => {
@@ -15,7 +14,7 @@ exports.updatePhoneNumber = (req, res) => {
             }
         }
     )
-    .then(() => res.json("okay"))
+    .then(() => res.json("success"))
     .catch(err => res.status(400).json("Error: " + err));
 
 

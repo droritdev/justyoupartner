@@ -240,9 +240,13 @@ const TrainerProfilePage = ({navigation}) => {
         setIsSingle(!isSingle);
     }
 
+
+
+
     //Handle press on why us button
     const handleOnWhyUsPrees = () => {
         navigation.navigate('WhyUS');
+
     }
 
     //Handle press on Q & A button
