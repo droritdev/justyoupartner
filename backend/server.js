@@ -6,6 +6,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = mongoose.connection;
 
+//chat
+const findChatByIDS = require('./findChatByIDS/findChatByIDS');
+const createChat = require('./createChat/createChat');
+const updateChat = require('./updateChat/updateChat');
+
         //**Trainer imports**//
 const trainerRegister = require('./register/trainerRegister');
 const changeVisibility = require('./changeVisibility/changeVisibility');
@@ -32,6 +37,7 @@ const deleteComment = require('./commentReviews/deleteComment');
 const markStarReview = require('./markStarReview/markStarReview');
 const findAroundMe = require('./findAroundMe/findAroundMe');
 const uploadimage = require('./uploadimage/uploadimage');
+const findClientByID = require('./findClientByID/findClientByID');
 
         //**Place imports**//
 const placeRegister = require('./register/placeRegister');
@@ -76,6 +82,9 @@ mongoose.connect(process.env.MONGO_URI, {
     .catch(err => console.log(err));
 
             ////**Client & trainer & place end points**////
+//End point to get client by ID
+app.get('/clients/findByID/:id', findClientByID.getClientByID);
+
 //End point for sending emails
 app.post('/send-email', sendEmail.sendEmail);
 
@@ -132,8 +141,8 @@ app.get('/trainers/phone/:phone', findTrainerByPhone.getTrainerByPhone);
 //End point for editing the trainer profile
 app.put('/trainers/settings/edit-profile/:email', trainerEditProfile.editProfile);
 
-            ////**Client end points**////   
 
+            ////**Client end points**////   
 //End point for searching trainers by category
 app.get('/clients/trainers/category', findTrainerByCategory.getTrainersByCategory);
 
@@ -184,3 +193,16 @@ app.post('/places/register', placeRegister.register);
 
 //End point for editing the place profile
 app.put('/places/settings/edit-profile', placeEditProfile.editProfile);
+
+
+
+
+//chat
+//End point to get chat by clientID and trainerID
+app.get('/chat/findByIDS/:ids', findChatByIDS.getChatByIDS);
+
+//End point to create new chat
+app.post('/chat/createChat', createChat.createChat);
+
+//End point to update chat
+app.post('/chat/updateChat', updateChat.updateChat);

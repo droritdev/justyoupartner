@@ -6,7 +6,7 @@ import { TagSelect } from 'react-native-tag-select';
 const PickCategories = (props) => {
     const categories = [
         { id: 1, label: 'HIT' },
-        { id: 2, label: 'KIK BOX' },
+        { id: 2, label: 'KICK BOX' },
         { id: 3, label: 'MARTIAL ARTS' },
         { id: 4, label: 'PILATIS' },
         { id: 5, label: 'CLIMBING' },
