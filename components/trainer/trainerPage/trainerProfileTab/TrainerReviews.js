@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     },
     reviewTextContainer: {
         marginLeft: Dimensions.get('window').width * .050,
-        marginTop: Dimensions.get('window').height * .02,
+        marginTop: Dimensions.get('window').height * .01,
         flexDirection: 'column',
         justifyContent: 'space-between',
     },

@@ -245,8 +245,16 @@ const TrainerProfilePage = ({navigation}) => {
 
     //Handle press on why us button
     const handleOnWhyUsPrees = () => {
-        navigation.navigate('WhyUS');
+        // axios
+        //   .post('/twilio/makeCall', {},
+        //   config
+        //   )
+        //   .then(() => {
+        //   })
+        //   .catch(()=> {
 
+        //   })
+        navigation.navigate('WhyUS');
     }
 
     //Handle press on Q & A button

@@ -5,11 +5,18 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = mongoose.connection;
-
+module.exports.mongoose = mongoose;
 //chat
 const findChatByIDS = require('./findChatByIDS/findChatByIDS');
 const createChat = require('./createChat/createChat');
 const updateChat = require('./updateChat/updateChat');
+
+
+// chat messages
+const findMessageByIDS = require('./messages/findMessageByIDS');
+const newMessage = require('./messages/newMessage');
+const watchForUpdates = require('./messages/watchForUpdates');
+
 
         //**Trainer imports**//
 const trainerRegister = require('./register/trainerRegister');
@@ -47,6 +54,7 @@ const placeEditProfile = require('./placeEditProfile/placeEditProfile');
         //**Common imports**//
 const sendEmail = require('./sendGrid/sendEmail');
 const verificationSms = require('./twilio/verificationSms');
+const makeCall = require('./twilio/makeCall');
 const updatePaymentMethods = require('./updatePaynemtMethods/updatePaymentMethods');
 const updateEmailAddress = require('./updateEmailAddress/updateEmailAddress');
 const updatePhoneNumber = require('./updatePhoneNumber/updatePhoneNumber');
@@ -93,6 +101,9 @@ app.post('/send-verification-code', verificationSms.sendVerificationCode);
 
 //End point for verifying the verification code
 app.post('/verify-code', verificationSms.verifyCode);
+
+//End point for making twilio phone call
+app.post('/twilio/makeCall', makeCall.makeCall);
 
 //End point for updating the payment methods
 app.put('/settings/update-payment-methods', updatePaymentMethods.updatePaymentMethods);
@@ -206,3 +217,14 @@ app.post('/chat/createChat', createChat.createChat);
 
 //End point to update chat
 app.post('/chat/updateChat', updateChat.updateChat);
+
+
+
+//chat messages
+//End point to get chat message by clientID and trainerID (receiver and sender)
+app.get('/messages/findMessageByIDS/:ids', findMessageByIDS.getMesssageByIDS);
+
+//End point to create new chat message
+app.post('/messages/newMessage', newMessage.createMessage);
+
+app.get('/messages/watchForUpdates/:receiver', watchForUpdates.watchForUpdates);

@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, useCallback} from 'react';
-import {ActivityIndicator, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import {Alert, ActivityIndicator, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
@@ -10,27 +10,16 @@ import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import MapView, { Marker } from "react-native-maps";
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Feather';
-
-
-// chat model
-
-/*
-    usersInvolved: {
-        trainerID:
-        clientID:
-    },
-    chat: []
-*/
-
+import * as Progress from 'react-native-progress';
 
 const Chat = ({navigation, route}) => {
 
     const [messages, setMessages] = useState([]);
     const [clientUser, setClientUser] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
-    var isChatEmpty = false;
-    var chatID = "";
-    var allMessages = [];
+    //Cancel token for the watcher
+    // const cancelTokenSource = axios.CancelToken.source();
 
     //Client ID from previous page
     const clientID = route.params;
@@ -41,8 +30,6 @@ const Chat = ({navigation, route}) => {
     const {lastName} = useContext(NameContext);
     const {mediaPictures} = useContext(MediaContext);
 
-
-    //Chat users
     //Information of the trainer
     const trainerUser = {
         _id: trainerID,
@@ -63,6 +50,8 @@ const Chat = ({navigation, route}) => {
 
     //Show bottom navgation UI
     const handleArrowButton = () => {
+        // cancelTokenSource.cancel();
+        // console.log(cancelTokenSource);
         navigation.navigate('PendingApprovalOrder');
     }
 
@@ -80,7 +69,7 @@ const Chat = ({navigation, route}) => {
             {...props}
             wrapperStyle={{
                 left: {
-                backgroundColor: '#E0E0E0',
+                backgroundColor: '#FCFCFC',
                 },
                 right: {
                 backgroundColor: '#3399FF',
@@ -115,16 +104,15 @@ const Chat = ({navigation, route}) => {
     }
 
 
+    //Bottom input toolbar
     const renderInputToolbar = (props) => {
         return (
             <InputToolbar
               {...props}
-            //   containerStyle={{
-            //     backgroundColor: "white",
-            //     borderTopColor: "#E8E8E8",
-            //     borderTopWidth: 1,
-            //     padding: 8
-            //   }}
+              containerStyle={{
+                borderTopWidth: 0,
+                borderRadius: 45
+              }}
             />
           );
     }
@@ -156,31 +144,56 @@ const Chat = ({navigation, route}) => {
 
     //Send the user current location
     const sendCurrentPosition = () => {
-        Geolocation.getCurrentPosition(info => {
-            var newLocationMessage = 
-            [
-                {
-                    _id: 'location: ' + info.coords.latitude + ', ' + info.coords.longitude,
-                    text: 'My location',
-                    createdAt: new Date(),
-                    user: trainerUser,
-                    location: {
-                      latitude: info.coords.latitude,
-                      longitude: info.coords.longitude,
+        if (!isLoading) {
+            Geolocation.getCurrentPosition(info => {
+                var newLocationMessage = 
+                [
+                    {
+                        _id: 'Date: ' + new Date() +'  location: ' + info.coords.latitude + ', ' + info.coords.longitude,
+                        text: 'My location',
+                        createdAt: new Date(),
+                        user: trainerUser,
+                        location: {
+                        latitude: info.coords.latitude,
+                        longitude: info.coords.longitude,
+                        }
                     }
-                }
-            ];
+                ];
 
-            onSend(newLocationMessage);
-        });
+                onSend(newLocationMessage);
+            });
+        }
     }
 
 
 
     useEffect(() => {
         getClientInfo();
+
+        // watchForUpdates();
     }, [])
 
+
+
+    //Listener to mongodb to check if a new message was sent
+    //Update UI and display the new message that was sent
+    // const watchForUpdates = async () => {
+    //    await axios
+    //         .get('/messages/watchForUpdates/'+trainerID, {
+    //             cancelToken: cancelTokenSource.token
+    //         },
+    //         config
+    //         )
+    //         .then((doc) => {
+    //             var message = doc.data;
+    //             if (message) {
+    //                 setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+    //             }
+    //         })
+    //         .catch((err) => {});
+
+    //     watchForUpdates();
+    // }
 
 
 
@@ -201,28 +214,7 @@ const Chat = ({navigation, route}) => {
             };
 
         setClientUser(clientInfo);
-        
-        // var lala = 
-        // [
-        //     {
-        //         _id: 4,
-        //         text: '',
-        //         createdAt: new Date(),
-        //         user: {
-        //           _id: 2,
-        //           name: 'React Native',
-        //         },
-        //         sent: true,
-        //         received: true,
-        //         location: {
-        //           latitude: 31.807470216262608,
-        //           longitude: 34.91016335903766,
-        //         }
-        //     }
-        // ]
-        // setMessages(lala);
         getChatMessages();
-
         })
         .catch((err) => {});
     }
@@ -233,129 +225,198 @@ const Chat = ({navigation, route}) => {
     //Retrive all the chat messages by clientID and trainerID
     //Load all messages on the UI
     const getChatMessages = async () => {
-       await axios
-        .get('/chat/findByIDS/'+clientID+'@'+trainerID, 
-        config
-        )
-        .then((doc) => {
-            allMessages = doc.data[0].chat;
-            chatID = doc.data[0]._id;
-            isChatEmpty = false;
-            setMessages(allMessages);
-        })
-        .catch((err) => {
+        //Sender: client, Receiver: trainer
+        var firstResult = [];
+        //Sender: trainer, Receiver: client
+        var secondResult = [];
+        //Both results combined
+        var finalResult = [];
+
+        //Get all messages by - Sender: client, Receiver: trainer  - and assign result to a var
+        await axios
+            .get('/messages/findMessageByIDS/'+clientID+'@'+trainerID, 
+            config
+            )
+            .then((doc) => {
+                firstResult = doc.data;
+            })
+            .catch((err) => {
+            });
+
+        //Get all messages by - Sender: trainer, Receiver: client  - and assign result to a var
+        await axios
+            .get('/messages/findMessageByIDS/'+trainerID+'@'+clientID, 
+            config
+            )
+            .then((doc) => {
+                secondResult = doc.data;
+            })
+            .catch((err) => {
+            });
+
+
+        //Check if first result is undefined
+        if(firstResult !== undefined) {
+            finalResult = [...finalResult, ...firstResult];
+        }
+
+        //Check if second result is undefined
+        if(secondResult !== undefined) {
+            finalResult = [...finalResult, ...secondResult];
+        }
+        
+        //All messages model relaeted to both
+        finalResult = sortMessages(finalResult);
+
+        //Extract the message object from the model and insert into a messages array
+        var allMessages = [];
+        for (let index = 0; index < finalResult.length; index++) {
+            const singleMessageObject = finalResult[index].message;
+            allMessages[index] = singleMessageObject;
+            
+        }
+
+        //Check if there are no messages
+        if (allMessages.length===0) {
+            //Show friendly system message
             var systemMessage = {
                 _id: 'system',
                 text: "Start chating, it's free!",
                 createdAt: new Date(),
                 system: true,
-                // Any additional custom parameters are passed through
-              };
+            };
 
             setMessages([systemMessage])
-            isChatEmpty=true
-        });
+            setIsLoading(false);
+        } else {
+            //Show all messages
+            setMessages(allMessages);
+            setIsLoading(false);
+        }
+    }
+
+    
+
+
+    //Sort messages by time created
+    const sortMessages = (messagesArray) => {
+        // Iterate Over Array From First Element
+        for (let i = 0; i < messagesArray.length; i++) {
+            // Iterate Over Array From Succeeding Element
+            for (let j = 1; j < messagesArray.length; j++) {
+                //checks the time order was created at
+                var first = new Date(messagesArray[j - 1].message.createdAt).getTime();
+                var second = new Date(messagesArray[j].message.createdAt).getTime();
+                if (first < second) {
+                    // Swap Numbers
+                    swapNumbers(messagesArray, j - 1, j);
+                }
+            }
+        }
+        return messagesArray;
     }
 
 
-    //If chat between the client and trainer doesn't exist -> create a new chat on db
-    //If chat exist -> update the new message
+    const swapNumbers = (array, i, j) => {
+        // Save Element Value (Because It Will Change When We Swap/Reassign)
+        let temp = array[i];
+        // Assign Element2 To Element1
+        array[i] = array[j];
+        // Assign Element1 To Element2
+        array[j] = temp;
+    };
+
+
+    //Upload new message to mongodb
     //Update UI to show new message
     const onSend = useCallback(async (sentMessages = []) => {
         var newMessage = sentMessages[0];
+        var messageText = newMessage.text;
 
-        if (isChatEmpty) {
-            // console.log('empty');
-            setMessages([])
-            await createChat(newMessage);
-            isChatEmpty = false;
+        //Check if the message is a phone number
+        let phoneFormat = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+        if(phoneFormat.test(messageText)){
+            Alert.alert(
+                'Attention',
+                'The system has recognized that you have sent a phone number. \n You are able to make a phone call within the app.',
+                [
+                    {text: 'OK'},
+                  ],
+                  { cancelable: false }
+                )
         } else {
-            console.log('not empty');
-            await uploadMessageToDB(newMessage);
+            //Upload message to database
+            await axios
+            .post('/messages/newMessage', {
+                receiver: clientID,
+                sender: trainerID,
+                message: newMessage,
+            },
+            config
+            )
+            .then((res) => {
+                if (res.data.status === 'success') {
+                    if(messages.length === 0) {
+                        getChatMessages();
+                    } else {
+                        setMessages(previousMessages => GiftedChat.append(previousMessages, sentMessages));
+                    }
+                }
+            })
+            .catch((err) => {
+                Alert.alert(
+                    'Network error',
+                    'Please check your internet connection.',
+                    [
+                        {text: 'OK'},
+                      ],
+                      { cancelable: false }
+                    )
+            });
         }
-
-        setMessages(previousMessages => GiftedChat.append(previousMessages, sentMessages))
-        getChatMessages();
       }, [])
-
-
-
-    //Upload the new sent message to DB
-    const uploadMessageToDB = async (newMessage) => {
-        var newChat = [...allMessages];
-        newChat.push(newMessage);
-        newChat.reverse();
-        allMessages = newChat;
-
-        await axios  
-        .post('/chat/updateChat', {
-            _id: chatID,
-            chat: newChat
-            
-        },
-        config
-        )
-        .then((res) => {
-            if (res.data.status === 'success') {
-                console.log('updated');
-            }
-        })
-        .catch((err) => alert(err.data));
-    }
-
-
-
-    //Create a chat model with client and trainer
-    const createChat = async (newMessage) => {
-        var newChat = [];
-        newChat.push(newMessage);
-
-        await axios
-        .post('/chat/createChat', {
-            clientID: clientID,
-            trainerID: trainerID,
-            chat: newChat,
-        },
-        config
-        )
-        .then((res) => {
-            if (res.data.status === 'success') {
-                console.log('added');
-            }
-        })
-        .catch((err) => alert(err.data));
-    }
 
 
 
     return(
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.headerContainer}>
-                <ArrowBackButton
-                    onPress={handleArrowButton}
-                />
-                <Text style={styles.headerText}> {clientUser.name} </Text>
+            <View style={{ flex: 1 }}>
+                <View style={styles.headerContainer}>
+                    <ArrowBackButton
+                        onPress={handleArrowButton}
+                    />
+                    <Text style={styles.headerText}> {clientUser.name} </Text>
+                        
+                    <Icon name="map-pin" size={22} style={styles.locationIcon} onPress={()=> sendCurrentPosition()} />
+                </View>
 
-                <Icon name="map-pin" size={22} style={styles.locationIcon} onPress={()=> sendCurrentPosition()} />
+
+                {isLoading?
+                <View>
+                    <View style={styles.progressView}>
+                        <Progress.Circle size={Dimensions.get('window').height * .10} indeterminate={true} />
+                    </View>
+                </View>
+            :
+                <View style={{ flex: 1 }}>
+                    <GiftedChat
+                        messages={messages}
+                        onSend={sentMessages => onSend(sentMessages)}
+                        user={trainerUser}
+                        infiniteScroll={true}
+                        renderUsernameOnMessage={true}
+                        showUserAvatar={true}
+                        showAvatarForEveryMessage={true}
+                        alwaysShowSend={true}
+                        scrollToBottom={true}
+                        renderBubble={renderBubble}
+                        renderLoading={renderLoading}
+                        renderSystemMessage={renderSystemMessage}
+                        renderInputToolbar={renderInputToolbar}
+                    />    
+                </View>
+            }
             </View>
-
-
-            <GiftedChat
-                messages={messages}
-                onSend={sentMessages => onSend(sentMessages)}
-                user={trainerUser}
-                infiniteScroll={true}
-                renderUsernameOnMessage={true}
-                showUserAvatar={true}
-                showAvatarForEveryMessage={true}
-                alwaysShowSend={true}
-                scrollToBottom={true}
-                renderBubble={renderBubble}
-                renderLoading={renderLoading}
-                renderSystemMessage={renderSystemMessage}
-                renderInputToolbar={renderInputToolbar}
-            />
-
         </SafeAreaView>
     );
 }
@@ -375,18 +436,26 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-      },
-      systemMessageText: {
+    },
+    systemMessageText: {
         fontSize: 14,
         color: 'black',
         fontWeight: 'bold'
-      },
-      locationIcon: {
+    },
+    locationIcon: {
         marginTop: Dimensions.get('window').height * .012,
         marginRight: Dimensions.get('window').width * .05,
         width: 25,
         height: 25,
-      }
+    },
+    loadingTextView: {
+        alignSelf: 'center',
+        marginTop: Dimensions.get('window').height * .020
+    },
+    progressView: {
+        marginTop: Dimensions.get('window').height * .4,
+        alignItems: 'center'
+    },
 
 });
 
