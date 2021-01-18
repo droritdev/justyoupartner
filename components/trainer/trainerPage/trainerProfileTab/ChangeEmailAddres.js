@@ -28,30 +28,30 @@ const ChangeEmailAddress = ({navigation}) => {
     const mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const sendVerifyEmail = () => {
         alert("Code sent");
-        //   axios
-        //     .post('/send-verification-code', {
-        //       to: emailAddress,
-        //       channel: "email"
-        //     },
-        //     config
-        //   )
-        //   .then((res) => {
-        //     if(res !== null) {
-        //       if(res.data.status === 'pending'){
-        //           alert("Code sent");
-        //       }
-        //       else{
-        //         alert(res.data);
-        //       }
-        //     }
-        //     else{
-        //       alert("Error 2");
-        //     }
-        //   }
-        //   )
-        //   .catch((error) => {
-        //     alert(error)
-        //   })
+          axios
+            .post('/send-verification-code', {
+              to: emailAddressInput,
+              channel: "email"
+            },
+            config
+          )
+          .then((res) => {
+            if(res !== null) {
+              if(res.data.status === 'pending'){
+                  alert("Code sent");
+              }
+              else{
+                alert(res.data);
+              }
+            }
+            else{
+              alert("Error 2");
+            }
+          }
+          )
+          .catch((error) => {
+            alert(error)
+          })
     }
 
     //Navigates back to the profile page

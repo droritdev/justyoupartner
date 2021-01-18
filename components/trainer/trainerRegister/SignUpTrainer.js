@@ -35,31 +35,31 @@ const SignUpTrainer = ({navigation}) => {
 
     //Send the verification code to the user's email
     const sendVerifyEmail = () => {
-      navigation.navigate('EmailVerificationTrainer');
-        // axios
-        //   .post('/send-verification-code', {
-        //     to: emailAddress,
-        //     channel: "email"
-        //   },
-        //   config
-        // )
-        // .then((res) => {
-        //   if(res !== null) {
-        //     if(res.data.status === 'pending'){
-        //       navigation.navigate('EmailVerificationTrainer')
-        //     }
-        //     else{
-        //       alert(res.data);
-        //     }
-        //   }
-        //   else{
-        //     alert("Error 2");
-        //   }
-        // }
-        // )
-        // .catch((error) => {
-        //   alert(error)
-        // })
+      // navigation.navigate('EmailVerificationTrainer');
+        axios
+          .post('/send-verification-code', {
+            to: emailAddress,
+            channel: "email"
+          },
+          config
+        )
+        .then((res) => {
+          if(res !== null) {
+            if(res.data.status === 'pending'){
+              navigation.navigate('EmailVerificationTrainer')
+            }
+            else{
+              alert(res.data);
+            }
+          }
+          else{
+            alert("Error 2");
+          }
+        }
+        )
+        .catch((error) => {
+          alert(error)
+        })
     }
 
     //Set the emailAddressInput to the value in the text field

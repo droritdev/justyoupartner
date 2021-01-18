@@ -3,7 +3,7 @@ import {Alert, ActivityIndicator, Text, View, SafeAreaView, Image, StyleSheet, D
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
-import { GiftedChat, Bubble, SystemMessage, InputToolbar, CustomView } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, SystemMessage, InputToolbar, Actions, ActionsProps} from 'react-native-gifted-chat'
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import {NameContext} from '../../../../context/trainerContextes/NameContext';
 import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
@@ -11,6 +11,11 @@ import MapView, { Marker } from "react-native-maps";
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Feather';
 import * as Progress from 'react-native-progress';
+import ImagePicker from 'react-native-image-crop-picker';
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import uuid from 'uuid';
+import Video from 'react-native-video';
 
 const Chat = ({navigation, route}) => {
 
@@ -19,7 +24,7 @@ const Chat = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(true);
 
     //Cancel token for the watcher
-    // const cancelTokenSource = axios.CancelToken.source();
+    var cancelTokenSource = axios.CancelToken.source();
 
     //Client ID from previous page
     const clientID = route.params;
@@ -50,8 +55,7 @@ const Chat = ({navigation, route}) => {
 
     //Show bottom navgation UI
     const handleArrowButton = () => {
-        // cancelTokenSource.cancel();
-        // console.log(cancelTokenSource);
+        cancelTokenSource.cancel();
         navigation.navigate('PendingApprovalOrder');
     }
 
@@ -78,6 +82,21 @@ const Chat = ({navigation, route}) => {
             />
         );  
     }
+
+    //Render custom view to display video in the chat
+    const renderMessageVideo = (props) => {
+        const {currentMessage} = props;
+        return (
+            <Video 
+                muted={true}
+                resizeMode="cover"  
+                controls={true}
+                source={{uri: currentMessage.video}}
+                style={styles.video}
+                key={currentMessage._id}
+            />
+        );
+    };
 
 
 
@@ -107,17 +126,16 @@ const Chat = ({navigation, route}) => {
     //Bottom input toolbar
     const renderInputToolbar = (props) => {
         return (
-            <InputToolbar
-              {...props}
-              containerStyle={{
-                borderTopWidth: 0,
-                borderRadius: 45
-              }}
-            />
-          );
+                <InputToolbar
+                {...props}
+                containerStyle={{
+                    borderTopWidth: 0,
+                    borderRadius: 45
+                }}
+                /> 
+            );
     }
-
-
+          
 
 
     //Custom view to display location
@@ -166,34 +184,130 @@ const Chat = ({navigation, route}) => {
     }
 
 
+    //Show location sharing verification alert
+    const showSendLocationAlert = () => {
+        Alert.alert(
+            'Share location',
+            'Would you like to share your current location?',
+            [
+                {text: 'Cancel'},
+                {text: 'Share', onPress: () => sendCurrentPosition()},
+              ],
+              { cancelable: false }
+        )
+    }
+
+
+    //Open picker for user to select image/video to send
+    const handleMediaPicker =  () => {
+        ImagePicker.openPicker({
+          }).then((file) => {
+            var fileMime = file.mime.split('/')[0];
+            var fileName = file.filename;
+            var source = {};
+            console.log(fileName);
+
+            switch (fileMime) {
+                case "image" :
+                    source = {uri: "file://"+file.path};
+                break;
+
+                case "video":
+                    source = {uri: file.sourceURL};
+                break;
+            }
+
+
+            uploadMedia(fileMime, fileName, source);
+
+        }).catch(err => {
+            //user cancel the picker
+        });
+    }
+
+
+    
+    //Upload selected image/video to database
+    const uploadMedia = async (fileMime, fileName, source) => {
+        console.log("uploading");
+        const userRef = "/trainers/" + auth().currentUser.uid + "/messagesMedia/";
+        let ref = storage().ref(userRef+ fileName);
+
+        await ref.putFile(source.uri).then((snapshot) => {
+            console.log("upload done");
+        })
+          .catch((e) => console.log("fail"));
+
+        await ref.getDownloadURL().then((url) => {
+            console.log("download done");
+            sendMediaMessage(fileMime, url);
+        })
+        .catch((e) => console.log("fail"));
+    }
+
+
+
+    //Send a message that contains a video/image
+    const sendMediaMessage = async () => {
+        var newMessage = [];
+            
+        switch (fileMime) {
+            case "image" :
+                newMessage =
+                [{
+                    _id: uuid.v4(),
+                    text: '',
+                    createdAt: new Date(),
+                    user: trainerUser,
+                    image: url
+                }];
+            break;
+
+            case "video":
+                newMessage =
+                [{
+                    _id: uuid.v4(),
+                    text: '',
+                    createdAt: new Date(),
+                    user: trainerUser,
+                    video: url
+                }];
+            break;
+        }
+
+        onSend(newMessage);
+    }
+
+
 
     useEffect(() => {
         getClientInfo();
 
-        // watchForUpdates();
+        watchForUpdates();
     }, [])
 
 
 
     //Listener to mongodb to check if a new message was sent
     //Update UI and display the new message that was sent
-    // const watchForUpdates = async () => {
-    //    await axios
-    //         .get('/messages/watchForUpdates/'+trainerID, {
-    //             cancelToken: cancelTokenSource.token
-    //         },
-    //         config
-    //         )
-    //         .then((doc) => {
-    //             var message = doc.data;
-    //             if (message) {
-    //                 setMessages(previousMessages => GiftedChat.append(previousMessages, message));
-    //             }
-    //         })
-    //         .catch((err) => {});
+    const watchForUpdates = async () => {
+        cancelTokenSource = axios.CancelToken.source();
+        await axios
+            .get('/messages/watchForUpdates/'+trainerID, {
+                cancelToken: cancelTokenSource.token
+            },
+            config
+            )
+            .then((doc) => {
+                var message = doc.data;
+                if (message) {
+                    setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+                }
+            })
+            .catch((err) => {});
 
-    //     watchForUpdates();
-    // }
+        watchForUpdates();
+    }
 
 
 
@@ -332,7 +446,7 @@ const Chat = ({navigation, route}) => {
     const onSend = useCallback(async (sentMessages = []) => {
         var newMessage = sentMessages[0];
         var messageText = newMessage.text;
-
+        console.log(sentMessages);
         //Check if the message is a phone number
         let phoneFormat = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
         if(phoneFormat.test(messageText)){
@@ -387,7 +501,19 @@ const Chat = ({navigation, route}) => {
                     />
                     <Text style={styles.headerText}> {clientUser.name} </Text>
                         
-                    <Icon name="map-pin" size={22} style={styles.locationIcon} onPress={()=> sendCurrentPosition()} />
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity
+                         onPress={()=> handleMediaPicker()}
+                        >
+                            <Icon name="camera" size={24} style={styles.cameraIcon}/> 
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={()=> showSendLocationAlert()}
+                        >
+                            <Icon name="map-pin" size={23} style={styles.locationIcon} />   
+                        </TouchableOpacity>
+                    </View>    
                 </View>
 
 
@@ -413,6 +539,8 @@ const Chat = ({navigation, route}) => {
                         renderLoading={renderLoading}
                         renderSystemMessage={renderSystemMessage}
                         renderInputToolbar={renderInputToolbar}
+                        renderMessageVideo={renderMessageVideo}
+
                     />    
                 </View>
             }
@@ -445,8 +573,8 @@ const styles = StyleSheet.create({
     locationIcon: {
         marginTop: Dimensions.get('window').height * .012,
         marginRight: Dimensions.get('window').width * .05,
-        width: 25,
-        height: 25,
+        width: Dimensions.get('window').width * .060,
+        height: Dimensions.get('window').height * .025,
     },
     loadingTextView: {
         alignSelf: 'center',
@@ -455,6 +583,27 @@ const styles = StyleSheet.create({
     progressView: {
         marginTop: Dimensions.get('window').height * .4,
         alignItems: 'center'
+    },
+    cameraIcon: {
+        marginTop: Dimensions.get('window').height * .011,
+        marginRight: Dimensions.get('window').width * .05,
+        width: Dimensions.get('window').width * .070,
+        height: Dimensions.get('window').height * .040,
+    },
+    sendIcon: {
+        width: Dimensions.get('window').width * .060,
+        height: Dimensions.get('window').height * .025,
+        marginBottom: Dimensions.get('window').height * .012,
+        marginRight: Dimensions.get('window').width * .05,
+    },
+    bottomIconsContainer: {     
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+
+    },
+    video: {
+        height: Dimensions.get('window').height * .12,
+        width: Dimensions.get('window').width * .37,
     },
 
 });
