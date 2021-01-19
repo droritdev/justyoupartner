@@ -23,6 +23,7 @@ import {CalendarContext} from '../../../../context/trainerContextes/CalendarCont
 import {ReviewsContext} from '../../../../context/trainerContextes/ReviewsContext';
 
 
+
 //The trainer main profile page - profile area
 const TrainerProfilePage = ({navigation}) => {
     const {trainerID, dispatchTrainerID} = useContext(IdContext);
@@ -70,7 +71,7 @@ const TrainerProfilePage = ({navigation}) => {
      //Load all trainer info from mongodb to the dispatch
     const getInfoFromMongoDB = async () => {
         axios
-        .get('/trainers/'+auth().currentUser.email,
+        .get('/trainers/email/'+auth().currentUser.email,
         config
         )
         .then((doc) => {
@@ -86,6 +87,11 @@ const TrainerProfilePage = ({navigation}) => {
                 dispatchEmail({
                     type: 'SET_EMAIL_ADDRESS',
                     emailAddress: doc.data[0].email   
+                });
+
+                dispatchPassword({
+                    type: 'SET_PASSWORD',
+                    password: doc.data[0].password   
                 });
         
                 dispatchFirst({

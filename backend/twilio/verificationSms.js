@@ -6,7 +6,6 @@ const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWI
 
 //Sending the verification code to the user by: to --> phone number/email address, channel --> sms/email
 exports.sendVerificationCode = (req, res) => {
-    console.log("omer");
     client
         .verify
         .services(process.env.TWILIO_SERVICE_SID)
@@ -25,7 +24,6 @@ exports.sendVerificationCode = (req, res) => {
 
 //Cheking the verification code by: to --> phone number/email address, channel --> sms/email 
 exports.verifyCode = (req, res) => {
-    console.log("shahar");
     client
         .verify
         .services(process.env.TWILIO_SERVICE_SID)

@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = mongoose.connection;
 module.exports.mongoose = mongoose;
+
+
 //chat
 const findChatByIDS = require('./findChatByIDS/findChatByIDS');
 const createChat = require('./createChat/createChat');
@@ -145,7 +147,7 @@ app.post('/trainers/updateMedia', updateMedia.updateMedia);
 app.post('/trainers/updateTrainerinfo', updateTrainerInfo.updateTrainerInfo);
 
 //End point to get trainer by email
-app.get('/trainers/:email', findTrainerByEmail.getTrainerByEmail);
+app.get('/trainers/email/:email', findTrainerByEmail.getTrainerByEmail);
 
 app.get('/trainers/phone/:phone', findTrainerByPhone.getTrainerByPhone);
 

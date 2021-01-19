@@ -109,7 +109,7 @@ const TrainerOrdersPage = ({navigation}) => {
         if (pendingOrders !== []) {
             for(let i = 0; i < pendingOrders.length; i++) {
                 repeats.push(
-                    <View style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
+                    <View key={'pendingRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
                         <FastImage
                                     style={styles.image}
                                     source={{
@@ -144,7 +144,7 @@ const TrainerOrdersPage = ({navigation}) => {
         if (approvedOrders !== []) {
             for(let i = 0; i < approvedOrders.length; i++) {
                 repeats.push(
-                    <View style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
+                    <View key={'approvedRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
                     <FastImage
                                 style={styles.image}
                                 source={{

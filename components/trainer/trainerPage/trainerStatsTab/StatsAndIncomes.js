@@ -322,7 +322,7 @@ const StatsAndIncomes = ({navigation}) => {
             for(let i = 0; i < totalCompletedOrders.length; i++) {
                 var orderObject = totalCompletedOrders[i];
                 repeats.push(
-                    <View style={i % 2 === 0? styles.incomeRowContainer : styles.incomeRow2Container}>
+                    <View key={'row'+i} style={i % 2 === 0? styles.incomeRowContainer : styles.incomeRow2Container}>
                         <View style={styles.incomeRow}>
                             <Text style={styles.rowInformation}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
                             <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>

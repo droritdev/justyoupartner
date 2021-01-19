@@ -80,7 +80,7 @@ const SignUpTrainer = ({navigation}) => {
   //Send GET request to mongodb using axios, to check if email is already used
   const checkEmailIsUsed = () => {
       axios  
-      .get('/trainers/'+emailAddressInput.toLowerCase(), config)
+      .get('/trainers/email/'+emailAddressInput.toLowerCase(), config)
       .then((doc) => {
           if(doc) {
             if(doc.data[0].email!=null) {

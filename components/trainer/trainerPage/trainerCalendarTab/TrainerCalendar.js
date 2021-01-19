@@ -77,7 +77,7 @@ const TrainerCalendar = ({navigation}) => {
       //Get current trainer calendar from MongoDB and update UI
       const getTrainerCalendar =  async () => { 
         axios
-        .get('/trainers/'+auth().currentUser.email,
+        .get('/trainers/email/'+auth().currentUser.email,
         config
         )
         .then(async (doc) => {

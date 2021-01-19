@@ -88,13 +88,14 @@ const TrainerReviews = ({navigation}) => {
                 var singleReview = reviews[i];
                 repeats.push(
                     //row
-                    <View style={styles.reviewRowContainer}> 
+                    <View key={'row'+i} style={styles.reviewRowContainer}> 
                         <FastImage
                             style={styles.reviewUserImage}
                             source={{
                                 uri: singleReview.userImage,
                                 priority: FastImage.priority.normal,
                             }}
+                            key={'image'+i}
                             resizeMode={FastImage.resizeMode.contain}
                         />
                         <View style={styles.reviewTextContainer}>
@@ -102,6 +103,7 @@ const TrainerReviews = ({navigation}) => {
                                 
                                 <Text style={styles.reviewTitle}> {singleReview.userFirstName + ' ' + singleReview.userLastName + ' - ' + singleReview.stars}  </Text>
                                 <Image
+                                key={'star'+i}
                                 source={require('../../../../images/starIconBlue.png')}
                                 style={styles.starIconReview}
                                 />

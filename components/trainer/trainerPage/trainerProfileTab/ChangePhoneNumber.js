@@ -160,7 +160,7 @@ const ChangePhoneNumber = ({navigation}) => {
     }
 
     //When preesed, the app checks if the code (when entered) is equal to the code was sent to the user - if so, navigates to the DonePopIp page
-    const handleNext = () => {
+    const handleSubmit = () => {
       if(areaCodeInput === "" || phoneNumberInput === ""){
         setNextErrorMessage("Fill the fields to verify your phone number");
         setIsNextError(true);
@@ -204,7 +204,7 @@ const ChangePhoneNumber = ({navigation}) => {
     }
 
 
-
+  //Update database with the new phone number
     const updateDB = () => {
         axios  
         .post('/trainers/updateTrainerInfo', {
@@ -325,7 +325,7 @@ const ChangePhoneNumber = ({navigation}) => {
               :null}
               <AppButton 
                 title="Submit"
-                onPress={handleNext}
+                onPress={handleSubmit}
               />
             </View>
         </SafeAreaView>
@@ -395,6 +395,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center'
   },
   verifyExplenationText: {
+      color: 'grey',
       textAlign:'center',
       fontSize: Dimensions.get('window').height * .0189,
   },
