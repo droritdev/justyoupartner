@@ -55,6 +55,7 @@ const placeEditProfile = require('./placeEditProfile/placeEditProfile');
 
         //**Common imports**//
 const sendEmail = require('./sendGrid/sendEmail');
+const sendAutomaticResponse = require('./sendGrid/sendAutomaticResponse');
 const verificationSms = require('./twilio/verificationSms');
 const makeCall = require('./twilio/makeCall');
 const updatePaymentMethods = require('./updatePaynemtMethods/updatePaymentMethods');
@@ -95,8 +96,12 @@ mongoose.connect(process.env.MONGO_URI, {
 //End point to get client by ID
 app.get('/clients/findByID/:id', findClientByID.getClientByID);
 
-//End point for sending emails
+//End point for sending email to support
 app.post('/send-email', sendEmail.sendEmail);
+
+//End point for sending automatic response
+app.post('/send-automatic-response', sendAutomaticResponse.sendAutomaticResponse);
+
 
 //End point for sending verification code
 app.post('/send-verification-code', verificationSms.sendVerificationCode);

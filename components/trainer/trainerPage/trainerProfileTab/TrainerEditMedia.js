@@ -371,7 +371,7 @@ const TrainerEditMedia = ({navigation}) => {
         for(let i = 0; i < pictures.length; i++) {
             if (picOrigin[i] === "online") {
                 repeats.push(
-                    <View style={styles.rowPicturesContainer}>
+                    <View key={"onlinePhoto"+i} style={styles.rowPicturesContainer}>
                         <TouchableOpacity
                             onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
                             style={styles.shadowContainer}
@@ -389,7 +389,7 @@ const TrainerEditMedia = ({navigation}) => {
                 )
             } else {
                 repeats.push(
-                    <View style={styles.rowPicturesContainer}>
+                    <View key={"offlinePhoto"+i} style={styles.rowPicturesContainer}>
                         <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
                         style={styles.shadowContainer}
@@ -407,7 +407,7 @@ const TrainerEditMedia = ({navigation}) => {
 
 
         repeats.push(
-            <View style={styles.rowPicturesContainer}>
+            <View  key={"addPhoto"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
                 >
@@ -430,7 +430,7 @@ const TrainerEditMedia = ({navigation}) => {
         for(let i = 0; i < videos.length; i++) {
             if (vidOrigin[i] === "online") {
                 repeats.push(
-                    <View style={styles.rowPicturesContainer}>
+                    <View key={"onlineVid"+i} style={styles.rowPicturesContainer}>
                         <TouchableOpacity
                             onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
                             style={styles.shadowContainer}
@@ -448,7 +448,7 @@ const TrainerEditMedia = ({navigation}) => {
                 )
             } else {
                 repeats.push(
-                    <View style={styles.rowPicturesContainer}>
+                    <View key={"offlineVid"+i} style={styles.rowPicturesContainer}>
                         <TouchableOpacity
                             onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
                             style={styles.shadowContainer}
@@ -467,7 +467,7 @@ const TrainerEditMedia = ({navigation}) => {
         }
 
         repeats.push(
-            <View style={styles.rowPicturesContainer}>
+            <View key={"addVideo"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
                 >
@@ -641,7 +641,6 @@ const styles = StyleSheet.create ({
         },
         shadowOpacity: 0.58,
         shadowRadius: 16.00,    
-        elevation: 24,
     },
     plusPicture: {
         height: Dimensions.get('window').height * .15,
@@ -669,7 +668,6 @@ const styles = StyleSheet.create ({
         },
         shadowOpacity: 0.58,
         shadowRadius: 16.00,    
-        elevation: 24,
     },
     footerContainer:{
     },

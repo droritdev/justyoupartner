@@ -24,7 +24,7 @@ const Chat = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(true);
 
     //Cancel token for the watcher
-    var cancelTokenSource = axios.CancelToken.source();
+    // const cancelTokenSource = axios.CancelToken.source();
 
     //Client ID from previous page
     const clientID = route.params;
@@ -53,9 +53,8 @@ const Chat = ({navigation, route}) => {
 
 
 
-    //Show bottom navgation UI
+    //Go back 
     const handleArrowButton = () => {
-        cancelTokenSource.cancel();
         navigation.navigate('PendingApprovalOrder');
     }
 
@@ -248,7 +247,7 @@ const Chat = ({navigation, route}) => {
 
 
     //Send a message that contains a video/image
-    const sendMediaMessage = async () => {
+    const sendMediaMessage = async (fileMime, url) => {
         var newMessage = [];
             
         switch (fileMime) {
@@ -291,22 +290,18 @@ const Chat = ({navigation, route}) => {
     //Listener to mongodb to check if a new message was sent
     //Update UI and display the new message that was sent
     const watchForUpdates = async () => {
-        cancelTokenSource = axios.CancelToken.source();
+        var message = [];
         await axios
-            .get('/messages/watchForUpdates/'+trainerID, {
-                cancelToken: cancelTokenSource.token
-            },
-            config
-            )
+            .get('/messages/watchForUpdates/'+trainerID, config)
             .then((doc) => {
-                var message = doc.data;
+                message = doc.data;
                 if (message) {
-                    setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+                    setTimeout(() => watchForUpdates(), 1000);
                 }
             })
-            .catch((err) => {});
+            .catch((err) => {}); 
 
-        watchForUpdates();
+        setMessages(previousMessages => GiftedChat.append(previousMessages, message));
     }
 
 
@@ -446,10 +441,8 @@ const Chat = ({navigation, route}) => {
     const onSend = useCallback(async (sentMessages = []) => {
         var newMessage = sentMessages[0];
         var messageText = newMessage.text;
-        console.log(sentMessages);
-        //Check if the message is a phone number
-        let phoneFormat = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
-        if(phoneFormat.test(messageText)){
+
+        if(checkForPhoneNumber(messageText)) {
             Alert.alert(
                 'Attention',
                 'The system has recognized that you have sent a phone number. \n You are able to make a phone call within the app.',
@@ -490,6 +483,20 @@ const Chat = ({navigation, route}) => {
         }
       }, [])
 
+
+    //Check if the message contains a phone number
+    const checkForPhoneNumber = (messageText) => {
+    let phoneFormat = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+    var digits = messageText.replace(/\D/g, "");
+
+    if (digits.length >= 7) {
+        if(phoneFormat.test(digits)) {
+            return true;
+        }
+    }
+
+        return false;
+    }
 
 
     return(

@@ -1,142 +1,266 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground, TextInput} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Dialog from "react-native-dialog";
+import {Alert, Text, View, SafeAreaView, StyleSheet, Dimensions, TextInput} from 'react-native';
+import { ScrollView} from 'react-native-gesture-handler';
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+import {EmailContext} from '../../../../context/trainerContextes/EmailContext';
+import {NameContext} from '../../../../context/trainerContextes/NameContext';
+import AppButton from '../../../globalComponents/AppButton';
+import axios from 'axios';
 
 //The question and answers page
 const CustomerService = ({navigation}) => {
-    const mailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    //server config
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
+
+    //Format to check if the email is in the following format:
+    // just@gmail.com
+    // just@gmail.com, just@gmail.com
+    const mailformat = /^(|([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([,.] (([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/;
     
-    const [bccInput, setBccInput] = useState("");
+    //Sender email
+    const supportEmail = "jusyou.pro@gmail.com";
+
+    //Trainer information
+    const {firstName} = useContext(NameContext);
+    const {lastName} = useContext(NameContext);
+    const {emailAddress} = useContext(EmailContext);
+
+    //Inputs
+    const [ccInput, setCcInput] = useState("");
     const [subjectInput, setSubjectInput] = useState("");
     const [mailInput, setMailInput] = useState("");
 
-    const [cancelDialogVisible, setCancelDialogVisible] = useState(false);
-    const [sendDialogVisible, setSendDialogVisible] = useState(false);
+    //Error message when input validation fails
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleOnCancelPressed = () => {
-        setCancelDialogVisible(true);
-    };
 
-    const handleCancelYesDialog = () => {
-        setCancelDialogVisible(false);
+    //Hide bottom navgation UI
+    useEffect(() => {
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: false
+        })
+        }, []);
+
+
+    //Navigate back to trainer profile page and show the buttom navigation UI
+    const handleArrowButton = () => {
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: true
+        })
         navigation.navigate('TrainerProfilePage');
-    };
+    }
 
-    const handleCancelNoDialog = () => {
-        setCancelDialogVisible(false);
-    };
 
-    const handleSendOkDialog = () => {
-        setSendDialogVisible(false);
-    };
-
+    //Check validation for all inputs
+    //If validationg is okay => send email to support
     const handleOnSendEmailPressed = () => {
-        if(subjectInput === ""){
-            setSendDialogVisible(true);
+        if(subjectInput === "") {
+            setErrorMessage("Please enter a subject to your email.");
+            setIsError(true);
         }
-        else if(mailInput === ""){
-            setSendDialogVisible(true);
+        else if(mailInput === "") {
+            setErrorMessage("Please enter a message to your email.");
+            setIsError(true);
         }
-        else if(bccInput !== ""){
-            if(!(mailformat.test(bccInput))){
-                setSendDialogVisible(true);
-            }
+        else if(ccInput !== "" && !(mailformat.test(ccInput))) {
+            setErrorMessage("Add cc in the following format: just@gmail.com, just@gmail.com");
+            setIsError(true);
         }
         else{
             sendEmail();
         }
     };
 
-    const handleOnBccInputChange = (text) => {
-        setBccInput(text);
+
+    //Change input for the cc and remove error message
+    const handleOnCcInputChange = (text) => {
+        setIsError(false);
+        setCcInput(text);
     };
 
+    //Change input for the subject and remove error message
     const handleOnSubjectChange = (text) => {
+        setIsError(false);
         setSubjectInput(text);
     };
 
+    //Change input for the mail content and remove error message
     const handleOnMailInputChange = (text) => {
+        setIsError(false);
         setMailInput(text);
     };
 
-    const sendEmail = () => {
-        navigation.navigate('TrainerProfilePage');
+
+
+
+    //Send email using axios and sendgrid
+    const sendEmail = async () => {
+        //Information of the sender for customer service
+        var senderInfo = 'Email: ' + emailAddress + 
+                        '\n' + 'Name: '+ firstName + ' ' + lastName +  '\n \n \n';
+
+        //Check if there is need to send a copy to anyone
+        if (ccInput !== "") {
+            var emailsArray = ccInput.split(", ");
+            if (emailsArray.length > 0) {
+                await sendEmailCopy(emailsArray);
+            }
+        }
+
+        await axios
+        .post('/send-email', {
+            to: supportEmail,
+            from: supportEmail,
+            subject: subjectInput,
+            text: senderInfo + mailInput,
+        },
+        config
+        )
+        .then((res) => {
+            //Check if email was sent to the support
+            if (res.data.status === 'success') {
+                //Send automatic response
+                sendAutomaticResponse();
+            }
+        })
+        .catch((err) => {
+            Alert.alert(
+                'System failure',
+                "Couldn't send message, please try again later.",
+                [
+                    {text: 'OK'},
+                  ],
+                  { cancelable: false }
+                )
+        });
     }
+
+     
+
+    //Send copy of the email to every email in the array
+    const sendEmailCopy = async (emailArray) => {
+        await axios
+        .post('/send-email', {
+            to: emailArray,
+            from: supportEmail,
+            subject: subjectInput,
+            text: mailInput,
+        },
+        config
+        )
+        .then((res) => {
+            //Check if the copy was sent to the specified email address
+            if (res.data.status === 'success') {
+            }
+        })
+        .catch((err) => {
+            Alert.alert(
+                'System failure',
+                "Couldn't send message, please try again later.",
+                [
+                    {text: 'OK'},
+                ],
+                { cancelable: false }
+                )
+        }); 
+    }
+
+
+    //Send automatic email response to the trainer
+    const sendAutomaticResponse = async () => {
+        await axios
+        .post('/send-automatic-response', {
+            to: emailAddress,
+            from: supportEmail,
+            name: firstName
+        },
+        config
+        )
+        .then((res) => {
+            //Check if the automatic response message was sent successfully.
+            if (res.data.status === 'success') {
+                Alert.alert(
+                    'Success',
+                    'Your email has been sent!',
+                    [
+                        {text: 'OK', onPress: () => handleArrowButton()},
+                      ],
+                      { cancelable: false }
+                )
+            }
+        })
+        .catch((err) => {
+
+        });
+    }
+
+
 
     return(
         <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <View>
-                    <Dialog.Container visible={cancelDialogVisible}>
-                        <Dialog.Title style={styles.dialogTitle}>Attention</Dialog.Title>
-                        <Dialog.Description style={styles.dialogContent}>Mail was not sent - are you sure?</Dialog.Description>
-                        <Dialog.Button label="No" onPress={(() => handleCancelNoDialog())} />
-                        <Dialog.Button label="Yes" onPress={() => handleCancelYesDialog()} />
+            <ArrowBackButton
+                    onPress={handleArrowButton}
+            />
+            <View >
+                <Text style={styles.titleText}>JustYou Support</Text>
+                <View style={styles.greyBorder}></View>
+            </View>
+            <View style={styles.emailHeaders}>
+                <View style={styles.headerContainer}>
+                    <View style={styles.headerRow}>
+                        <Text style={styles.emailHeader}>To: </Text>
+                        <Text style={styles.companyEmail}> {supportEmail}</Text>
+                    </View>
+                </View>
+                <View style={styles.headerContainer}>
+                    <View style={styles.headerRow}>
+                        <Text style={styles.emailHeader}>Cc: </Text>
+                        <TextInput
+                            style={styles.headerInput}
+                            placeholder={"just@gmail.com, you@hotmail.com"}
+                            onChangeText={(text) => handleOnCcInputChange(text)}
+                        />
+                    </View>
+                </View>
+                <View style={styles.headerContainer}>
+                    <View style={styles.headerRow}>
+                        <Text style={styles.emailHeader}>Subject: </Text>
+                        <TextInput
+                            style={styles.headerInput}
+                            placeholder={"Question about.."}
+                            onChangeText={(text) => handleOnSubjectChange(text)}
+                        />
+                    </View>
+                </View>
+            </View>
 
-                    </Dialog.Container>
-                </View>
-                <View>
-                    <Dialog.Container visible={sendDialogVisible}>
-                        <Dialog.Title style={styles.dialogTitle}>Attention</Dialog.Title>
-                        <Dialog.Description style={styles.dialogContent}>Not all field are correct, email can not be sent</Dialog.Description>
-                        <Dialog.Button label="Ok" onPress={(() => handleSendOkDialog())} />
-
-                    </Dialog.Container>
-                </View>
-                <TouchableOpacity 
-                    style={styles.cancelButton}
-                    onPress={() => handleOnCancelPressed()}
-                >
-                    <Text style={styles.cancelButtonText}>Cancel</Text>
-                </TouchableOpacity>
-                <View style={styles.titleAndButtonContainer}>
-                    <View style={styles.titleAndButtonRow}>
-                        <Text style={styles.titleText}>Just You</Text>
-                        <TouchableOpacity
-                            onPress={() => handleOnSendEmailPressed()}
-                        >
-                            <Image
-                                source={require('../../../../images/emailSendIcon.png')}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.emailHeaders}>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.headerRow}>
-                            <Text style={styles.emailHeader}>To: </Text>
-                            <Text style={styles.companyEmail}>justyou@gmail.com</Text>
-                        </View>
-                    </View>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.headerRow}>
-                            <Text style={styles.emailHeader}>Cc/Bcc: </Text>
-                            <TextInput
-                                style={styles.headerInput}
-                                onChangeText={(text) => handleOnBccInputChange(text)}
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.headerRow}>
-                            <Text style={styles.emailHeader}>Subject: </Text>
-                            <TextInput
-                                style={styles.headerInput}
-                                onChangeText={(text) => handleOnSubjectChange(text)}
-                            />
-                        </View>
-                    </View>
+                <ScrollView>
                     <View style={styles.emailContentContainer}>
                         <TextInput
                             style={styles.emailContentInput}
-                            placeholder="Type your text here..."
+                            placeholder={"Hello " + firstName + ", we are here to help! \nWrite your message here..."}
                             multiline={true}
                             onChangeText={(text) => handleOnMailInputChange(text)}
                         />
                     </View>
-                </View>
             </ScrollView>
+
+            {isError ?
+            <Text style={styles.errorText}>{errorMessage}</Text>
+            :null}
+
+            <AppButton 
+              title="Send"
+              onPress={handleOnSendEmailPressed}
+            />
         </SafeAreaView>
     )
 }   
@@ -167,6 +291,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontWeight: 'bold',
+        alignSelf: 'center',
         fontSize: Dimensions.get('window').height * .0278
     },
     emailHeaders: {
@@ -207,7 +332,20 @@ const styles = StyleSheet.create({
     },
     dialogContent: {
         fontSize: Dimensions.get('window').height * .02
-    }
+    },
+    errorText: {
+        marginBottom: Dimensions.get('window').height * .015,
+        textAlign:'center',
+        color: 'red',
+        fontSize: Dimensions.get('window').height * .022,
+    },
+    greyBorder: {
+        marginTop: Dimensions.get('window').height * .01,
+        alignSelf: 'center',
+        width: Dimensions.get('window').width * .6,
+        borderTopWidth: 3,
+        borderTopColor: 'lightgrey',
+    },
 });
 
 export default CustomerService;
