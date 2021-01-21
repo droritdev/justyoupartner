@@ -17,7 +17,7 @@ const PendingApprovalOrder = ({navigation}) => {
     const {orderObject} = useContext(OrderContext);
     const [approveClicked, setApproveClicked] = useState(false);
     const [declineClicked, setDeclineClicked] = useState(false);
-    // const [timeOccupiedMessage, setTimeOccupiedMessage] = useState(false);
+    const [clientInfo, setClientInfo] = useState([]);
 
     //Format the categories list to lower case with first letter upper case
     const textDisplayFormat = (str) => {
@@ -30,8 +30,11 @@ const PendingApprovalOrder = ({navigation}) => {
        navigation.dangerouslyGetParent().setOptions({
         tabBarVisible: false
        })
+
+       getClientInfo();
     }, []);
 
+    
 
     //Axios post config
     const config = {
@@ -41,6 +44,23 @@ const PendingApprovalOrder = ({navigation}) => {
           "Content-Type": "application/json",
         },
     };
+
+
+    //Retrive the client information by ID
+    const getClientInfo = async () => {
+        await axios
+         .get('/clients/findByID/'+orderObject.client.id, 
+         config
+         )
+         .then((doc) => {
+             var clientObject = doc.data;
+             setClientInfo(clientObject);
+ 
+         })
+         .catch((err) => {});
+     }
+
+     
 
 
     //Show bottom navgation UI
@@ -166,7 +186,7 @@ const PendingApprovalOrder = ({navigation}) => {
         { 
             start: orderObject.trainingDate.startTime,
             end: orderObject.trainingDate.endTime,
-            title: orderObject.client.firstName + ' ' + orderObject.client.lastName + ' - ' + textDisplayFormat(orderObject.category),
+            title: clientInfo.name.first + ' ' + clientInfo.name.last + ' - ' + textDisplayFormat(orderObject.category),
             summary: textDisplayFormat(orderObject.type) + ' - ' + orderObject.location.address,
             color: 'deepskyblue'  
         }
@@ -329,14 +349,18 @@ const PendingApprovalOrder = ({navigation}) => {
                         <FastImage
                                     style={styles.profileImage}
                                     source={{
-                                    uri: orderObject.client.profilePic,
+                                    uri: clientInfo.image,
                                     priority: FastImage.priority.normal,
                                     }}
                                     resizeMode={FastImage.resizeMode.stretch}
                         />
                         <View style={styles.nameButtonsColumContainer}>
                             <View style={styles.nameBox}>
-                                <Text style={styles.nameText}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
+                                {clientInfo.name!==undefined?
+                                    <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last}</Text>
+                                :
+                                    <Text style={styles.nameText}>{""}</Text>
+                                } 
                             </View>
 
                             <View style={styles.buttonsRowContaier}>

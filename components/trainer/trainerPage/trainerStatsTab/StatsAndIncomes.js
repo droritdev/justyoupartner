@@ -4,14 +4,10 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import Icon from 'react-native-vector-icons/Feather';
-import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-  } from "react-native-chart-kit";
+import * as Progress from 'react-native-progress';
+
+
+import {LineChart} from "react-native-chart-kit";
 
 //The trainer's order page - pennding + stats
 const StatsAndIncomes = ({navigation}) => {
@@ -36,6 +32,9 @@ const StatsAndIncomes = ({navigation}) => {
     const [monthlyDeclinedOrders, setMonthlyDeclinedOrders] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     const [monthlyIncome, setMonthlyIncome] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     const [monthlyIncomeGraph, setMonthlyIncomeGraph] = useState([0, 0, 0, 0, 0, 0]);
+
+    //Check if loading data from database is finished
+    const [isLoading, setIsLoading] = useState(true);
 
     //our trainer ID
     const {trainerID} = useContext(IdContext);
@@ -218,6 +217,7 @@ const StatsAndIncomes = ({navigation}) => {
             setMonthlyDeclinedOrders(declinedByMonth);
             setMonthlyIncome(incomesByMonth);
             updateData(incomesByMonth, "monthlyIncome");
+            setIsLoading(false);
 
         })
         .catch((err) => {});
@@ -373,32 +373,41 @@ const StatsAndIncomes = ({navigation}) => {
             </View> */}
             {isIncome?
                 <View>
-                    {totalCompletedOrders.length === 0?
-                        <View> 
-                            <Image
-                                source={require('../../../../images/noReceipts.png')}
-                                style={styles.noOrdersImage}
-                            />
-                            <Text style={styles.noOrdersTitle}>{"NO RECEIPTS FOUND"}</Text>
-                            <Text style={styles.noOrdersMessage}>{"Looks like you haven't completed an order yet."}</Text>
+                    {isLoading?
+                        <View style={styles.progressView}>
+                            <Progress.Circle size={Dimensions.get('window').height * .25} indeterminate={true} />
                         </View>
                     :
-                    <View>
-                        <View style={styles.tableHeaders}>
-                        <View style={styles.tableHeadersRow}>
-                            <Text style={styles.headerTitle}>Name</Text>
-                            <Text style={styles.headerTitle}>Date</Text>
-                            <Text style={styles.headerTitle}>Time</Text>
-                            <Text style={styles.headerTitle}>Type</Text>
-                            <Text style={styles.headerTitle}>Income</Text>
+                        <View>
+                        {totalCompletedOrders.length === 0?
+                            <View> 
+                                <Image
+                                    source={require('../../../../images/noReceipts.png')}
+                                    style={styles.noOrdersImage}
+                                />
+                                <Text style={styles.noOrdersTitle}>{"NO RECEIPTS FOUND"}</Text>
+                                <Text style={styles.noOrdersMessage}>{"Looks like you haven't completed an order yet."}</Text>
+                            </View>
+                        :
+                        <View>
+                            <View style={styles.tableHeaders}>
+                            <View style={styles.tableHeadersRow}>
+                                <Text style={styles.headerTitle}>Name</Text>
+                                <Text style={styles.headerTitle}>Date</Text>
+                                <Text style={styles.headerTitle}>Time</Text>
+                                <Text style={styles.headerTitle}>Type</Text>
+                                <Text style={styles.headerTitle}>Income</Text>
+                            </View>
+                            </View>
+                            <View style={styles.incomesTableContainer}>
+                                {getCompletedOrders()}
+                            </View>
                         </View>
-                        </View>
-                        <View style={styles.incomesTableContainer}>
-                            {getCompletedOrders()}
-                        </View>
+                        }
                     </View>
                     }
                 </View>
+
             :
                 <View>
                 
@@ -803,6 +812,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .4,
+    },
+    progressView: {
+        marginTop: Dimensions.get('window').height * .2,
+        alignSelf: 'center'
     }
 });
 

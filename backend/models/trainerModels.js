@@ -27,18 +27,6 @@ const trainerProfileSchema = new Schema(
                             type: String,
                             trim: true
                         },
-                        userImage: {
-                            type: String,
-                            trim: true
-                        },
-                        userFirstName: {
-                            type: String,
-                            trim: true
-                        },
-                        userLastName: {
-                            type: String,
-                            trim: true
-                        },
                         stars: {
                             type: Number
                         },

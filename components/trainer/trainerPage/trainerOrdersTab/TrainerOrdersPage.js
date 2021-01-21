@@ -6,17 +6,35 @@ import {OrderContext} from '../../../../context/orderContexts/OrderContext';
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import Icon from 'react-native-vector-icons/Feather';
 import FastImage from 'react-native-fast-image';
+import * as Progress from 'react-native-progress';
 
 //The trainer's order page - pennding + approved
 const TrainerOrdersPage = ({navigation}) => {
-    const {trainerID, dispatchTrainerID} = useContext(IdContext);
-    const {orderObject, dispatchOrderObject} = useContext(OrderContext);
+    //Trainer ID to get orders related to this ID
+    const {trainerID} = useContext(IdContext);
 
+    //Dispatch the order object to the next page
+    const {dispatchOrderObject} = useContext(OrderContext);
+
+    //Check if flip is on pending or approved
     const [isPending, setIsPending] = useState(true);
+
+    //Aray with all the pending orders
     const [pendingOrders, setPendingOrders] = useState([]);
+
+    //Aray with all the approved orders
     const [approvedOrders, setApprovedOrders] = useState([]);
+
+    //Check if loading data from database is finished
+    const [isLoading, setIsLoading] = useState(true);
     
+    //Information of all pending clients
+    const [pendingClientsInfo, setPendingClientsInfo] = useState([]);
+
+    //Information of all approved clients
+    const [approvedClientsInfo, setApprovedClientsInfo] = useState([]);
     
+
     const config = {
         withCredentials: true,
         baseURL: 'http://localhost:3000/',
@@ -46,12 +64,12 @@ const TrainerOrdersPage = ({navigation}) => {
 
 
     //Get all orders by trainer ID, sort by time created, assaign to designated const
-    const getTrainerOrders = () => {
-        axios
+    const getTrainerOrders = async () => {
+        await axios
         .get('/orders/by-trainer-id/'+trainerID, 
         config
         )
-        .then((doc) => {
+        .then(async (doc) => {
             var allOrders = doc.data;
             var pendingOrders = [];
             var approvedOrders = [];
@@ -65,14 +83,78 @@ const TrainerOrdersPage = ({navigation}) => {
                 }
             }
 
+            var approvedClients = await getApprovedClientsInfo(approvedOrders);
+            var pendingClients = await getPendingClientsInfo(pendingOrders);
+
             pendingOrders = sortOrders(pendingOrders);
             approvedOrders = sortOrders(approvedOrders);
 
+            setIsLoading(false);
             setPendingOrders(pendingOrders);
             setApprovedOrders(approvedOrders);
+            setApprovedClientsInfo(approvedClients);
+            setPendingClientsInfo(pendingClients);
         })
         .catch((err) => {});
     }
+
+
+    //Get all approved orders
+    //Return an array with all the information of those clients from database
+    const getApprovedClientsInfo = async (approvedOrders) => {
+            //Array to to be filled with the ids of the clients that are approved
+            var approvedIdArray = [];
+    
+            //Push into the approvedIdArray all of the approved clientID
+            for (let index = 0; index < approvedOrders.length; index++) {
+                const singleApprovedUserID = approvedOrders[index].client.id;
+                approvedIdArray.push(singleApprovedUserID);
+            }
+
+        var info = await fetchInfoFromDB(approvedIdArray);
+        return info;
+    }
+
+
+
+    //Get all pending orders
+    //Return an array with all the information of those clients from database
+    const getPendingClientsInfo = async (pendingOrders) => {
+        //Array to to be filled with the ids of the clients that are pending
+        var pendingIdArray = [];
+
+        //Push into the pendingIdArray all of the pending clientID
+        for (let index = 0; index < pendingOrders.length; index++) {
+            const singlePendingUserID = pendingOrders[index].client.id;
+            pendingIdArray.push(singlePendingUserID);
+        }
+
+        var info = await fetchInfoFromDB(pendingIdArray);
+        return info;
+    }
+
+
+
+    //Get an array of client IDS,
+    //Return an array with all the information of those clients from database
+    const fetchInfoFromDB = async (idArray) => {
+        var info = [];
+
+        //fetch the  clients from mongodb using axios
+        await axios
+        .get('/clients/findMultipleClients/'+idArray, 
+        config
+        )
+        .then((doc) => {
+            info = doc.data;
+            info.reverse();
+
+        })
+        .catch((err) => {});
+
+        return info;
+    }
+
 
 
     //Sort orders by time created
@@ -93,6 +175,7 @@ const TrainerOrdersPage = ({navigation}) => {
         return ordersArray;
     }
 
+    
     const swapNumbers = (array, i, j) => {
         // Save Element Value (Because It Will Change When We Swap/Reassign)
         let temp = array[i];
@@ -103,23 +186,42 @@ const TrainerOrdersPage = ({navigation}) => {
     };
 
 
+    //Receive the current order userID and find this user information in the clientsInfoArray
+    //Return the information
+    const getCurrentClient = (userID, clientsInfoArray) => {
+        var info = {};
+
+        for (let index = 0; index < clientsInfoArray.length; index++) {
+            const singleClientID = clientsInfoArray[index]._id;
+            if (userID === singleClientID) {
+                info = clientsInfoArray[index];
+                break;
+            }
+        }
+
+        return info;
+    }
+
 
     const getPendingOrdersPattern = () => {
         let repeats = [];
-        if (pendingOrders !== []) {
+        if (pendingOrders !== [] && pendingClientsInfo.length > 0) {
             for(let i = 0; i < pendingOrders.length; i++) {
+                //Get the client object that contatins all of his information
+                var clientInfo = getCurrentClient(pendingOrders[i].client.id, pendingClientsInfo);
+
                 repeats.push(
                     <View key={'pendingRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
                         <FastImage
                                     style={styles.image}
                                     source={{
-                                    uri: pendingOrders[i].client.profilePic,
+                                    uri: clientInfo.image,
                                     priority: FastImage.priority.normal,
                                     }}
                                     resizeMode={FastImage.resizeMode.stretch}
                         />
                         <View style={styles.nameBox}>
-                            <Text style={styles.nameText}>{pendingOrders[i].client.firstName + " " + pendingOrders[i].client.lastName }</Text>
+                            <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last }</Text>
                         </View>
                         <View style={styles.dateBox}>
                             <Text style={styles.dateText}>{pendingOrders[i].trainingDate.startTime.slice(0, 10)}</Text>
@@ -143,18 +245,21 @@ const TrainerOrdersPage = ({navigation}) => {
         let repeats = [];
         if (approvedOrders !== []) {
             for(let i = 0; i < approvedOrders.length; i++) {
+                //Get the client object that contatins all of his information
+                var clientInfo = getCurrentClient(approvedOrders[i].client.id, approvedClientsInfo);
+
                 repeats.push(
                     <View key={'approvedRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
                     <FastImage
                                 style={styles.image}
                                 source={{
-                                uri: approvedOrders[i].client.profilePic,
+                                uri: clientInfo.image,
                                 priority: FastImage.priority.normal,
                                 }}
                                 resizeMode={FastImage.resizeMode.stretch}
                     />
                     <View style={styles.nameBox}>
-                        <Text style={styles.nameText}>{approvedOrders[i].client.firstName + " " + approvedOrders[i].client.lastName }</Text>
+                        <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last  }</Text>
                     </View>
                     <View style={styles.dateBox}>
                         <Text style={styles.dateText}>{approvedOrders[i].trainingDate.startTime.slice(0, 10)}</Text>
@@ -173,6 +278,7 @@ const TrainerOrdersPage = ({navigation}) => {
     };
 
 
+    //Dispatch the order object and navigate to pending order details papge
     const handleOnArrowPendingPressed = (index) => {
         
         dispatchOrderObject({
@@ -184,6 +290,7 @@ const TrainerOrdersPage = ({navigation}) => {
     }
 
 
+    //Dispatch the order object and navigate to approved order details papge
     const handleArrowApprovedPressed = (index) => {
 
         dispatchOrderObject({
@@ -216,39 +323,55 @@ const TrainerOrdersPage = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 {isPending ?
-                    <View style={styles.pendingContainer}>
-                        <View style={styles.pendingOrderView}>
-                            {pendingOrders.length === 0 ? 
-                            <View> 
+                    <View>
+                        {isLoading?
+                            <View style={styles.progressView}>
+                                <Progress.Circle size={Dimensions.get('window').height * .25} indeterminate={true} />
+                            </View>
+                        :
+                        <View style={styles.pendingContainer}>
+                            <View style={styles.pendingOrderView}>
+                                {pendingOrders.length === 0 ? 
+                                <View> 
+                                        <Image
+                                            source={require('../../../../images/noOrders.png')}
+                                            style={styles.noOrdersImage}
+                                        />
+                                    <Text style={styles.noOrdersTitle}>{"NO PENDING ORDERS"}</Text>
+                                    <Text style={styles.noOrdersMessage}>{"Looks like you haven't received orders yet."}</Text>
+                                </View>
+                                :
+                                getPendingOrdersPattern()}
+                            </View>
+                        </View>
+                        }
+                    </View>
+                    : 
+                    <View>
+                        {isLoading?
+                            <View style={styles.progressView}>
+                                <Progress.Circle size={Dimensions.get('window').height * .25} indeterminate={true} />
+                            </View>
+                        :
+                        <View style={styles.pendingContainer}>
+                            <View style={styles.pendingOrderView}>
+                                {approvedOrders.length === 0 ? 
+                                <View> 
                                     <Image
                                         source={require('../../../../images/noOrders.png')}
                                         style={styles.noOrdersImage}
                                     />
-                                  <Text style={styles.noOrdersTitle}>{"NO PENDING ORDERS"}</Text>
-                                  <Text style={styles.noOrdersMessage}>{"Looks like you haven't received orders yet."}</Text>
+                                    <Text style={styles.noOrdersTitle}>{"NO APPROVED ORDERS"}</Text>
+                                    <Text style={styles.noOrdersMessage}>{"Looks like you haven't approved orders yet."}</Text>
+                                </View>
+                                :
+                                getApprovedOrdersPattern()}
                             </View>
-                            :
-                            getPendingOrdersPattern()}
-                        </View>
-                    </View>
-                    : 
-                    <View style={styles.pendingContainer}>
-                        <View style={styles.pendingOrderView}>
-                            {approvedOrders.length === 0 ? 
-                            <View> 
-                                <Image
-                                    source={require('../../../../images/noOrders.png')}
-                                    style={styles.noOrdersImage}
-                                />
-                                <Text style={styles.noOrdersTitle}>{"NO APPROVED ORDERS"}</Text>
-                                <Text style={styles.noOrdersMessage}>{"Looks like you haven't approved orders yet."}</Text>
-                            </View>
-                            :
-                            getApprovedOrdersPattern()}
-                        </View>
 
+                        </View>
+                        }
                     </View>
-                    }
+                }     
             </ScrollView>
         </SafeAreaView>
     );
@@ -429,6 +552,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .4,
+    },
+    progressView: {
+        marginTop: Dimensions.get('window').height * .2,
+        alignSelf: 'center'
     }
 });
 

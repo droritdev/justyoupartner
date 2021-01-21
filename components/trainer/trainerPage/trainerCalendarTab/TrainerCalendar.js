@@ -94,7 +94,16 @@ const TrainerCalendar = ({navigation}) => {
                 calendar: calendar
             });
         })
-        .catch((err) => alert(err));
+        .catch((err) => {
+            Alert.alert(
+                'No internet connection',
+                'Please check your internet connection and try again.',
+                [
+                    {text: 'OK'},
+                ],
+                { cancelable: false }
+            )
+        });
       }
 
 
@@ -645,7 +654,7 @@ const TrainerCalendar = ({navigation}) => {
 
 
             <Modal
-
+                
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}

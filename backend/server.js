@@ -7,13 +7,6 @@ const cors = require('cors');
 const db = mongoose.connection;
 module.exports.mongoose = mongoose;
 
-
-//chat
-const findChatByIDS = require('./findChatByIDS/findChatByIDS');
-const createChat = require('./createChat/createChat');
-const updateChat = require('./updateChat/updateChat');
-
-
 // chat messages
 const findMessageByIDS = require('./messages/findMessageByIDS');
 const newMessage = require('./messages/newMessage');
@@ -47,6 +40,7 @@ const markStarReview = require('./markStarReview/markStarReview');
 const findAroundMe = require('./findAroundMe/findAroundMe');
 const uploadimage = require('./uploadimage/uploadimage');
 const findClientByID = require('./findClientByID/findClientByID');
+const findMultipleClients = require('./findMultipleClients/findMultipleClients');
 
         //**Place imports**//
 const placeRegister = require('./register/placeRegister');
@@ -95,6 +89,9 @@ mongoose.connect(process.env.MONGO_URI, {
             ////**Client & trainer & place end points**////
 //End point to get client by ID
 app.get('/clients/findByID/:id', findClientByID.getClientByID);
+
+//End point to get client by ID
+app.get('/clients/findMultipleClients/:idArray', findMultipleClients.getMultipleClients);
 
 //End point for sending email to support
 app.post('/send-email', sendEmail.sendEmail);
@@ -211,19 +208,6 @@ app.post('/places/register', placeRegister.register);
 
 //End point for editing the place profile
 app.put('/places/settings/edit-profile', placeEditProfile.editProfile);
-
-
-
-
-//chat
-//End point to get chat by clientID and trainerID
-app.get('/chat/findByIDS/:ids', findChatByIDS.getChatByIDS);
-
-//End point to create new chat
-app.post('/chat/createChat', createChat.createChat);
-
-//End point to update chat
-app.post('/chat/updateChat', updateChat.updateChat);
 
 
 

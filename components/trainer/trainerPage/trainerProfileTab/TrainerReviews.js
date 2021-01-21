@@ -1,11 +1,9 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Dialog from "react-native-dialog";
-import {Accordion, Block} from 'galio-framework';
-import auth from '@react-native-firebase/auth';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 import FastImage from 'react-native-fast-image';
+import axios from 'axios';
 
 import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
 import {NameContext} from '../../../../context/trainerContextes/NameContext';
@@ -23,7 +21,18 @@ const TrainerReviews = ({navigation}) => {
     const {reviews} = useContext(ReviewsContext);
 
     const [age, setAge] = useState();
+    const [clientsInfo, setClientsInfo] = useState([]);
     const [starRating ,setStarRating] = useState();
+
+
+    //server config
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
 
 
     //Calculate trainer age
@@ -70,6 +79,8 @@ const TrainerReviews = ({navigation}) => {
 
         loadStarRating();
 
+        getAllClientsInfo();
+
     }, []);
 
     //Navigates back to the profile page
@@ -81,9 +92,39 @@ const TrainerReviews = ({navigation}) => {
     }
 
 
+    //Reterive from database the information of the users involved
+    const getAllClientsInfo = async () => {
+        //Array to to be filled with the ids of the clients that left reviews
+        var idArray = [];
+
+        //Push into the idArray all of the clientID
+        for (let index = 0; index < reviews.length; index++) {
+            const singleReviewUserID = reviews[index].userID;
+            idArray.push(singleReviewUserID);
+        }
+
+
+        //fetch the client of all clients from mongodb using axios
+        await axios
+        .get('/clients/findMultipleClients/'+idArray, 
+        config
+        )
+        .then((doc) => {
+           var allClientsInfo = doc.data;
+           allClientsInfo.reverse();
+
+           setClientsInfo(allClientsInfo);
+
+        })
+        .catch((err) => {});
+    }
+
+
+    //Input the information retrived from database over the UI
     const getTrainerReviews = () => {
         let repeats = [];
-        if (reviews !== []) {
+        if (reviews !== [] && clientsInfo.length>0) {
+            
             for(let i = 0; i < reviews.length; i++) {
                 var singleReview = reviews[i];
                 repeats.push(
@@ -92,7 +133,7 @@ const TrainerReviews = ({navigation}) => {
                         <FastImage
                             style={styles.reviewUserImage}
                             source={{
-                                uri: singleReview.userImage,
+                                uri: clientsInfo[i].image,
                                 priority: FastImage.priority.normal,
                             }}
                             key={'image'+i}
@@ -100,8 +141,11 @@ const TrainerReviews = ({navigation}) => {
                         />
                         <View style={styles.reviewTextContainer}>
                             <View style={{flexDirection:'row'}}>
-                                
-                                <Text style={styles.reviewTitle}> {singleReview.userFirstName + ' ' + singleReview.userLastName + ' - ' + singleReview.stars}  </Text>
+                                {clientsInfo.length>0?
+                                    <Text style={styles.reviewTitle}> {clientsInfo[i].name.first + ' ' + clientsInfo[i].name.last + ' - ' + singleReview.stars}  </Text>
+                                :
+                                    <Text style={styles.reviewTitle}>{""}</Text>
+                                }
                                 <Image
                                 key={'star'+i}
                                 source={require('../../../../images/starIconBlue.png')}

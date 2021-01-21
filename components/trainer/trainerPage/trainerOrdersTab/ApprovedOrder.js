@@ -5,12 +5,13 @@ import {OrderContext} from '../../../../context/orderContexts/OrderContext';
 import FastImage from 'react-native-fast-image';
 import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 import Icon from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
 //The trainer's order page - pennding + approved
 const ApprovedOrder = ({navigation}) => {
 
     const {orderObject} = useContext(OrderContext);
-
+    const [clientInfo, setClientInfo] = useState([]);
 
     //Format the categories list to lower case with first letter upper case
     const textDisplayFormat = (str) => {
@@ -23,8 +24,33 @@ const ApprovedOrder = ({navigation}) => {
        navigation.dangerouslyGetParent().setOptions({
         tabBarVisible: false
        })
+
+       getClientInfo();
     }, []);
 
+
+    //Axios post config
+    const config = {
+        withCredentials: true,
+        baseURL: 'http://localhost:3000/',
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+
+    //Retrive the client information by ID
+    const getClientInfo = async () => {
+        await axios
+         .get('/clients/findByID/'+orderObject.client.id, 
+         config
+         )
+         .then((doc) => {
+             var clientObject = doc.data;
+             setClientInfo(clientObject);
+ 
+         })
+         .catch((err) => {});
+     }
 
     //Show bottom navgation UI
     const handleArrowButton = () => {
@@ -52,14 +78,18 @@ const ApprovedOrder = ({navigation}) => {
                         <FastImage
                                     style={styles.profileImage}
                                     source={{
-                                    uri: orderObject.client.profilePic,
+                                    uri: clientInfo.image,
                                     priority: FastImage.priority.normal,
                                     }}
                                     resizeMode={FastImage.resizeMode.stretch}
                         />
                         <View style={styles.nameButtonsColumContainer}>
                             <View style={styles.nameBox}>
-                                <Text style={styles.nameText}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
+                                {clientInfo.name!==undefined?
+                                    <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last}</Text>
+                                :
+                                    <Text style={styles.nameText}>{""}</Text>
+                                } 
                             </View>
 
                             <View style={styles.buttonsRowContaier}>

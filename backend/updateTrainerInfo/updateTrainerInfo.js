@@ -9,5 +9,4 @@ exports.updateTrainerInfo = (req, res) => {
     )
     .then(() => res.json({type: "success"}))
     .catch(err => console.log(err.data));
-
 }

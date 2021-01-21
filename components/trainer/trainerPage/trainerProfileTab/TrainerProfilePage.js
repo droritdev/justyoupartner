@@ -1,9 +1,11 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import {Modal, Alert, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
+import Icon from 'react-native-vector-icons/Feather';
+import * as Progress from 'react-native-progress';
 
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import {MediaContext} from '../../../../context/trainerContextes/MediaContext';
@@ -55,10 +57,37 @@ const TrainerProfilePage = ({navigation}) => {
     const [starRating ,setStarRating] = useState();
     const [isSingle, setIsSingle] = useState(true);
 
+    //Modal to display if there is no internet connection
+    const [modalVisible, setModalVisible] = useState(false);
+
     //Format the categories list to lower case with first letter upper case
     const categoryDisplayFormat = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
+
+
+    //Check if information can be retrived from database (interent/server issue)
+    const checkInterntIsOn = async () => {
+        //Wait for response if the data reading was successfull
+        var success =  await getInfoFromMongoDB();
+
+        if (success) {
+            //Dismiss the no internet connection modal
+            setModalVisible(false);
+
+        } else {
+
+            //Show the no internet connection modal if it's not already been displayed
+            if(!modalVisible) {
+                setModalVisible(true);
+            }
+            
+            //Retry to establish connection after 15 seconds
+            setTimeout(() => checkInterntIsOn(), 15000)
+        }
+
+    }
+
 
     const config = {
         withCredentials: true,
@@ -70,7 +99,9 @@ const TrainerProfilePage = ({navigation}) => {
 
      //Load all trainer info from mongodb to the dispatch
     const getInfoFromMongoDB = async () => {
-        axios
+        var success =  true;
+        
+        await axios
         .get('/trainers/email/'+auth().currentUser.email,
         config
         )
@@ -179,14 +210,36 @@ const TrainerProfilePage = ({navigation}) => {
                     type: 'SET_CALENDAR',
                     calendar: doc.data[0].calendar
                 });
-
-                
             }
             else{
-                alert("No trainer");
+                Alert.alert(
+                    'Acount not found',
+                    "We couldn't retrive information about your account. \n Please contact support for further assistance.",
+                    [
+                        {text: 'OK'},
+                    ],
+                    { cancelable: false }
+                )
             }
         })
-        .catch((err) => alert(err));
+        .catch((err) => {
+            success = false;
+
+            if(!modalVisible) {
+                dispatchAboutMe({
+                    type: 'SET_ABOUT_ME',
+                    aboutMe: ""
+                })
+    
+                dispatchCertifications({
+                    type: 'SET_CERTIFICATIONS',
+                    certifications: ""
+                })
+            }
+
+        });
+
+        return success;
     };
 
 
@@ -194,7 +247,7 @@ const TrainerProfilePage = ({navigation}) => {
    //When page is focused, load info again
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            getInfoFromMongoDB();
+            checkInterntIsOn();
         });
     
         
@@ -286,6 +339,26 @@ const TrainerProfilePage = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
+
+            <Modal
+                
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => { setModalVisible(true)}}
+            >
+                <View style={styles.noInternetContainer}>
+                    <View style={styles.noInternetModalContainer}>
+                        <Icon name="wifi-off" size={Dimensions.get('window').width * .2} style={styles.noInternetIcon} />
+                        <Text style={styles.noInternetTitle}>No internet connection</Text>
+                        <Text style={styles.noInternetMessage}>Please check your internet connection.</Text>
+                        <View style={styles.progressView}>
+                                <Progress.Circle size={Dimensions.get('window').height * .07} indeterminate={true} />
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
             <ScrollView style={styles.container}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
@@ -785,6 +858,46 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: Dimensions.get('window').height * .8
+    },
+    noInternetContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    noInternetModalContainer: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        height: Dimensions.get('window').height * .3,
+        width: Dimensions.get('window').width * .8,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+      noInternetIcon: {
+        marginTop: Dimensions.get('window').height * .015,
+        alignSelf: 'center',
+      },
+      noInternetTitle: {
+        marginTop: Dimensions.get('window').height * .017,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .0278,
+        fontWeight: 'bold'
+      },
+      noInternetMessage: {
+        flex: 1,
+        marginTop: Dimensions.get('window').height * .013,
+        alignSelf: 'center',
+        fontSize: Dimensions.get('window').height * .02,
+      },
+      progressView: {
+        marginBottom: Dimensions.get('window').height * .01,
+        alignSelf: 'center'
     }
 });
 export default TrainerProfilePage;

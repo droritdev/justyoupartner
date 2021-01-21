@@ -3,7 +3,6 @@ import { Button, Text, View } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import TrainerCalendar from './TrainerCalendar';
-import TrainerAddEvent from './TrainerAddEvent';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +13,6 @@ const TrainerCalendarPageStack = ({navigation}) => {
             screenOptions={{headerShown: false}}
         >
             <Stack.Screen name='TrainerCalendar' component={TrainerCalendar}/>
-            <Stack.Screen name='TrainerAddEvent' component={TrainerAddEvent}/>
         </Stack.Navigator>
     )
 }
