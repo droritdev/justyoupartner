@@ -208,13 +208,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     justYouHeader: {
-        fontSize: Dimensions.get('window').height * .033,
+        fontSize: Dimensions.get('window').height * .0278,
         fontWeight: 'bold'
     },
     partnerText: {
         color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height * .022
+        fontSize: Dimensions.get('window').height * .018
     },
     arrowBackButton: {
         alignItems: 'flex-start',

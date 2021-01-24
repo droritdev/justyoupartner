@@ -12,7 +12,7 @@ const WhyUs = ({navigation}) => {
     return(
         <SafeAreaView style={styles.safeArea}>
             <ImageBackground
-                source={require('../../../../images/Q&As.jpg')}
+                source={require('../../../../images/whyUs.png')}
                 style={styles.coverImage} 
             >
                 <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useRef, useContext, useState, useEffect} from 'react';
 import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 // import EventCalendar from 'react-native-events-calendar';
@@ -9,6 +9,8 @@ import {CalendarContext} from '../../../../context/trainerContextes/CalendarCont
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
+import DropdownAlert from 'react-native-dropdownalert';
+import Icon from 'react-native-vector-icons/Feather';
 
 // calendar [Object of type Event]
 /*
@@ -50,7 +52,13 @@ const TrainerCalendar = ({navigation}) => {
 
     var blockStartTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
     var blockEndTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
-    // const forceUpdate = React.useReducer(bool => !bool)[1]; 
+  
+    //ref to show covid alert
+    let dropDownAlertRef = useRef(null);
+
+    //Modal to display for covid-19 alert tap
+    const [covidModalVisible, setCovidModalVisible] = useState(false);
+    
 
     
     const config = {
@@ -66,6 +74,16 @@ const TrainerCalendar = ({navigation}) => {
         setCurrentDisplayedDate(getCurrentDate());
         
         const unsubscribe = navigation.addListener('focus', () => {
+            //Check if covid alert was dismissed
+            if(global.covidAlert) {
+                if(dropDownAlertRef.state.isOpen === false) {
+                    //Show covid alert
+                    dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
+                }
+            } else {
+                dropDownAlertRef.closeAction();
+            }
+
             getTrainerCalendar();
         });
     
@@ -73,6 +91,16 @@ const TrainerCalendar = ({navigation}) => {
         return unsubscribe;
       }, [navigation]);
 
+    //Update the covid alert var to false (will not display coivd alert anymore)
+    const covidAlertCancel = () => {
+        global.covidAlert = false;
+    }
+
+
+    //Show the covid information modal
+    const covidAlertTap = () => {
+        setCovidModalVisible(true);
+    }
 
       //Get current trainer calendar from MongoDB and update UI
       const getTrainerCalendar =  async () => { 
@@ -715,6 +743,50 @@ const TrainerCalendar = ({navigation}) => {
 
             </Modal>
 
+
+
+            <Modal
+                
+                animationType="slide"
+                transparent={true}
+                cancelable={true}
+                visible={covidModalVisible}
+                onRequestClose={()=>{}}
+            >
+                <View style={styles.covidContainer}>
+                    
+                    <View style={styles.covidModalContainer}>
+                        <Icon
+                            name="x-circle" 
+                            size={Dimensions.get('window').width * .05} 
+                            style={styles.covidCloseIcon} 
+                            onPress={()=> {setCovidModalVisible(false)}}
+                        />
+                        <Text style={styles.covidTitle}>COVID-19 Information</Text>
+                        <Text style={styles.covidMessage}>{"We at JustYou take care to follow the changing guidelines of the Ministry of Health regarding the coronavirus. Before ordering, the personal trainer and the client will fill out a statement that they do indeed meet the requirements of the law regarding the coronavirus. \nAs Everyone knows, the guidelines may change at any time and we will make the adujstments according to the changes to be determined by the Ministry of Health. Adherence to these requirments is for all of us for your health and safety and we will know better days"}.</Text>
+                    </View>
+                </View>
+
+            </Modal>
+
+            <View style={styles.covidAlertView}>
+                <DropdownAlert
+                        ref={(ref) => {
+                        if (ref) {
+                            dropDownAlertRef = ref;
+                        }
+                        }}
+                        containerStyle={styles.covidAlertContainer}
+                        showCancel={true}
+                        infoColor ={'deepskyblue'}
+                        onCancel={covidAlertCancel}
+                        closeInterval = {0}
+                        onTap={covidAlertTap}
+                        titleNumOfLines={1}
+                        messageNumOfLines={1}
+                />
+            </View>
+
             <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Calendar</Text>
@@ -797,7 +869,7 @@ const styles = StyleSheet.create({
         },
         headerContainer: {
             alignItems: 'center'
-          },
+        },
         justYouHeader: {
             fontSize: Dimensions.get('window').height * .0278,
             fontWeight: 'bold'
@@ -812,13 +884,88 @@ const styles = StyleSheet.create({
             justifyContent: "center",
             alignItems: "center",
             marginTop: 22
-          },
-          modalView: {
-            margin: 20,
+        },
+        modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        height: Dimensions.get('window').height * .5,
+        width: Dimensions.get('window').width * .8,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+        },
+        cancelButton: {
+        marginLeft: Dimensions.get('window').width * .04,
+        backgroundColor: "lightgrey",
+        width: Dimensions.get('window').width * .25,
+        height: Dimensions.get('window').height * .05,
+        borderRadius: 20,
+        justifyContent: 'center'
+        },
+        cancelTextStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        },
+        submitButton: {
+        marginRight: Dimensions.get('window').width * .04,
+        backgroundColor: "deepskyblue",
+        width: Dimensions.get('window').width * .25,
+        height: Dimensions.get('window').height * .05,
+        borderRadius: 20,
+        justifyContent: 'center'
+        },
+        submitTextStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        },
+        modalText: {
+        marginTop:  Dimensions.get('window').height * .03,
+        fontWeight: "bold",
+        fontSize: Dimensions.get('window').height * .03,
+        textAlign: "center"
+        }, 
+        subtitleText: {
+        marginTop:  Dimensions.get('window').height * .025,
+        fontWeight: "bold",
+        fontSize: Dimensions.get('window').height * .02,
+        textAlign: "center"
+        },
+        buttonsRow: {
+        marginTop:  Dimensions.get('window').height * .03,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+        },
+        pickerStyle: {
+        marginTop:  Dimensions.get('window').height * .025,
+        alignSelf: 'center',
+        width: Dimensions.get('window').width * .5,
+        height: Dimensions.get('window').height * .10,
+        },
+        covidAlertView: {
+            zIndex: 2,
+            opacity: 0.9
+        },
+        covidAlertContainer: {
+            backgroundColor: 'deepskyblue',
+        },
+        covidContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        },
+        covidModalContainer: {
             backgroundColor: "white",
-            borderRadius: 20,
-            height: Dimensions.get('window').height * .5,
-            width: Dimensions.get('window').width * .8,
+            height: Dimensions.get('window').height * .45,
+            width: Dimensions.get('window').width * .9,
             shadowColor: "#000",
             shadowOffset: {
               width: 0,
@@ -826,57 +973,25 @@ const styles = StyleSheet.create({
             },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
-            elevation: 5
           },
-          cancelButton: {
-            marginLeft: Dimensions.get('window').width * .04,
-            backgroundColor: "lightgrey",
-            width: Dimensions.get('window').width * .25,
-            height: Dimensions.get('window').height * .05,
-            borderRadius: 20,
-            justifyContent: 'center'
-          },
-          cancelTextStyle: {
-            color: "white",
-            fontWeight: "bold",
-            textAlign: "center",
-          },
-          submitButton: {
-            marginRight: Dimensions.get('window').width * .04,
-            backgroundColor: "deepskyblue",
-            width: Dimensions.get('window').width * .25,
-            height: Dimensions.get('window').height * .05,
-            borderRadius: 20,
-            justifyContent: 'center'
-          },
-          submitTextStyle: {
-            color: "white",
-            fontWeight: "bold",
-            textAlign: "center",
-          },
-          modalText: {
-            marginTop:  Dimensions.get('window').height * .03,
-            fontWeight: "bold",
-            fontSize: Dimensions.get('window').height * .03,
-            textAlign: "center"
-          }, 
-          subtitleText: {
-            marginTop:  Dimensions.get('window').height * .025,
-            fontWeight: "bold",
-            fontSize: Dimensions.get('window').height * .02,
-            textAlign: "center"
-          },
-          buttonsRow: {
-            marginTop:  Dimensions.get('window').height * .03,
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          },
-          pickerStyle: {
-            marginTop:  Dimensions.get('window').height * .025,
+        covidTitle: {
+            marginTop: Dimensions.get('window').height * .01,
             alignSelf: 'center',
-            width: Dimensions.get('window').width * .5,
-            height: Dimensions.get('window').height * .10,
-          }
+            fontSize: Dimensions.get('window').height * .0278,
+            fontWeight: 'bold'
+        },
+        covidMessage: {
+            flex: 1,
+            marginTop: Dimensions.get('window').height * .013,
+            alignSelf: 'center',
+            marginLeft: Dimensions.get('window').width * .020,
+            fontSize: Dimensions.get('window').height * .02,
+        },
+        covidCloseIcon: {
+            marginTop: Dimensions.get('window').height * .015,
+            marginRight: Dimensions.get('window').width * .015,
+            alignSelf: 'flex-end',
+        }
           
 });
 

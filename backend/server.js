@@ -7,59 +7,41 @@ const cors = require('cors');
 const db = mongoose.connection;
 module.exports.mongoose = mongoose;
 
-// chat messages
+        //**Chat imports**//
 const findMessageByIDS = require('./messages/findMessageByIDS');
 const newMessage = require('./messages/newMessage');
 const watchForUpdates = require('./messages/watchForUpdates');
 
 
         //**Trainer imports**//
-const trainerRegister = require('./register/trainerRegister');
-const changeVisibility = require('./changeVisibility/changeVisibility');
-const trainerEditProfile = require('./trainerEditProfile/trainerEditProfile');
-const findTrainerByEmail = require('./findTrainerByEmail/findTrainerByEmail');
-const findTrainerByPhone = require('./findTrainerByPhone/findTrainerByPhone');
-const updateMedia = require('./updateMedia/updateMedia');
-const updateTrainerInfo = require('./updateTrainerInfo/updateTrainerInfo');
+const trainerRegister = require('./trainers/register/trainerRegister');
+const findTrainerByEmail = require('./trainers/findTrainerByEmail/findTrainerByEmail');
+const findTrainerByPhone = require('./trainers/findTrainerByPhone/findTrainerByPhone');
+const updateMedia = require('./trainers/updateMedia/updateMedia');
+const updateTrainerInfo = require('./trainers/updateTrainerInfo/updateTrainerInfo');
 
 
 
         //**Client imports**//
-const findTrainerByCategory = require('./findTrainersByCategory/findTrainersByCategory');
-const makeOrder = require('./orders/makeOrder');
-const updateClientCredit = require('./clientCredit/updateClientCredit');
-const clientFindPlaces = require('./clientFindPlaces/clientFindPlaces');
-const clientEditProfile = require('./clientEditProfile/clientEditProfile');
-const markAsLike = require('./markAsLike/markAsLike');
-const removeFromLikes = require('./removeFromLikes/removeFromLikes');
-const searchMyLikes = require('./searchMyLikes/searchMyLikes');
-const writeComment = require('./commentReviews/writeComment');
-const showComments = require('./showComments/showComments');
-const deleteComment = require('./commentReviews/deleteComment');
-const markStarReview = require('./markStarReview/markStarReview');
-const findAroundMe = require('./findAroundMe/findAroundMe');
-const uploadimage = require('./uploadimage/uploadimage');
-const findClientByID = require('./findClientByID/findClientByID');
-const findMultipleClients = require('./findMultipleClients/findMultipleClients');
+const findClientByID = require('./clients/findClientByID/findClientByID');
+const findMultipleClients = require('./clients/findMultipleClients/findMultipleClients');
 
-        //**Place imports**//
-const placeRegister = require('./register/placeRegister');
-//const changeVisibility = require('./changeVisibility/changeVisibility');
-const placeEditProfile = require('./placeEditProfile/placeEditProfile');
 
-        //**Common imports**//
+
+        //**SendGrid imports**//
 const sendEmail = require('./sendGrid/sendEmail');
 const sendAutomaticResponse = require('./sendGrid/sendAutomaticResponse');
-const verificationSms = require('./twilio/verificationSms');
+
+
+        //**Twilio imports**//
+const verificationCode = require('./twilio/verificationCode');
 const makeCall = require('./twilio/makeCall');
-const updatePaymentMethods = require('./updatePaynemtMethods/updatePaymentMethods');
-const updateEmailAddress = require('./updateEmailAddress/updateEmailAddress');
-const updatePhoneNumber = require('./updatePhoneNumber/updatePhoneNumber');
+
+
+        //**Orders imports**//
 const updateOrderStatus = require('./orders/updateOrderStatus');
-const getOrdersByStatus = require('./orders/getOrdersByStatus');
 const getOrdersByTrainerID = require('./orders/getOrdersByTrainerID');
-const logIn = require('./logIn/logIn');
-const signOut = require('./signOut/signOut');
+
 
 
         //**In-app variables**//
@@ -86,59 +68,24 @@ mongoose.connect(process.env.MONGO_URI, {
     })
     .catch(err => console.log(err));
 
-            ////**Client & trainer & place end points**////
-//End point to get client by ID
-app.get('/clients/findByID/:id', findClientByID.getClientByID);
-
-//End point to get client by ID
-app.get('/clients/findMultipleClients/:idArray', findMultipleClients.getMultipleClients);
-
-//End point for sending email to support
-app.post('/send-email', sendEmail.sendEmail);
-
-//End point for sending automatic response
-app.post('/send-automatic-response', sendAutomaticResponse.sendAutomaticResponse);
 
 
-//End point for sending verification code
-app.post('/send-verification-code', verificationSms.sendVerificationCode);
+            ////**Chat end points**////
+//End point to get chat message by clientID and trainerID (receiver and sender)
+app.get('/messages/findMessageByIDS/:ids', findMessageByIDS.getMesssageByIDS);
 
-//End point for verifying the verification code
-app.post('/verify-code', verificationSms.verifyCode);
+//End point to create new chat message
+app.post('/messages/newMessage', newMessage.createMessage);
 
-//End point for making twilio phone call
-app.post('/twilio/makeCall', makeCall.makeCall);
-
-//End point for updating the payment methods
-app.put('/settings/update-payment-methods', updatePaymentMethods.updatePaymentMethods);
-
-//End point for updating the email address
-app.put('/settings/update-email-address', updateEmailAddress.updateEmailAddress);
-
-//End point for updating the phone number
-app.put('/settings/update-phone-number', updatePhoneNumber.updatePhoneNumber);
-
-//End point for updating an order status
-app.post('/orders/update-status', updateOrderStatus.updateOrderStatus);
-
-//End point for searching order by status (declined/pending/approved/acomplished)
-app.get('/orders/search', getOrdersByStatus.getOrdersByStatus);
-
-//End point for searching order by trainer id
-app.get('/orders/by-trainer-id/:id', getOrdersByTrainerID.getOrdersByTrainerID);
-
-//End point for log in existing accounts
-app.put('/log-in', logIn.logIn);
-
-//End point for sign out existing accounts
-app.put('/sign-out', signOut.signOut);
-
-            ////**Both trainer & places end points**////
-//End point for chainging visibility
-app.put('/settings/visibility', changeVisibility.changeVisibility);
+//End point to observe new messages on chat
+app.get('/messages/watchForUpdates/:receiver', watchForUpdates.watchForUpdates);
 
 
-            ////**Trainer end points**////
+
+
+
+
+        ////**Trainer end points**////
 //End point for confirming the registration and add a new trainer to the dataBase
 app.post('/trainers/register', trainerRegister.register);
 
@@ -153,69 +100,54 @@ app.get('/trainers/email/:email', findTrainerByEmail.getTrainerByEmail);
 
 app.get('/trainers/phone/:phone', findTrainerByPhone.getTrainerByPhone);
 
-//End point for editing the trainer profile
-app.put('/trainers/settings/edit-profile/:email', trainerEditProfile.editProfile);
-
-
-            ////**Client end points**////   
-//End point for searching trainers by category
-app.get('/clients/trainers/category', findTrainerByCategory.getTrainersByCategory);
-
-//End point for booking an order
-app.post('/clients/orders/book-order', makeOrder.makeOrder);
-
-//End point for updating the client's credit
-app.put('/clients/update-credit', updateClientCredit.updateClientCredit);
-
-//End point for searching places by the client
-app.get('/clients/places', clientFindPlaces.clientFindPlaces);
-
-//End point for editing the client profile
-app.put('/clients/settings/edit-profile', clientEditProfile.editProfile);
-
-//End point for mark a trainer as like
-app.put('/clients/likes/add', markAsLike.markAsLike);
-
-//End point for remove a trainer from likes
-app.put('/clients/likes/remove', removeFromLikes.removeFromLikes);
-
-//End point for getting my likes list
-app.get('/clients/likes', searchMyLikes.searchMyLikes);
-
-//End point for writing a comment on trainers page
-app.put('/clients/comments/add', writeComment.writeComment);
-
-//End point for showing all trainer's comments
-app.get('/clients/trainers/comments', showComments.showComments);
-
-//End point for removing client's comment from trainer's page
-app.put('/clients/comments/remove', deleteComment.deleteComment);
-
-//End point for mark a star review on a trainer page
-app.put('/clients/trainers/stars', markStarReview.markStarReview);
-
-//End point for finding trainers around me by distance
-app.get('/clients/aroundme/trainers', findAroundMe.findTrainers);
-
-//End point for finding places around me by distance
-app.get('/clients/aroundme/places', findAroundMe.findPlaces);
-
-app.post('/clients/upload-image', uploadimage.uploadImage);
-
-            ////**Place end points**////
-//End point for confirming the registration and add a new place to the dataBase 
-app.post('/places/register', placeRegister.register);
-
-//End point for editing the place profile
-app.put('/places/settings/edit-profile', placeEditProfile.editProfile);
 
 
 
-//chat messages
-//End point to get chat message by clientID and trainerID (receiver and sender)
-app.get('/messages/findMessageByIDS/:ids', findMessageByIDS.getMesssageByIDS);
 
-//End point to create new chat message
-app.post('/messages/newMessage', newMessage.createMessage);
 
-app.get('/messages/watchForUpdates/:receiver', watchForUpdates.watchForUpdates);
+        ////**Client end points**////
+//End point to get client by ID
+app.get('/clients/findByID/:id', findClientByID.getClientByID);
+
+//End point to get client by ID
+app.get('/clients/findMultipleClients/:idArray', findMultipleClients.getMultipleClients);
+
+
+
+
+
+        ////**SendGrid end points**////
+//End point for sending email to support
+app.post('/send-email', sendEmail.sendEmail);
+
+//End point for sending automatic response
+app.post('/send-automatic-response', sendAutomaticResponse.sendAutomaticResponse);
+
+
+
+
+        ////**Twilio end points**////
+//End point for sending verification code
+app.post('/send-verification-code', verificationCode.sendVerificationCode);
+
+//End point for verifying the verification code
+app.post('/verify-code', verificationCode.verifyCode);
+
+//End point for making twilio phone call
+app.post('/twilio/makeCall', makeCall.makeCall);
+
+
+
+
+
+        ////**Orders end points**////
+//End point for updating an order status
+app.post('/orders/update-status', updateOrderStatus.updateOrderStatus);
+
+
+//End point for searching order by trainer id
+app.get('/orders/by-trainer-id/:id', getOrdersByTrainerID.getOrdersByTrainerID);
+
+
+
+

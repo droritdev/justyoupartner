@@ -30,6 +30,7 @@
     "react-native-add-calendar-event": "^4.0.0",
     "react-native-chart-kit": "^6.9.0",
     "react-native-dialog": "^6.1.2",
+    "react-native-dropdownalert": "^4.3.0",
     "react-native-events-calendar": "^1.0.8",
     "react-native-fast-image": "^8.3.4",
     "react-native-flip-toggle-button": "^1.0.8",

@@ -9,6 +9,7 @@ const WelcomePopUpTrainer = ({navigation}) => {
 
     React.useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
+            global.covidAlert = true;
             if (user) {
                 unsubscribe();
                 navigation.navigate('TrainerContainer');

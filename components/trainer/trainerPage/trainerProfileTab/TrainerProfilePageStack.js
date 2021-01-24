@@ -18,6 +18,8 @@ import CustomerService from './CustomerService';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsConditions from './TermsConditions';
 import TrainerReviews from './TrainerReviews';
+import Updates from './Updates';
+
 
 
 const Stack = createStackNavigator();
@@ -44,6 +46,8 @@ const TrainerProfilePageStack = ({navigation}) => {
             <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy}/>
             <Stack.Screen name='TermsConditions' component={TermsConditions}/>
             <Stack.Screen name='TrainerReviews' component={TrainerReviews}/>
+            <Stack.Screen name='Updates' component={Updates}/>
+
 
         </Stack.Navigator>
     )

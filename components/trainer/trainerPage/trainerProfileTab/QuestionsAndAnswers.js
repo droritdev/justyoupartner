@@ -45,7 +45,7 @@ const QuestionsAndAnswers = ({navigation}) => {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
                 <ImageBackground
-                    source={require('../../../../images/Q&As.jpg')}
+                    source={require('../../../../images/q&a.jpg')}
                     style={styles.coverImage} 
                 >
                     <TouchableOpacity
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
     },
     coverImage: {
-        height: Dimensions.get('window').height * .3,
+        height: Dimensions.get('window').height * .4,
         width: Dimensions.get('window').width,
     },
     arrowImage: {

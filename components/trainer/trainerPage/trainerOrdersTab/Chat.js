@@ -323,7 +323,7 @@ const Chat = ({navigation, route}) => {
             };
 
         setClientUser(clientInfo);
-        getChatMessages();
+        getChatMessages(clientInfo);
         })
         .catch((err) => {});
     }
@@ -333,7 +333,7 @@ const Chat = ({navigation, route}) => {
 
     //Retrive all the chat messages by clientID and trainerID
     //Load all messages on the UI
-    const getChatMessages = async () => {
+    const getChatMessages = async (clientInfo) => {
         //Sender: client, Receiver: trainer
         var firstResult = [];
         //Sender: trainer, Receiver: client
@@ -398,6 +398,13 @@ const Chat = ({navigation, route}) => {
             setMessages([systemMessage])
             setIsLoading(false);
         } else {
+            //Repleace the user in the client messages to the up to date user
+            for (let index = 0; index < allMessages.length; index++) {
+                if(allMessages[index].user._id === clientID) {
+                    allMessages[index].user = clientInfo;
+                }
+            }
+
             //Show all messages
             setMessages(allMessages);
             setIsLoading(false);

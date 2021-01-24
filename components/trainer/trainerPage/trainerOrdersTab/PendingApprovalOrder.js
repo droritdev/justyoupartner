@@ -364,33 +364,21 @@ const PendingApprovalOrder = ({navigation}) => {
                             </View>
 
                             <View style={styles.buttonsRowContaier}>
-                                <View style={styles.buttonsRow}>
-                                    <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity style={styles.iconBackStyle}>
-                                            <Icon name="phone-call" size={30} style={styles.phoneCallIcon}/>
-                                           
-                                        </TouchableOpacity>
-                                        <Text style={styles.buttonTitle}>Call</Text>
-                                    </View>
-                                    <View style={styles.buttonAndTitle}>
-                                        <TouchableOpacity 
-                                        style={styles.iconBackStyle}
-                                        onPress={()=> handleChatPressed()}>
-                                            <Icon name="message-circle" size={30} style={styles.messageIcon}/>
-                                        </TouchableOpacity>
-                                        <Text style={styles.buttonTitle}>Chat</Text>
-                                    </View>
-
-                                </View>
+                            <TouchableOpacity
+                                onPress={()=>handleChatPressed()}
+                                style={styles.chatButton}
+                            >
+                                <Icon name="message-circle" size={30} style={styles.messageIcon}/>
+                                {clientInfo.name!==undefined?
+                                     <Text style={styles.approveButtonText}>{'Contact ' + clientInfo.name.first}</Text>
+                                :
+                                <Text style={styles.approveButtonText}>{'Contact'}</Text>
+                                } 
+                            </TouchableOpacity>
                             </View>
                         </View>
 
                 </View>
-
-
-
-
-
 
                 <View style={styles.orderInformationContainer}>
                     <View style={styles.orderRow}>
@@ -517,13 +505,26 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     buttonAndTitle: {
-        alignItems: 'center'
+        alignItems: 'center',
+        width: Dimensions.get('window').width * .85,
     },
     buttonTitle: {
         marginTop: Dimensions.get('window').height * .005,
         textAlign: 'center',
         fontSize: Dimensions.get('window').height * .011
     },  
+    chatButton: {
+        flexDirection: 'row',
+        marginLeft: Dimensions.get('window').width * .020,
+        marginTop: Dimensions.get('window').height * .015,
+        height: Dimensions.get('window').height * .035,
+        width: Dimensions.get('window').width * .65,
+        alignSelf: 'center',
+        backgroundColor: 'deepskyblue',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
     approveButton: {
         flex: 1,
         marginTop: Dimensions.get('window').height * .15,
@@ -636,7 +637,6 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     messageIcon: {
-        marginLeft: Dimensions.get('window').width * .015, 
         marginTop: Dimensions.get('window').width * .015, 
         width: Dimensions.get('window').width * .09, 
         height: Dimensions.get('window').height * .04,
