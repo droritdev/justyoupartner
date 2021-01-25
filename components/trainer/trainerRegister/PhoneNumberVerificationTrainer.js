@@ -186,16 +186,6 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setIsNextError(true);
       }
       else{
-        dispatchArea({
-          type: 'SET_AREA_CODE',
-          areaCode: areaCodeInput
-        });
-
-        dispatchNumber({
-          type: 'SET_PHONE_NUMBER',
-          phoneNumber: phoneNumberInput
-        });
-
         axios
           .post('/verify-code', {
             to: fullPhoneNumber,

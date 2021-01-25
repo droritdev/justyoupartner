@@ -161,7 +161,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //Sets the birthday of the user when selected
     const handleConfirm = (date) => {
-      setBirthdaySelected((date.getMonth()+1)+"/"+date.getUTCDate()+"/"+date.getUTCFullYear());
+      var timestamp = new Date().getTime() - (18 * 365 * 24 * 60 * 60 * 1000);
+
+      if (date.getTime() > timestamp) {
+        date.setFullYear(date.getFullYear()-18);
+      } 
+
+      setBirthdaySelected((date.getMonth()+1)+"/"+date.getDate()+"/"+date.getUTCFullYear());
       setDatePickerVisible(false);
       setIsBirthdaySelected(true);
     };

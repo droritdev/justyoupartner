@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, KeyboardAvoidingView} from 'react-native';
+import {Alert, StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, KeyboardAvoidingView} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 
@@ -23,11 +23,6 @@ const SignUpTrainer = ({navigation}) => {
       },
     };
 
-    //Navigates back to the SignUpAs page
-    const handleArrowButton = () => {
-      navigation.navigate('SignUpAs');
-    }
-
     //Navigate to Login page
     const handleSignIn = () => {
       navigation.navigate('LogInTrainer');
@@ -35,31 +30,45 @@ const SignUpTrainer = ({navigation}) => {
 
     //Send the verification code to the user's email
     const sendVerifyEmail = () => {
-      // navigation.navigate('EmailVerificationTrainer');
-        axios
-          .post('/send-verification-code', {
-            to: emailAddress,
-            channel: "email"
-          },
-          config
-        )
-        .then((res) => {
-          if(res !== null) {
-            if(res.data.status === 'pending'){
-              navigation.navigate('EmailVerificationTrainer')
-            }
-            else{
-              alert(res.data);
-            }
-          }
-          else{
-            alert("Error 2");
-          }
-        }
-        )
-        .catch((error) => {
-          alert(error)
-        })
+      navigation.navigate('EmailVerificationTrainer');
+        // axios
+        //   .post('/send-verification-code', {
+        //     to: emailAddressInput.toLowerCase(),
+        //     channel: "email"
+        //   },
+        //   config
+        // )
+        // .then((res) => {
+        //   if(res !== null) {
+        //     if(res.data.status === 'pending'){
+        //       navigation.navigate('EmailVerificationTrainer')
+        //     }
+        //     else{
+        //       Alert.alert(
+        //         'System failure',
+        //         'Please check your internet connection and try again.',
+        //         [
+        //             {text: 'OK'},
+        //         ],
+        //         { cancelable: false }
+        //       )
+        //     }
+        //   }
+        //   else{
+        //     Alert.alert(
+        //       'System failure',
+        //       'Please check your internet connection and try again.',
+        //       [
+        //           {text: 'OK'},
+        //       ],
+        //       { cancelable: false }
+        //     )
+        //   }
+        // }
+        // )
+        // .catch((error) => {
+        //   alert(error)
+        // })
     }
 
     //Set the emailAddressInput to the value in the text field
@@ -120,9 +129,6 @@ const SignUpTrainer = ({navigation}) => {
   
     return(
         <SafeAreaView style={styles.container}>
-          <ArrowBackButton
-            onPress={handleArrowButton}
-          />
           <Text style={styles.justYouHeader}>Just You</Text>
           <Text style={styles.signUpText}>Sign up and start searching</Text>
           <Text style={styles.inputTitle}>Email</Text>

@@ -137,7 +137,7 @@ const TrainerReviews = ({navigation}) => {
                                 priority: FastImage.priority.normal,
                             }}
                             key={'image'+i}
-                            resizeMode={FastImage.resizeMode.contain}
+                            resizeMode={FastImage.resizeMode.strech}
                         />
                         <View style={styles.reviewTextContainer}>
                             <View style={{flexDirection:'row'}}>
@@ -181,7 +181,7 @@ const TrainerReviews = ({navigation}) => {
                         uri: mediaPictures[0],
                         priority: FastImage.priority.normal,
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
+                    resizeMode={FastImage.resizeMode.strech}
                 />
                 <View style={styles.nameRatingAgeContainer}>
                     <Text style={styles.nameText}>{firstName+" "+lastName}</Text>

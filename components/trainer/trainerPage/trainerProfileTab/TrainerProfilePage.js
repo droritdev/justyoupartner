@@ -446,7 +446,7 @@ const TrainerProfilePage = ({navigation}) => {
                                 uri: mediaPictures[0],
                                 priority: FastImage.priority.normal,
                             }}
-                            resizeMode={FastImage.resizeMode.contain}
+                            resizeMode={FastImage.resizeMode.stretch}
                         />
                     <View style={styles.nameRatingAgeContainer}>
                         <Text style={styles.nameText}>{firstName+" "+lastName}</Text>

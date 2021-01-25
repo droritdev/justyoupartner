@@ -37,6 +37,8 @@ const AddressTrainer = ({navigation, route}) => {
     const [markerLocation, setMarkerLocation] = useState({latitude: 0, longitude: 0});
 
 
+    var splitLocationTitle = [];
+
     //Navigates back to the ProfileDetailsPage1Trainer
     const handleArrowButton = () => {
         navigation.navigate('ProfileDetailsPage2Trainer');
@@ -86,8 +88,6 @@ const AddressTrainer = ({navigation, route}) => {
         })
         .catch(error => console.warn(error));
     }
-
-
 
     //Set location on the map according to lat and lang
     const setZoomedLocation = (lat, lang) => {
@@ -213,13 +213,14 @@ const AddressTrainer = ({navigation, route}) => {
                         </TouchableOpacity>
                     );
                     }}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.key}
                     style={styles.searchResultsContainer}  
                 />
             </View> 
             <View display={isSubmitOn} style={styles.sumbitContainer}>
                 <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(0, locationTitle.indexOf(',')) : locationTitle} </Text> 
                 <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(locationTitle.indexOf(',')+1) : ""}</Text> 
+               
                 <TouchableOpacity
                     style={styles.submitButtonContainer}
                     onPress={handleSubmit}

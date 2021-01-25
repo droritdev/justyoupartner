@@ -179,7 +179,7 @@ const AddPhotosTrainer = ({navigation}) => {
         let repeats = [];
         for(let i = 0; i < pictures.length; i++) {
             repeats.push(
-                <View style={styles.rowPicturesContainer}>
+                <View key={"image"+i} style={styles.rowPicturesContainer}>
                     <TouchableOpacity
                     onPress={() => isPencilPressed ? handlePencilPressed("pic", i) : handleImage(i)}
                     style={styles.shadowContainer}
@@ -194,7 +194,7 @@ const AddPhotosTrainer = ({navigation}) => {
             ) 
         }
         repeats.push(
-            <View style={styles.rowPicturesContainer}>
+            <View key={"addImage"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
                 >
@@ -214,12 +214,13 @@ const AddPhotosTrainer = ({navigation}) => {
         let repeats = [];
         for(let i = 0; i < videos.length; i++) {
             repeats.push(
-                <View style={styles.rowPicturesContainer}>
+                <View key={"video"+i} style={styles.rowPicturesContainer}>
                     <TouchableOpacity
                         onPress={() => isPencilPressed ? handlePencilPressed("vid", i) : handleVideo(i)}
                         style={styles.shadowContainer}
                     >
                         <Video 
+                            muted = {true}
                             resizeMode="cover"  
                             controls={videos[i]=== undefined?  false : !isPencilPressed}
                             source={{uri: videos[i]}}
@@ -232,7 +233,7 @@ const AddPhotosTrainer = ({navigation}) => {
         }
 
         repeats.push(
-            <View style={styles.rowPicturesContainer}>
+            <View key={"addVideo"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
                 >
@@ -399,7 +400,6 @@ const styles = StyleSheet.create ({
         },
         shadowOpacity: 0.58,
         shadowRadius: 16.00,    
-        elevation: 24,
     },
     plusPicture: {
         height: Dimensions.get('window').height * .15,
@@ -427,7 +427,6 @@ const styles = StyleSheet.create ({
         },
         shadowOpacity: 0.58,
         shadowRadius: 16.00,    
-        elevation: 24,
     },
     footerContainer:{
     },

@@ -493,7 +493,7 @@ const TrainerEditProfile = ({navigation}) => {
                         uri: mediaPictures[0],
                         priority: FastImage.priority.normal,
                         }}
-                    resizeMode={FastImage.resizeMode.contain}
+                    resizeMode={FastImage.resizeMode.stretch}
                 />
                 </TouchableOpacity>
                 <TextInput

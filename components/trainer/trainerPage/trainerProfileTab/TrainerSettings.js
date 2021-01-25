@@ -60,7 +60,7 @@ const TrainerSettings = ({navigation}) => {
         <SafeAreaView style={styles.safeArea}>
             <View>
                 <Dialog.Container visible={dialogVisible}>
-                    <Dialog.Title style={styles.dialogTitle}>Are You Sure?</Dialog.Title>
+                    <Dialog.Title style={styles.dialogTitle}>Do you want to sign out?</Dialog.Title>
                     <Dialog.Button style={styles.cancelDialog} label="Cancel" onPress={(() => handleNoDialog())} />
                     <Dialog.Button style={styles.signOutDialog} label="Sign Out" onPress={() => handleYesDialog()} />
 

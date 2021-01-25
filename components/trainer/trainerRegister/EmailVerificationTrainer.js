@@ -42,31 +42,44 @@ const EmailVerificationTrainer = ({navigation}) => {
 
     //Re-send the verification code
     const sendVerifyEmail = () => {
-      alert('Email sent');
-        // axios
-        //   .post('/send-verification-code', {
-        //     to: emailAddress,
-        //     channel: "email"
-        //   },
-        //   config
-        // )
-        // .then((res) => {
-        //   if(res !== null) {
-        //     if(res.data.status === 'pending'){
-        //       alert('pending')
-        //     }
-        //     else{
-        //       alert(res.data);
-        //     }
-        //   }
-        //   else{
-        //     alert("Error 2");
-        //   }
-        // }
-        // )
-        // .catch((error) => {
-        //   alert(error)
-        // })
+        axios
+          .post('/send-verification-code', {
+            to: emailAddress,
+            channel: "email"
+          },
+          config
+        )
+        .then((res) => {
+          if(res !== null) {
+            if(res.data.status === 'pending'){
+              alert('pending')
+            }
+            else {
+              Alert.alert(
+                'System failure',
+                'Please check your internet connection and try again.',
+                [
+                    {text: 'OK'},
+                ],
+                { cancelable: false }
+              )
+            }
+          }
+          else {
+            Alert.alert(
+              'System failure',
+              'Please check your internet connection and try again.',
+              [
+                  {text: 'OK'},
+              ],
+              { cancelable: false }
+            )
+          }
+        }
+        )
+        .catch((error) => {
+          alert(error)
+        })
     }
 
     //Handle the next button press
@@ -219,7 +232,6 @@ const EmailVerificationTrainer = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .022,
       width: Dimensions.get('window').width * .35,
       height: Dimensions.get('window').height * .035,
-      backgroundColor: 'lightgrey',
       borderRadius: 5,
       justifyContent: 'center'
     },
