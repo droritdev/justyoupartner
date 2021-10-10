@@ -45,7 +45,7 @@ const Chat = ({navigation, route}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -177,7 +177,7 @@ const Chat = ({navigation, route}) => {
                     }
                 ];
 
-                onSend(newLocationMessage);
+                onSend(newLocationMessage).done();
             });
         }
     }
@@ -525,7 +525,7 @@ const Chat = ({navigation, route}) => {
                         <TouchableOpacity
                             onPress={()=> showSendLocationAlert()}
                         >
-                            <Icon name="map-pin" size={23} style={styles.locationIcon} />   
+                            <Icon name="map-pin" size={18} style={styles.locationIcon} />   
                         </TouchableOpacity>
                     </View>    
                 </View>
@@ -567,11 +567,13 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: '#fafafa'
+        alignItems: 'center',
+        backgroundColor: '#fafafa',
+        height: 40
     }, 
     headerText: {
         marginTop: Dimensions.get('window').height * .012,
-        fontSize: Dimensions.get('window').height * .02,
+        fontSize: Dimensions.get('window').height * .03,
         fontWeight: '500'
     },
     loadingContainer: {

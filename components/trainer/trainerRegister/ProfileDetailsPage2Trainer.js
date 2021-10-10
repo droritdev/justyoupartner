@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect, useCallback, useContext} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button, TouchableOpacity} from 'react-native';
 import axios from 'axios';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons';
@@ -127,6 +127,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
 
     const openAddressWindow = (type) => {
+      console.log('pressed trainer site input')
       navigation.navigate('AddressTrainer', {type: type});
     }
 
@@ -343,10 +344,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
         setIsCertificationError(true);
         scrollTo("certifications");
       }
-      else if(trainingSite1 === "" && trainingSite2 === ""){
-        setTrainingSiteErrorMessage("Enter at least one training site");
-        setIsTrainingSiteError(true);
-      }
+      // else if(trainingSite1 === "" && trainingSite2 === ""){
+      //   setTrainingSiteErrorMessage("Enter at least one training site");
+      //   setIsTrainingSiteError(true);
+      // }
       else if(singleAtTrainerInput === "" && singleOutdoorInput === "" && coupleAtTrainerInput === "" && coupleOutdoorInput === ""){
         setPriceErrorMessage("Enter at least one training price");
         setIsPriceError(true);
@@ -417,7 +418,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     //show only 3 categories.
     const showCategories = () => {
-      text = "";
+      let text = "";
       for (let i = 0; i<categories.length; i++) {
         if(i<4) {
           text += categories[i] + ((i<categories.length-1 && i<3)? ", " : "");
@@ -609,22 +610,21 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           <View style={styles.trainingSiteContainer}>
             <Text style={styles.trainingSiteText}>Training Site</Text>
             <TouchableOpacity onPress = {() => openAddressWindow(1)}>
-              <TextInput
+            <View style={{width: '100%'}}>
+              <Text style={styles.trainingSiteInput}>{trainingSite1 ? trainingSite1 : 'Primary Address'}</Text>
+              {/* <TextInput
                 style={styles.trainingSiteInput}
                 title='address'
                 placeholder='Primary Address'
                 pointerEvents="none"
-                value = {trainingSite1 === "" ? "" : trainingSite1}
-              />    
+                // value = {trainingSite1 === "" ? "" : trainingSite1}
+              /> */}
+              </View>   
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => openAddressWindow(2)}>
-              <TextInput
-                style={styles.trainingSiteInput}
-                title='address'
-                placeholder='Secondary Address'
-                pointerEvents="none"
-                value = {trainingSite2 === "" ? "" : trainingSite2}
-              /> 
+            <TouchableOpacity onPress={() => openAddressWindow(2)}>
+              <View style={{width: '100%'}}>
+                <Text style={styles.trainingSiteInput}>{trainingSite2 ? trainingSite2 : 'Secondary Address'}</Text>
+              </View>  
             </TouchableOpacity>
             {isTrainingSiteError ? 
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
@@ -744,10 +744,10 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     profileImage: {
       marginTop: Dimensions.get('window').height * .015,
-      width: Dimensions.get('window').width * .200,
+      width: Dimensions.get('window').height * .095,
       height: Dimensions.get('window').height * .095,
       overflow: 'hidden',
-      borderRadius: 70
+      borderRadius: Dimensions.get('window').height * .095 / 2
     },
 
     nameErrorMessage: {
@@ -798,6 +798,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     birthdayPicked: {
       textAlign: 'center',
+      color: 'black',
       fontSize: Dimensions.get('window').height * .025,
       marginLeft: Dimensions.get('window').width * .3
     },
@@ -881,6 +882,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     categoryPicked: {
       textAlign: 'left',
+      color: 'black',
       marginLeft: Dimensions.get('window').width * .010,
       fontSize: Dimensions.get('window').height * .022,
     },
@@ -932,6 +934,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       color: 'grey'
     },
     aboutMeText: {
+      color: 'black',
       marginTop: Dimensions.get('window').height * .011,
       marginLeft: Dimensions.get('window').width * .0241,
       fontSize: Dimensions.get('window').height * .02
@@ -972,6 +975,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       color: 'grey'
     },
     certificationsText: {
+      color: 'black',
       marginTop: Dimensions.get('window').height * .011,
       marginLeft: Dimensions.get('window').width * .0241,
       fontSize: Dimensions.get('window').height * .02
@@ -1020,7 +1024,11 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
       fontSize: Dimensions.get('window').height * .017,
-      textAlign: 'center'
+      textAlign: 'center',
+      fontSize: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: 7
     },
     trainingSiteErrorText: {
       marginTop: Dimensions.get('window').height * .011,
@@ -1117,14 +1125,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     atTrainerSitePrice: {
       flexDirection: 'row',
+      alignItems: 'center'
     },
     atTrainingSiteInput: {
       borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
-      height: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .05,
       textAlign: 'center',
-      fontSize: Dimensions.get('window').height * .022
+      fontSize: Dimensions.get('window').height * .022,
+      padding: 0
     },
     atTrainerSiteText: {
       fontSize: Dimensions.get('window').height * .022,
@@ -1138,14 +1148,16 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     outDoorPrice: {
       flexDirection: 'row',
+      alignItems: 'center'
     },
     outDoorInput: {
       borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
-      height: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .05,
       textAlign: 'center',
-      fontSize: Dimensions.get('window').height * .022
+      fontSize: Dimensions.get('window').height * .022,
+      padding: 0
     },
     outDoorText: {
       fontSize: Dimensions.get('window').height * .022,

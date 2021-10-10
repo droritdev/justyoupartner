@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {FlatList, StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { FlatList, StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView, LogBox } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import {TrainingSiteContext} from '../../../context/trainerContextes/TrainingSiteContext';
+import { TrainingSiteContext } from '../../../context/trainerContextes/TrainingSiteContext';
 
 import ArrowBackButton from '../../globalComponents/ArrowBackButton';
-import MapView, { Marker }  from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
@@ -18,12 +18,13 @@ Geocoder.init(API_KEY); // use a valid API key
 
 
 //Here The trainer user writes about him
-const AddressTrainer = ({navigation, route}) => {
+const AddressTrainer = ({ navigation, route }) => {
+    LogBox.ignoreAllLogs(true);
     const type = route.params.type;
-    const {dispatchTrainingSite1} = useContext(TrainingSiteContext);
-    const {dispatchTrainingSite2} = useContext(TrainingSiteContext);
-    const {dispatchCoordinates1} = useContext(TrainingSiteContext);
-    const {dispatchCoordinates2} = useContext(TrainingSiteContext);
+    const { dispatchTrainingSite1 } = useContext(TrainingSiteContext);
+    const { dispatchTrainingSite2 } = useContext(TrainingSiteContext);
+    const { dispatchCoordinates1 } = useContext(TrainingSiteContext);
+    const { dispatchCoordinates2 } = useContext(TrainingSiteContext);
 
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
@@ -34,7 +35,7 @@ const AddressTrainer = ({navigation, route}) => {
     const [locationTitle, setLocationTitle] = useState("");
     const [locationCoordinates, setLocationCoordinates] = useState([]);
     const [isSubmitOn, setIsSubmitOn] = useState("none");
-    const [markerLocation, setMarkerLocation] = useState({latitude: 0, longitude: 0});
+    const [markerLocation, setMarkerLocation] = useState({ latitude: 0, longitude: 0 });
 
 
     var splitLocationTitle = [];
@@ -50,21 +51,21 @@ const AddressTrainer = ({navigation, route}) => {
         setInputText(text);
         setIsSubmitOn('none');
 
-        if(text === "") {
+        if (text === "") {
             setListData({});
             showUserCurrentLocation();
         } else {
             axios
-            .request({
-                method: 'post',
-                url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`,
-            })
-            .then((response) => {
-                setListData(response.data.predictions);
-            })
-            .catch((e) => {
-                console.log(e.response);
-            });
+                .request({
+                    method: 'post',
+                    url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`,
+                })
+                .then((response) => {
+                    setListData(response.data.predictions);
+                })
+                .catch((e) => {
+                    console.log(e.response);
+                });
         }
     };
 
@@ -75,18 +76,18 @@ const AddressTrainer = ({navigation, route}) => {
     const handleItemPressed = (text) => {
         setListData({});
         setInputText(text);
-        
+
         // Search by address
         Geocoder.from(text)
-        .then(json => {
-            var location = json.results[0].geometry.location;
-            setZoomedLocation(location.lat, location.lng);
-            setMarkerLocation({latitude: location.lat, longitude: location.lng});
-            setLocationTitle(text);
-            setLocationCoordinates([location.lat, location.lng]);
-            setIsSubmitOn('flex');
-        })
-        .catch(error => console.warn(error));
+            .then(json => {
+                var location = json.results[0].geometry.location;
+                setZoomedLocation(location.lat, location.lng);
+                setMarkerLocation({ latitude: location.lat, longitude: location.lng });
+                setLocationTitle(text);
+                setLocationCoordinates([location.lat, location.lng]);
+                setIsSubmitOn('flex');
+            })
+            .catch(error => console.warn(error));
     }
 
     //Set location on the map according to lat and lang
@@ -105,13 +106,13 @@ const AddressTrainer = ({navigation, route}) => {
         Geolocation.getCurrentPosition(info => {
             setZoomedLocation(info.coords.latitude, info.coords.longitude);
             Geocoder.from(info.coords.latitude, info.coords.longitude)
-            .then(json => {
-                var address = json.results[0].formatted_address;
-                setLocationTitle(address);
-                setLocationCoordinates([info.coords.latitude, info.coords.longitude]);
-                setIsSubmitOn('flex');   
-		    })
-		.catch(error => console.warn(error));
+                .then(json => {
+                    var address = json.results[0].formatted_address;
+                    setLocationTitle(address);
+                    setLocationCoordinates([info.coords.latitude, info.coords.longitude]);
+                    setIsSubmitOn('flex');
+                })
+                .catch(error => console.warn(error));
 
         });
     }
@@ -156,29 +157,29 @@ const AddressTrainer = ({navigation, route}) => {
         showUserCurrentLocation();
     }
 
-    return (   
-        <SafeAreaView style={{flex: 1}}   >  
-            <MapView    
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <MapView
                 style={styles.mapContainer}
                 region=
                 {
-                    {   
-                        latitude: latitude,  
-                        longitude: longitude,    
-                        latitudeDelta: latitudeDelta,       
-                        longitudeDelta: longitudeDelta      
+                    {
+                        latitude: latitude,
+                        longitude: longitude,
+                        latitudeDelta: latitudeDelta,
+                        longitudeDelta: longitudeDelta
                     }
-                }    
-                animated ={true}
+                }
+                animated={true}
                 zoomEnabled={true}
                 loadingEnabled={true}
-                showsUserLocation={true}   
+                showsUserLocation={true}
             >
                 <Marker
                     coordinate={markerLocation}
                     title={locationTitle}
-                    pinColor = {'red'}
-                />   
+                    pinColor={'red'}
+                />
             </MapView>
 
             <View style={styles.arrowBackContainer}>
@@ -197,39 +198,40 @@ const AddressTrainer = ({navigation, route}) => {
                         style={styles.textStyle}
                         placeholder={'Search your address'}
                         placeholderTextColor={'grey'}
-                        onChangeText={(text)=>searchLocation(text)}
+                        onChangeText={(text) => searchLocation(text)}
                         value={inputText}
-                    />                 
+                    />
                 </View>
                 <FlatList
                     data={listData}
-                    renderItem={({item, index}) => {
-                    return (
-                        <TouchableOpacity
-                        style={styles.resultItem}
-                        onPress={() => handleItemPressed(item.description)}
-                        >
-                        <Text  style={styles.itemText}>{item.description}</Text>
-                        </TouchableOpacity>
-                    );
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity
+                                style={styles.resultItem}
+                                onPress={() => handleItemPressed(item.description)}
+                                key={index.toString()}
+                            >
+                                <Text style={styles.itemText}>{item.description}</Text>
+                            </TouchableOpacity>
+                        );
                     }}
                     keyExtractor={(item) => item.key}
-                    style={styles.searchResultsContainer}  
+                    style={styles.searchResultsContainer}
                 />
-            </View> 
+            </View>
             <View display={isSubmitOn} style={styles.sumbitContainer}>
-                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(0, locationTitle.indexOf(',')) : locationTitle} </Text> 
-                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(locationTitle.indexOf(',')+1) : ""}</Text> 
-               
+                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(0, locationTitle.indexOf(',')) : locationTitle} </Text>
+                <Text style={styles.locationTitle}> {locationTitle.indexOf(',') >= 0 ? locationTitle.slice(locationTitle.indexOf(',') + 1) : ""}</Text>
+
                 <TouchableOpacity
                     style={styles.submitButtonContainer}
                     onPress={handleSubmit}
                 >
                     <Text style={styles.submitButtonText}> Submit</Text>
                 </TouchableOpacity>
-            </View> 
-        </SafeAreaView> 
-        );  
+            </View>
+        </SafeAreaView>
+    );
 }
 
 
@@ -240,14 +242,14 @@ const styles = StyleSheet.create({
     },
     arrowBackContainer: {
         position: 'absolute',
-        top: Dimensions.get('window').height * .05, 
-        width: '100%', 
+        top: Dimensions.get('window').height * .05,
+        width: '100%',
         zIndex: 1
     },
     searchBarContainer: {
         position: 'absolute',
-        top: Dimensions.get('window').height * .01, 
-        width: '100%' 
+        top: Dimensions.get('window').height * .01,
+        width: '100%'
     },
     searchBar: {
         flexDirection: 'row',
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
         color: 'black',
         backgroundColor: 'white',
         opacity: 0.8,
-        height: Dimensions.get('window').height * .05,
+        height: Dimensions.get('window').height * .07,
         zIndex: 1,
         shadowColor: "black",
         shadowOffset: {
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-      },
+    },
     textStyle: {
         flex: 1,
         paddingLeft: Dimensions.get('window').width * .03,
@@ -315,7 +317,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
-        
+
         elevation: 12,
     },
     locationTitle: {

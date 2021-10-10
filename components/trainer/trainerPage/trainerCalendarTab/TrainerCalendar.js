@@ -63,7 +63,7 @@ const TrainerCalendar = ({navigation}) => {
     
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -73,22 +73,7 @@ const TrainerCalendar = ({navigation}) => {
     React.useEffect(() => {
         setCurrentDisplayedDate(getCurrentDate());
         
-        const unsubscribe = navigation.addListener('focus', () => {
-            //Check if covid alert was dismissed
-            if(global.covidAlert) {
-                if(dropDownAlertRef.state.isOpen === false) {
-                    //Show covid alert
-                    dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
-                }
-            } else {
-                dropDownAlertRef.closeAction();
-            }
-
-            getTrainerCalendar();
-        });
-    
         
-        return unsubscribe;
       }, [navigation]);
 
     //Update the covid alert var to false (will not display coivd alert anymore)

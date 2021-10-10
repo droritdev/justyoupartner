@@ -43,32 +43,15 @@ const TrainerOrdersPage = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
     };
     
-
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            //Check if covid alert was dismissed
-            if(global.covidAlert) {
-                if(dropDownAlertRef.state.isOpen === false) {
-                    //Show covid alert
-                    dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
-                }
-            } else {
-                dropDownAlertRef.closeAction();
-            }
-
-            getTrainerOrders();
-        });
-    
-        
-        return unsubscribe;
-      }, [navigation]);
-
+    useEffect(() => {
+        getTrainerOrders()
+    }, [navigation])
 
     //Update the covid alert var to false (will not display coivd alert anymore)
     const covidAlertCancel = () => {
@@ -92,6 +75,7 @@ const TrainerOrdersPage = ({navigation}) => {
 
     //Get all orders by trainer ID, sort by time created, assaign to designated const
     const getTrainerOrders = async () => {
+        console.log('in gettrainerorders')
         await axios
         .get('/orders/by-trainer-id/'+trainerID, 
         config
@@ -115,14 +99,15 @@ const TrainerOrdersPage = ({navigation}) => {
 
             pendingOrders = sortOrders(pendingOrders);
             approvedOrders = sortOrders(approvedOrders);
-
+            console.log('pending orders ', pendingOrders)
+            console.log('approved orders ', approvedOrders)
             setIsLoading(false);
             setPendingOrders(pendingOrders);
             setApprovedOrders(approvedOrders);
             setApprovedClientsInfo(approvedClients);
             setPendingClientsInfo(pendingClients);
         })
-        .catch((err) => {});
+        .catch((err) => {console.log('error in gettrainerorders ', err)});
     }
 
 
@@ -239,6 +224,10 @@ const TrainerOrdersPage = ({navigation}) => {
 
                 repeats.push(
                     <View key={'pendingRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
+                        <TouchableOpacity 
+                            style={{flexDirection: 'row'}}
+                            onPress={() => handleOnArrowPendingPressed(i)}
+                        >
                         <FastImage
                                     style={styles.image}
                                     source={{
@@ -253,10 +242,6 @@ const TrainerOrdersPage = ({navigation}) => {
                         <View style={styles.dateBox}>
                             <Text style={styles.dateText}>{pendingOrders[i].trainingDate.startTime.slice(0, 10)}</Text>
                         </View>
-                        <TouchableOpacity 
-                            style={styles.arrowButton}
-                            onPress={() => handleOnArrowPendingPressed(i)}
-                        >
                             <Icon name="chevron-right" size={18} style={styles.arrow} />
                         </TouchableOpacity>
                     </View>
@@ -277,6 +262,10 @@ const TrainerOrdersPage = ({navigation}) => {
 
                 repeats.push(
                     <View key={'approvedRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
+                    <TouchableOpacity 
+                        style={{flexDirection: 'row'}}
+                        onPress={() => handleArrowApprovedPressed(i)}
+                    >
                     <FastImage
                                 style={styles.image}
                                 source={{
@@ -291,10 +280,6 @@ const TrainerOrdersPage = ({navigation}) => {
                     <View style={styles.dateBox}>
                         <Text style={styles.dateText}>{approvedOrders[i].trainingDate.startTime.slice(0, 10)}</Text>
                     </View>
-                    <TouchableOpacity 
-                        style={styles.arrowButton}
-                        onPress={() => handleArrowApprovedPressed(i)}
-                    >
                             <Icon name="chevron-right" size={18} style={styles.arrow} />
                     </TouchableOpacity>
                 </View>
@@ -354,23 +339,7 @@ const TrainerOrdersPage = ({navigation}) => {
 
             </Modal>
 
-            <View style={styles.covidAlertView}>
-                <DropdownAlert
-                        ref={(ref) => {
-                        if (ref) {
-                            dropDownAlertRef = ref;
-                        }
-                        }}
-                        containerStyle={styles.covidAlertContainer}
-                        showCancel={true}
-                        infoColor ={'deepskyblue'}
-                        onCancel={covidAlertCancel}
-                        closeInterval = {0}
-                        onTap={covidAlertTap}
-                        titleNumOfLines={1}
-                        messageNumOfLines={1}
-                />
-            </View>
+            
 
             <ScrollView style={styles.container}> 
                 <View style={styles.headerContainer}>

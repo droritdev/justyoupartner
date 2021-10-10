@@ -28,7 +28,7 @@ const TrainerReviews = ({navigation}) => {
     //server config
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },

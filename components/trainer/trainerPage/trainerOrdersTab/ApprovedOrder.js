@@ -37,7 +37,7 @@ const ApprovedOrder = ({navigation}) => {
     //Axios post config
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
             "Content-Type": "application/json",
         },
@@ -102,7 +102,7 @@ const ApprovedOrder = ({navigation}) => {
                                 onPress={()=>handleChatPressed()}
                                 style={styles.chatButton}
                             >
-                                <Icon name="message-circle" size={30} style={styles.messageIcon}/>
+                                {/* <Icon name="message-circle" size={30} style={styles.messageIcon}/> */}
                                 {clientInfo.name!==undefined?
                                      <Text style={styles.approveButtonText}>{'Contact ' + clientInfo.name.first}</Text>
                                 :
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .7
     },
     nameText: {
-        fontSize: Dimensions.get('window').height * .02,
+        fontSize: Dimensions.get('window').height * .03,
         fontWeight: '500'
     },
     dateBox: {

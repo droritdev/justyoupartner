@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Alert, StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, KeyboardAvoidingView} from 'react-native';
+import {Alert, StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 
@@ -17,7 +17,7 @@ const SignUpTrainer = ({navigation}) => {
 
     const config = {
       withCredentials: true,
-      baseURL: 'http://localhost:3000/',
+      baseURL: 'http://justyou.iqdesk.info:8081/',
       headers: {
         "Content-Type": "application/json",
       },
@@ -104,7 +104,7 @@ const SignUpTrainer = ({navigation}) => {
           type: 'SET_EMAIL_ADDRESS',
           emailAddress: emailAddressInput.toLowerCase()
          });
-         sendVerifyEmail();
+         navigation.navigate('CreatePasswordTrainer');
       });
   }
 
@@ -128,6 +128,7 @@ const SignUpTrainer = ({navigation}) => {
     }
   
     return(
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
           <Text style={styles.justYouHeader}>Just You</Text>
           <Text style={styles.signUpText}>Sign up and start searching</Text>
@@ -147,11 +148,7 @@ const SignUpTrainer = ({navigation}) => {
               :null}   
           </View>
           <View style={styles.fotterContainer}>
-            <AppButton 
-              title="Next"
-              onPress={handleNext}
-            />
-            <View style={styles.alreadyHaveAccountContainer}>
+          <View style={styles.alreadyHaveAccountContainer}>
               <Text style={styles.alreadyHaveAnAccountText}>Already have an account? </Text>
               <TouchableOpacity
                 onPress={() => handleSignIn()}
@@ -159,8 +156,13 @@ const SignUpTrainer = ({navigation}) => {
               <Text style={styles.signInText}>Sign In</Text> 
               </TouchableOpacity>
             </View>
+            <AppButton 
+              title="Next"
+              onPress={handleNext}
+            />
           </View>
         </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
 }
 

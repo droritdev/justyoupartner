@@ -21,9 +21,11 @@ const ChangePhoneNumber = ({navigation}) => {
     const [nextErrorMessage, setNextErrorMessage] = useState("");
     const {trainerID} = useContext(IdContext);
 
+    const [requestId, setRequestId] = useState();
+
     const config = {
       withCredentials: true,
-      baseURL: 'http://localhost:3000/',
+      baseURL: 'http://justyou.iqdesk.info:8081/',
       headers: {
         "Content-Type": "application/json",
       },
@@ -48,7 +50,7 @@ const ChangePhoneNumber = ({navigation}) => {
     .catch((err) =>  {
       setIsPhoneError(false);
       setIsNextError(false);
-      var fullPhone = '+'+areaCodeInput+phoneNumberInput;
+      var fullPhone = '97'+areaCodeInput+phoneNumberInput; // change 97 -> 1
       sendVerificationCode(fullPhone);
     });
   }
@@ -65,8 +67,8 @@ const ChangePhoneNumber = ({navigation}) => {
 
     //Sets the phoneNumebr object to the value
     const handleOnChangePhoneNumber = (value) => {
-      if (value.length > 10) {
-        value = value.slice(0, 10);
+      if (value.length > 7) {
+        value = value.slice(0, 7);
       }
       setIsNextError(false);
       setIsPhoneError(false);
@@ -105,7 +107,7 @@ const ChangePhoneNumber = ({navigation}) => {
         setIsPhoneError(true);
         setIsNextError(true);
       }
-      else if(areaCodeInput.length != 3 || phoneNumberInput.length <= 6){
+      else if(areaCodeInput.length != 3 || phoneNumberInput.length != 7){
         setPhoneErrorMessage("Enter a valid phone number")
         setIsPhoneError(true);
         setIsNextError(true);
@@ -123,37 +125,26 @@ const ChangePhoneNumber = ({navigation}) => {
       }
       else{
         setFullPhoneNumber(number);
-        // setIsCodeSent('flex');
+        setIsCodeSent('flex');
         axios
-          .post('/send-verification-code', {
-            to: number,
-            channel: "sms"
+          .post('/sendCode', {
+            number: number
           },
           config
           )
           .then((res) => {
             if(res !== null) {
-              if(res.data.status === 'pending'){
-                setIsCodeSent('flex');
-                Alert.alert(
-                    'Code sent',
-                    'Please check your phone for the verification code.',
-                    [
-                        {text: 'OK'},
-                      ],
-                      { cancelable: false }
-                    )
-              }
-              else{
-                alert("Couldn't send code to this number. Please try again.");
-              }
+              console.log('res not null resdata ', res.data)
+              setRequestId(res.data)
+              console.log('requestId after filled ', requestId)
             }
             else{
-                alert("Couldn't send code to this number. Please try again.");
+              console.log('success but res null ', error)
+              alert("success but res null");
             }
-          }
-          )
+          })
           .catch((error) => {
+            console.log('catch error sendCode ', error.request)
             alert(error)
           })
         }
@@ -169,36 +160,37 @@ const ChangePhoneNumber = ({navigation}) => {
         setNextErrorMessage("Enter your code to continue");
         setIsNextError(true);
       }
-      else if(code.length !== 5){
-        setNextErrorMessage("Code should be 5 digits");
+      else if(code.length !== 4){
+        setNextErrorMessage("Code should be 4 digits");
         setIsNextError(true);
       }
       else{
         axios
-          .post('/verify-code', {
-            to: fullPhoneNumber,
+          .post('/verifyCode', {
+            request_id: requestId,
             code: code
           },
           config
           )
           .then((res) => {
             if(res !== null) {
-              if(res.data.status === 'approved'){
-                updateDB();
+              console.log('res not null resdata ', res.data)
+              if(res.data === 'authenticated'){
+                console.log('authenticated')
+                updateDB()
               }
-              else {
-                setNextErrorMessage("Incorrect code, please try again.");
-                setIsNextError(true);
+              else{
+                console.log('failed')
+                setNextErrorMessage('Phone number was not verified. Please try again.')
               }
             }
             else{
-                setNextErrorMessage("Incorrect code, please try again.");
-                setIsNextError(true);
+              console.log('success but res null')
+              setNextErrorMessage('Phone number was not verified. Please try again.')
             }
-          }
-          )
+          })
           .catch((error) => {
-            alert(error)
+            console.log('catch error ', error)
           })
         }
     }
@@ -249,7 +241,7 @@ const ChangePhoneNumber = ({navigation}) => {
               <TextInput
                       style={styles.areaCodeInput}
                       textAlign='center'
-                      placeholder='+001'
+                      placeholder='Area Code'
                       keyboardType='numeric'
                       value = {areaCodeInput}
                       onChangeText={value => handleOnChangeAreaCode(value)}>
@@ -258,7 +250,7 @@ const ChangePhoneNumber = ({navigation}) => {
                     style={styles.phoneNumberInput}
                     textAlign='center'
                     keyboardType='numeric'
-                    placeholder='00000000000'
+                    placeholder='Phone Number'
                     value = {phoneNumberInput}
                     onChangeText={value => handleOnChangePhoneNumber(value)}
                 />
@@ -267,7 +259,7 @@ const ChangePhoneNumber = ({navigation}) => {
                 <Text style={styles.phoneErrorMessage}>{phoneErrorMessage}</Text>
               :null}
               <View style={styles.verifyExplenationContainer}>
-                <Text style={styles.verifyExplenationText}>We'll send you a text with a 5-digit code to verify your new phone number.</Text>
+                <Text style={styles.verifyExplenationText}>We'll send you a text with a 4-digit code to verify your new phone number.</Text>
               </View>
             </View>
             <View>
@@ -275,7 +267,7 @@ const ChangePhoneNumber = ({navigation}) => {
                     style={styles.verifyButton}
                     onPress={() => handleVerify()}
                 >
-                    <Text style={styles.verifyButtonText}>Verify</Text>
+                    <Text style={styles.verifyButtonText}>Send code to verify phone</Text>
                 </TouchableOpacity>
             </View>
 
@@ -299,7 +291,7 @@ const ChangePhoneNumber = ({navigation}) => {
             <View display={isCodeSent} style={styles.codeTextInput}>
               <TextInput
                   style={{fontSize: 33}}
-                  placeholder='00000'
+                  placeholder='Code'
                   textAlign='center'
                   onChangeText={text => handleOnChangeCode(text)}
               />
@@ -312,7 +304,7 @@ const ChangePhoneNumber = ({navigation}) => {
                 </View>
                 <View>
                     <TouchableOpacity 
-                    onPress={() => sendVerificationCode('+'+areaCodeInput+phoneNumberInput)}
+                    onPress={() => sendVerificationCode('97'+areaCodeInput+phoneNumberInput)} // change 97 -> 1
                     >
                     <Text style={styles.resendButton}>{"resend"}</Text> 
                     </TouchableOpacity>
@@ -324,7 +316,7 @@ const ChangePhoneNumber = ({navigation}) => {
               <Text style={styles.nextErrorMessage}>{nextErrorMessage}</Text>
               :null}
               <AppButton 
-                title="Submit"
+                title="Verify phone number"
                 onPress={handleSubmit}
               />
             </View>

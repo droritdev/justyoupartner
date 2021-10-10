@@ -55,7 +55,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,6 +65,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     //Check if the upload to Firebase is finished
     const checkFinishFirebaseUpload = async () => {
+        // console.log('incheckfinish')
         if (mediaPictures.length === picturesURL.length && mediaVideos.length == videosURL.length) {
             clearInterval(checkFinishInterval);
             registerTrainer();
@@ -90,13 +91,14 @@ const DonePopUpTrainer = ({navigation}) => {
                     console.log('That email address is invalid!');
                 }
 
-                // console.error(error);
+                console.log('Error in createuserwithemail ', error.code, error);
             });
     }
 
 
     //Upload all media to firebase
     const uploadMedia = async (userRef) => {
+        console.log('in uploadmedia')
         for (let i = 0; i < mediaPictures.length; i++) {
             uploadImage(userRef, mediaPictures[i], i);
         }   
@@ -108,6 +110,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     //Upload image to firebase storage
     const uploadImage = async (userRef, imageUri, imageNum) => {
+        console.log('in uploadimage')
         let ref = storage().ref(userRef+"images/trainerImage"+imageNum+getFormat(imageUri));
         await ref.putFile(imageUri).then((snapshot) => {
         })
@@ -137,6 +140,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     //Get file format (.jpg, .png, .mp4, etc)
      const getFormat = (uri) => {
+         console.log('ingetformat')
          indexOfDot = uri.indexOf('.', uri.length-6);
          return uri.slice(indexOfDot);
      }
@@ -188,6 +192,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     //Register trainer to mongodb
     const registerTrainer = async () => {
+        console.log('in register trainer')
         axios  
         .post('/trainers/register', {
             name: {

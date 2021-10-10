@@ -15,7 +15,7 @@ const TrainerContainer = () => {
         <Tab.Navigator
             tabBarOptions={{
                 style: {
-                    height: 80,
+                    height: 60,
                     borderTopWidth: 1.5
                 },
                 showLabel: false,
@@ -78,7 +78,7 @@ const TrainerContainer = () => {
                 options={{
                     tabBarIcon: ({ focused,tintColor }) => (
                         !focused ? <Image
-                            source={require('../../../images/calendarIcon.jpeg')}
+                            source={require('../../../images/calendarIcon.png')}
                             style={[styles.statsIcon, {tintColor: tintColor}]}
                           />
                           :
@@ -95,34 +95,28 @@ const TrainerContainer = () => {
 
 const styles = StyleSheet.create({
     profileIcon: {
-        width: 40,
-        height: 40,
-        marginTop: 10
+        width: 25,
+        height: 25
     },
     profileFocusedIcon: {
-        width: 45,
-        height: 45,
-        marginTop: 10
+        width: 30,
+        height: 30,
     },
     ordersIcon: {
-        width: 35,
-        height: 40,
-        marginTop: 15
+        width: 25,
+        height: 25,
     },
     ordersFocusedIcon: {
-        width: 40,
-        height: 45,
-        marginTop: 15
+        width: 30,
+        height: 30,
     },
     statsIcon: {
-        width: 40,
-        height: 35,
-        marginTop: 15    
+        width: 25,
+        height: 25,
     },
     statsFocusedIcon: {
-        width: 40,
-        height: 45,
-        marginTop: 15   
+        width: 30,
+        height: 30,
     }
 }); 
 

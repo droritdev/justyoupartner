@@ -12,11 +12,10 @@ const GetStarted = ({navigation}) => {
     return(
         <SafeAreaView style={styles.welcomePage2}>
             <View style={styles.welcomeContainer}>
-                <Image source = {require('../images/welcomepic.png')} />
                 <Text style={styles.welcomeToText}>Welcome to</Text>
                 <Text style={styles.justYouText}>Just You</Text>
                 <Text style={styles.partnerText}>Partner</Text>
-                <Text style={styles.previewText}>Our unique legal system creates an optimal connection between coaches and trainers</Text>
+                <Text style={styles.previewText}>Our unique legal system creates an optimal connection between clients and trainers</Text>
             </View>
             <View style={styles.getStartedContainer} >
                 <TouchableOpacity
@@ -32,15 +31,15 @@ const GetStarted = ({navigation}) => {
 
 const styles = StyleSheet.create({
     welcomePage2: {
-        height: Dimensions.get('window').height ,
+        height: Dimensions.get('window').height,
         flexDirection: 'column',
         backgroundColor: 'white',
-        justifyContent: 'center'
+        justifyContent: 'space-around'
     },
     welcomeContainer: {
         marginTop: Dimensions.get('window').height * .15,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         width: Dimensions.get('window').width,
         alignSelf: 'center'
     },
@@ -62,10 +61,11 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .0278,
         textAlign: 'center',
         width: Dimensions.get('window').width * .85,
-        marginTop: Dimensions.get('window').height * .022
+        color: 'black'
+    //    marginTop: Dimensions.get('window').height * .022
     },
     getStartedContainer: {
-        flex: 1,
+    //    flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center'
       },

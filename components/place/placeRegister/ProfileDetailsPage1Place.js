@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, Image, Dimensions, SafeAreaView} from 'react-nat
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
-import {Dropdown} from 'react-native-material-dropdown'
+import {Dropdown} from 'react-native-material-dropdown-v2'
 
 import PickCountry from '../../globalComponents/PickCountry';
 import {CountryContext} from '../../../context/placeContextes/CountryContext';

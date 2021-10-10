@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {StyleSheet, Alert, View, Text, TextInput, Button, Dimensions, SafeAreaView} from 'react-native';
+import {StyleSheet, Alert, View, Text, TextInput, Button, Dimensions, SafeAreaView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -22,20 +22,21 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
     const [isPhoneError, setIsPhoneError] = useState(false);
     const [isNextError, setIsNextError] = useState(false);
     const [nextErrorMessage, setNextErrorMessage] = useState("");
+
+    const [requestId, setRequestId] = useState()
   
     const config = {
       withCredentials: true,
-      baseURL: 'http://localhost:3000/',
+      baseURL: 'http://justyou.iqdesk.info:8081/',
       headers: {
         "Content-Type": "application/json",
       },
     };
 
     
-    useEffect (() => {
-      getAreaCode();
-    }, []);
-
+    // useEffect (() => {
+    //   getAreaCode();
+    // }, []);
 
     //Get area code by country picked
     const getAreaCode = () => {
@@ -44,9 +45,6 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
           setAreaCodeInput("001");
       }
     }
-
-  
-
 
   //Send GET request to mongodb using axios, to check if phone is already used
   const checkPhoneIsUsed = () => {
@@ -61,7 +59,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
     .catch((err) =>  {
       setIsPhoneError(false);
       setIsNextError(false);
-      var fullPhone = '+'+areaCodeInput+phoneNumberInput;
+      var fullPhone = '97'+areaCodeInput+phoneNumberInput; // change 97 -> 1
       sendVerificationCode(fullPhone);
     });
   }
@@ -78,8 +76,8 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
 
     //Sets the phoneNumebr object to the value
     const handleOnChangePhoneNumber = (value) => {
-      if (value.length > 10) {
-        value = value.slice(0, 10);
+      if (value.length > 7) {
+        value = value.slice(0, 7);
       }
       setIsNextError(false);
       setIsPhoneError(false);
@@ -91,10 +89,15 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
       setIsNextError(false);
       setIsPhoneError(false);
       setCode(value);
+      if(value.length === 4){
+        Keyboard.dismiss()
+      }
     }
 
-    //When pressed, the verify button checks if the numebr is valid and calls the sendVerificationCode function
+    //When pressed, the verify button checks if the number is valid and calls the sendCode function
     const handleVerify = () => {
+      Keyboard.dismiss()
+
       let areaCodeTemp = Number(areaCodeInput);
       let phoneNumberTemp = Number(phoneNumberInput);
 
@@ -118,7 +121,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setIsPhoneError(true);
         setIsNextError(true);
       }
-      else if(areaCodeInput.length != 3 || phoneNumberInput.length <= 6){
+      else if(areaCodeInput.length != 3 || phoneNumberInput.length != 7){
         setPhoneErrorMessage("Enter a valid phone number")
         setIsPhoneError(true);
         setIsNextError(true);
@@ -136,36 +139,26 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
       }
       else{
         setFullPhoneNumber(number);
+        setIsCodeSent('flex')
         axios
-          .post('/send-verification-code', {
-            to: number,
-            channel: "sms"
+          .post('/sendCode', {
+            number: number
           },
           config
           )
           .then((res) => {
             if(res !== null) {
-              if(res.data.status === 'pending'){
-                setIsCodeSent('flex');
-                Alert.alert(
-                    'Code sent',
-                    'Please check your phone for the verification code.',
-                    [
-                        {text: 'OK'},
-                      ],
-                      { cancelable: false }
-                    )
-              }
-              else{
-                alert("Couldn't send code to this number. Please try again.");
-              }
+              console.log('res not null resdata ', res.data)
+              setRequestId(res.data)
+              console.log('requestId after filled ', requestId)
             }
             else{
-              alert("Couldn't send code to this number. Please try again.");
+              console.log('success but res null ', error)
+              alert("success but res null");
             }
-          }
-          )
+          })
           .catch((error) => {
+            console.log('catch error sendCode ', error.request)
             alert(error)
           })
         }
@@ -181,50 +174,54 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
         setNextErrorMessage("Enter your code to continue");
         setIsNextError(true);
       }
-      else if(code.length !== 5){
-        setNextErrorMessage("Code should be 5 digits");
+      else if(code.length !== 4){
+        setNextErrorMessage("Code should be 4 digits");
         setIsNextError(true);
       }
       else{
         axios
-          .post('/verify-code', {
-            to: fullPhoneNumber,
+          .post('/verifyCode', {
+            request_id: requestId,
             code: code
           },
           config
           )
           .then((res) => {
             if(res !== null) {
-              if(res.data.status === 'approved') {
+              console.log('res not null resdata ', res.data)
+              if(res.data === 'authenticated'){
+                console.log('authenticated')
+                // alert("authenticated");
                 dispatchArea({
                   type: 'SET_AREA_CODE',
-                  areaCode: fullPhoneNumber.slice(1, 4)
+                  areaCode: fullPhoneNumber.slice(2, 5) // change to 1, 4
                 });
-        
+
                 dispatchNumber({
                   type: 'SET_PHONE_NUMBER',
-                  phoneNumber: fullPhoneNumber.slice(4)
+                  phoneNumber: fullPhoneNumber.slice(5) // change to 4
                 })
                 navigation.navigate('DonePopUpTrainer');
               }
               else{
-                setNextErrorMessage("Incorrect code, please try again.");
-                setIsNextError(true);
+                console.log('failed')
+                alert("failed");
               }
             }
             else{
-              setNextErrorMessage("Incorrect code, please try again.");
-              setIsNextError(true);
+              console.log('success but res null')
+              alert("success but res null");
             }
-          }
-          )
+          })
           .catch((error) => {
+            console.log('catch error ', error)
             alert(error)
           })
         }
     }
   
     return(
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
               <Text style={styles.justYouHeader}>Just You</Text>
@@ -236,7 +233,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
               <TextInput
                       style={styles.areaCodeInput}
                       textAlign='center'
-                      placeholder='+001'
+                      placeholder='Area Code'
                       keyboardType='numeric'
                       value = {areaCodeInput}
                       onChangeText={value => handleOnChangeAreaCode(value)}>
@@ -245,7 +242,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                     style={styles.phoneNumberInput}
                     textAlign='center'
                     keyboardType='numeric'
-                    placeholder='00000000000'
+                    placeholder='Phone Number'
                     value = {phoneNumberInput}
                     onChangeText={value => handleOnChangePhoneNumber(value)}
                 />
@@ -254,7 +251,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                 <Text style={styles.phoneErrorMessage}>{phoneErrorMessage}</Text>
               :null}
               <View style={styles.verifyExplenationContainer}>
-                <Text style={styles.verifyExplenationText}>Adding your phone number will strengthen your account security. We'll send you a text with a 5-digit code to verify your account.</Text>
+                <Text style={styles.verifyExplenationText}>Adding your phone number will strengthen your account security. We'll send you a text with a 4-digit code to verify your account.</Text>
               </View>
             </View>
             <View>
@@ -262,7 +259,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                     style={styles.verifyButton}
                     onPress={() => handleVerify()}
                 >
-                    <Text style={styles.verifyButtonText}>Verify</Text>
+                    <Text style={styles.verifyButtonText}>Send code to verify phone</Text>
                 </TouchableOpacity>
             </View>
 
@@ -286,7 +283,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
             <View display={isCodeSent} style={styles.codeTextInput}>
               <TextInput
                   style={{fontSize: 33}}
-                  placeholder='00000'
+                  placeholder='Code'
                   textAlign='center'
                   onChangeText={text => handleOnChangeCode(text)}
               />
@@ -299,7 +296,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                 </View>
                 <View>
                     <TouchableOpacity 
-                    onPress={() => sendVerificationCode('+'+areaCodeInput+phoneNumberInput)}
+                    onPress={() => sendVerificationCode('97'+areaCodeInput+phoneNumberInput)} // change 97 -> 1
                     >
                     <Text style={styles.resendButton}>{"resend"}</Text> 
                     </TouchableOpacity>
@@ -311,11 +308,12 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
               <Text style={styles.nextErrorMessage}>{nextErrorMessage}</Text>
               :null}
               <AppButton 
-                title="Next"
+                title="Verify phone number"
                 onPress={handleNext}
               />
             </View>
         </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 

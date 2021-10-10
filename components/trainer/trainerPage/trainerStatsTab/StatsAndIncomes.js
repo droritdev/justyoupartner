@@ -1,4 +1,4 @@
-import React, {useRef, useContext, useState} from 'react';
+import React, {useRef, useContext, useState, useEffect} from 'react';
 import { Modal, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
@@ -45,32 +45,19 @@ const StatsAndIncomes = ({navigation}) => {
     //Modal to display for covid-19 alert tap
     const [covidModalVisible, setCovidModalVisible] = useState(false);
 
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            //Check if covid alert was dismissed
-            if(global.covidAlert) {
-                if(dropDownAlertRef.state.isOpen === false) {
-                    //Show covid alert
-                    dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
-                }
-            } else {
-                dropDownAlertRef.closeAction();
-            }
 
-            getTrainerOrders();
-        });
-    
-        
-        return unsubscribe;
-    }, [navigation]);
 
       const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
     };
+
+    useEffect(() => {
+        getTrainerOrders()
+    }, [navigation])
 
     //Update the covid alert var to false (will not display coivd alert anymore)
     const covidAlertCancel = () => {
@@ -351,7 +338,7 @@ const StatsAndIncomes = ({navigation}) => {
                         <View style={styles.incomeRow}>
                             <Text style={styles.rowInformation}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
                             <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>
-                            <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(11, 16)}</Text>
+                            <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(16, 21)}</Text>
                             <Text style={styles.rowInformation}>{orderObject.type.charAt(0).toLowerCase() === 's'?"Single":"Couple"}</Text>
                             <Text style={styles.rowInformation}>{orderObject.cost+"$"}</Text>
 
@@ -366,47 +353,8 @@ const StatsAndIncomes = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
-            <Modal
-                
-                animationType="slide"
-                transparent={true}
-                cancelable={true}
-                visible={covidModalVisible}
-                onRequestClose={()=>{}}
-            >
-                <View style={styles.covidContainer}>
-                    
-                    <View style={styles.covidModalContainer}>
-                        <Icon
-                            name="x-circle" 
-                            size={Dimensions.get('window').width * .05} 
-                            style={styles.covidCloseIcon} 
-                            onPress={()=> {setCovidModalVisible(false)}}
-                        />
-                        <Text style={styles.covidTitle}>COVID-19 Information</Text>
-                        <Text style={styles.covidMessage}>{"We at JustYou take care to follow the changing guidelines of the Ministry of Health regarding the coronavirus. Before ordering, the personal trainer and the client will fill out a statement that they do indeed meet the requirements of the law regarding the coronavirus. \nAs Everyone knows, the guidelines may change at any time and we will make the adujstments according to the changes to be determined by the Ministry of Health. Adherence to these requirments is for all of us for your health and safety and we will know better days"}.</Text>
-                    </View>
-                </View>
+            
 
-            </Modal>
-
-            <View style={styles.covidAlertView}>
-                <DropdownAlert
-                        ref={(ref) => {
-                        if (ref) {
-                            dropDownAlertRef = ref;
-                        }
-                        }}
-                        containerStyle={styles.covidAlertContainer}
-                        showCancel={true}
-                        infoColor ={'deepskyblue'}
-                        onCancel={covidAlertCancel}
-                        closeInterval = {0}
-                        onTap={covidAlertTap}
-                        titleNumOfLines={1}
-                        messageNumOfLines={1}
-                />
-            </View>
             <ScrollView style={styles.container}> 
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>

@@ -1,6 +1,6 @@
 import React, {useRef, useContext, useState, useEffect} from 'react';
-import {Modal, Alert, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {Modal, Alert, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
@@ -66,6 +66,11 @@ const TrainerProfilePage = ({navigation}) => {
 
     //Modal to display for covid-19 alert tap
     const [covidModalVisible, setCovidModalVisible] = useState(false);
+    const [showCovidOverlay, setShowCovidOverlay] = useState(true)
+
+    useEffect(() => {
+        checkInterntIsOn()
+    }, [navigation])
     
     //Format the categories list to lower case with first letter upper case
     const categoryDisplayFormat = (str) => {
@@ -86,7 +91,7 @@ const TrainerProfilePage = ({navigation}) => {
 
             //Show the no internet connection modal if it's not already been displayed
             if(!internetModalVisible) {
-                setInternetModalVisible(true);
+                setInternetModalVisible(false);
             }
             
             //Retry to establish connection after 15 seconds
@@ -98,7 +103,7 @@ const TrainerProfilePage = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'http://justyou.iqdesk.info:8081/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -252,23 +257,23 @@ const TrainerProfilePage = ({navigation}) => {
 
 
    //When page is focused, load info again
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            //Check if covid alert was dismissed
-            if(global.covidAlert) {
-                if(dropDownAlertRef.state.isOpen === false) {
-                    //Show covid alert
-                    dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
-                }
-            } else {
-                dropDownAlertRef.closeAction();
-            }
+    // React.useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', () => {
+    //         //Check if covid alert was dismissed
+    //         if(global.covidAlert) {
+    //             if(dropDownAlertRef.state.isOpen === false) {
+    //                 //Show covid alert
+    //                 dropDownAlertRef.alertWithType('info', 'Latest information on CVOID-19', 'Click here to learn more.');
+    //             }
+    //         } else {
+    //             dropDownAlertRef.closeAction();
+    //         }
 
-        checkInterntIsOn();
-    });
+    //     checkInterntIsOn();
+    // });
     
-        return unsubscribe;
-      }, [navigation]);
+    //     return unsubscribe;
+    //   }, [navigation]);
 
 
 
@@ -372,12 +377,11 @@ const TrainerProfilePage = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
-            <Modal
-                
+            <Modal                
                 animationType="slide"
                 transparent={true}
-                visible={internetModalVisible}
-                onRequestClose={() => { setInternetModalVisible(true)}}
+                visible={false}
+                onRequestClose={() => { setInternetModalVisible(false)}}
             >
                 <View style={styles.noInternetContainer}>
                     <View style={styles.noInternetModalContainer}>
@@ -392,9 +396,20 @@ const TrainerProfilePage = ({navigation}) => {
 
             </Modal>
 
-
-            <Modal
-                
+            {showCovidOverlay && 
+                <View style={styles.covidOverlay}>
+                <TouchableWithoutFeedback onPress={covidAlertTap}>
+                <View>
+                <Text style={styles.covidOverlayText}>Latest information on COVID-19</Text>
+                <Text style={styles.covidOverlayText}>Click here to learn more</Text>
+                </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => setShowCovidOverlay(false)}>
+                <View style={styles.closeButton}><Text style={styles.xButton}>X</Text></View>
+                </TouchableWithoutFeedback>
+                </View>
+            }
+            <Modal                
                 animationType="slide"
                 transparent={true}
                 cancelable={true}
@@ -417,7 +432,7 @@ const TrainerProfilePage = ({navigation}) => {
 
             </Modal>
 
-            <View style={styles.covidAlertView}>
+            {/* <View style={styles.covidAlertView}>
                 <DropdownAlert
                         ref={(ref) => {
                         if (ref) {
@@ -433,8 +448,8 @@ const TrainerProfilePage = ({navigation}) => {
                         titleNumOfLines={1}
                         messageNumOfLines={1}
                 />
-            </View>
-            <ScrollView style={styles.container}>
+            </View> */}
+            <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 60}}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>
@@ -523,24 +538,7 @@ const TrainerProfilePage = ({navigation}) => {
                         <Text style={styles.updatesTitle}>UPDATES</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.socialButtons}>
-                    <TouchableOpacity
-                        onPress={() => handleUpdatesPress()}
-                    >
-                        <Image
-                            source={require('../../../../images/facebookButton.png')}
-                            style={styles.facebookButton}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleUpdatesPress()}
-                    >
-                        <Image
-                            source={require('../../../../images/instagram.png')}
-                            style={styles.instagramImage}
-                        />
-                    </TouchableOpacity>
-                </View>
+                
                 <View style={styles.moreContainer}>
                     <Text style={styles.moreTitle}>More</Text>
                     <View style={styles.rowContainer}>
@@ -628,7 +626,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         width: Dimensions.get('window').width,
-        flexDirection: 'column',
+        height: Dimensions.get('window').height,
+        flexDirection: 'column'
     },
     headerContainer: {
         alignItems: 'center'
@@ -814,44 +813,52 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .050
     },
     whyUsButton: {
-        borderRadius: 10,
-        backgroundColor: 'deepskyblue',
-        height: Dimensions.get('window').height * .066,
-        width: Dimensions.get('window').width * .305,
-        justifyContent: 'center'
-    },
-    whyUsTitle: {
-        color: 'white',
+        width: Dimensions.get('window').width * 0.3,
+        height: Dimensions.get('window').height * 0.065,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: 'gainsboro'
+      },
+      whyUsTitle: {
+        color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height * .0278,
-        alignSelf: 'center'
-    },
-    questionsButton: {
-        borderRadius: 10,
-        backgroundColor: 'deepskyblue',
-        height: Dimensions.get('window').height * .066,
-        width: Dimensions.get('window').width * .305,
-        justifyContent: 'center'
-    },
-    questionsTitle: {
-        color: 'white',
+        fontSize: 18,
+      },
+      questionsButton: {
+        width: Dimensions.get('window').width * 0.3,
+        height: Dimensions.get('window').height * 0.065,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: 'gainsboro'
+      },
+      questionsTitle: {
+        color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 25,
-        alignSelf: 'center'
-    },
-    updatesButton: {
-        borderRadius: 10,
-        backgroundColor: 'deepskyblue',
-        height: Dimensions.get('window').height * .066,
-        width: Dimensions.get('window').width * .305,
-        justifyContent: 'center'
-    },
-    updatesTitle: {
-        color: 'white',
+        fontSize: 18,
+        textAlign: 'center',
+      },
+      updatesButton: {
+        width: Dimensions.get('window').width * 0.3,
+        height: Dimensions.get('window').height * 0.065,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: 'gainsboro'
+      },
+      updatesTitle: {
+        color: 'deepskyblue',
         fontWeight: 'bold',
-        fontSize: 25,
-        alignSelf: 'center'
-    },
+        fontSize: 18,
+        textAlign: 'center',
+      },
     socialButtons: {
         flexDirection: 'row',
         width: Dimensions.get('window').width ,
@@ -1023,7 +1030,39 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .015,
         marginRight: Dimensions.get('window').width * .015,
         alignSelf: 'flex-end',
-    }
+    },
+    covidOverlay: {
+        zIndex: 2,
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        opacity: 0.9,
+        backgroundColor: 'deepskyblue',
+        width: Dimensions.get('window').width,
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+      covidOverlayText: {
+        color: 'white',
+        fontSize: 22
+      },
+      closeButton:{
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        borderColor: 'white',
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 10,
+        right: 10
+      },
+      xButton: {
+        color: 'white',
+        fontSize: 24
+      }
       
 });
 export default TrainerProfilePage;

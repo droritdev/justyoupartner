@@ -3,7 +3,7 @@ import {Alert, StyleSheet, View, Text, Image, Dimensions, SafeAreaView, ScrollVi
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FlipToggle from 'react-native-flip-toggle-button';
-import {Dropdown} from 'react-native-material-dropdown';
+import {Dropdown} from 'react-native-material-dropdown-v2';
 import MultiSelect from 'react-native-multiple-select';
 
 import {Platform} from 'react-native';
@@ -21,8 +21,8 @@ import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 //Here the user picks his country and grante the push and location pemissions
 const ProfileDetailsPage1Trainer = ({navigation}) => {
     const {country, dispatchCountry} = useContext(CountryContext);
-    const [isLocationPermission, setIsLocationPermission] = useState(false);
-    const [isPushPermission, setIsPushPermission] = useState(false);
+    const [isLocationPermission, setIsLocationPermission] = useState(true);
+    const [isPushPermission, setIsPushPermission] = useState(true);
     const [isTermsConditions, setIsTermsConditions] = useState(true);
     const [isPermissionsNotConfirmed, setIsPermissionsNotConfirmed] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("Pick a country");
@@ -74,7 +74,8 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     const handleLocationToggleChange = (newState) => {
       if(newState) {
         //toogle is on
-        checkLocationPermission();
+        askForPermission();
+        // checkLocationPermission();
       } else {
         //toogle is off
         setIsLocationPermission(newState);
@@ -200,11 +201,11 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     
     //Handle the next button press - if ok, navigates to ProfileDetailsPage2
     const handleNext = () => {
-      if(!isCountrySelected){
-        setCountryErrorMessage("You must pick a country");
-        setIsCountryErrorMessage(true);
-      }
-      else if(!isLocationPermission || !isPushPermission){
+      // if(!isCountrySelected){
+      //   setCountryErrorMessage("You must pick a country");
+      //   setIsCountryErrorMessage(true);
+      // }
+      if(!isLocationPermission || !isPushPermission){
         setIsPermissionsNotConfirmed(true);
       } else if (!isTermsConditions) {
         
@@ -213,7 +214,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
         setIsPermissionsNotConfirmed(false);
         dispatchCountry({
           type: 'SET_COUNTRY',
-          country: selectedCountryName
+          country: 'United States'
         });
         navigation.navigate('ProfileDetailsPage2Trainer');
       }
@@ -226,11 +227,20 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
         />
           <View style={styles.upperContainer}>
             <Text style={styles.profileDetailesText}>Profile Details</Text>
-            <Text style={styles.fillTheFieldsText}>Please fill out all fields:</Text>
+            <Text style={styles.fillTheFieldsText}></Text>
             <View style={styles.countryContainer}>
               <Text style={styles.countryTitle}>Country</Text>
               <View styles={styles.countryPicker}>
-                <PickCountry
+                <View style={styles.containerUSA}>
+                  <View style={styles.viewUSA}>
+                    <Text style={styles.textUSA}>United States</Text>
+                  </View>
+                  <Image 
+                    source={require('../../../images/worldIcon.png')}
+                    style={styles.image}
+                  />
+                </View>
+                {/* <PickCountry
                   initValue={selectedCountry}
                   onChange={(option) => handleOnChangeCountry(option.label)}
                   visible={visible}
@@ -239,7 +249,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
                 />
                 {isCountryErrorMessage ? 
                   <Text style={styles.countryErrorText}>Pick a country</Text>
-                : null}
+                : null} */}
               </View>
             </View>
           </View>
@@ -353,7 +363,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
-      marginTop: Dimensions.get('window').height * .01,
+      marginTop: Dimensions.get('window').height * .02,
       marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {
@@ -421,6 +431,31 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
   readMoreContainer: {
     marginTop: Dimensions.get('window').height * .01,
     marginLeft: Dimensions.get('window').width * .0483
+  },
+  containerUSA: {
+    flexDirection: 'row', 
+    alignSelf: 'center', 
+    width: Dimensions.get('window').width * .95, 
+    alignItems: 'center',
+    marginTop: 20
+  },
+  viewUSA: {
+    width: Dimensions.get('window').width * .825,
+    height: 60,
+    justifyContent: 'center',
+    borderColor: 'deepskyblue',
+    borderRadius: 17,
+    borderWidth: 2,
+    alignItems: 'center'
+  },
+  textUSA: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: '300'
+  },
+  image: {
+    width: 60,
+    height: 60
   }
   });
 

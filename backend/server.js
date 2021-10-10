@@ -7,6 +7,8 @@ const cors = require('cors');
 const db = mongoose.connection;
 module.exports.mongoose = mongoose;
 
+const Nexmo = require('nexmo');
+
         //**Chat imports**//
 const findMessageByIDS = require('./messages/findMessageByIDS');
 const newMessage = require('./messages/newMessage');
@@ -149,5 +151,62 @@ app.post('/orders/update-status', updateOrderStatus.updateOrderStatus);
 app.get('/orders/by-trainer-id/:id', getOrdersByTrainerID.getOrdersByTrainerID);
 
 
-
-
+ // generate secrete key    
+ const nexmo = new Nexmo({ 
+        apiKey: process.env.API_KEY,
+        apiSecret: process.env.API_SECRET
+      })
+    
+     
+      app.post('/sendCode', (req, res) => {
+        // A user registers with a mobile phone number
+        let phoneNumber = req.body.number;
+        console.log(phoneNumber);
+        nexmo.verify.request({
+            number: phoneNumber, //+ מספר טלפון עם קידומת המדינה בלי 
+            brand: 'Just You',
+            workflow_id: 6, // שולח (רק) הודעה עם קוד של 4 ספרות
+            pin_expiry: 120, // תוקף הקוד בשניות
+            next_event_wait: 120 // פרק זמן בין שליחת קוד לשליחת קוד חדש
+        }, (err, result) => {
+          if(err) {
+            res.sendStatus(500);
+          } 
+          else 
+          {
+              //res.json(result)
+              res.json(result.request_id)
+              console.log("code sent successfuly"); // Success! Now, have your user enter the PIN
+          } 
+        });
+      });
+    
+    
+      app.post('/verifyCode', (req, res) => {
+        let code = req.body.code;
+        let request_id = req.body.request_id;
+      
+        nexmo.verify.check({request_id: request_id, code: code}, (err, result) => {
+            if(result){
+                res.send('authenticated')
+               
+             }
+            else {
+                // handle the error
+                res.send('failed')
+    
+            } 
+            
+                // if(result && result.status == '0') { // Success!
+                //   res.status(200)
+                //   res.render({message: 'Account verified!'});
+                //   console.log('account verified')
+                // } else {
+                //   // handle the error - e.g. wrong PIN
+                //   console.log('wrong code')
+                // }
+    
+        });
+      });
+    
+    
