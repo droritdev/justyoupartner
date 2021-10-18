@@ -7,6 +7,8 @@ const cors = require('cors');
 const db = mongoose.connection;
 module.exports.mongoose = mongoose;
 
+mongoose.set('useFindAndModify', false);
+
 const Nexmo = require('nexmo');
 
         //**Chat imports**//

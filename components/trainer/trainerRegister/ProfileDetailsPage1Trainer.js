@@ -25,7 +25,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     const [isPushPermission, setIsPushPermission] = useState(true);
     const [isTermsConditions, setIsTermsConditions] = useState(true);
     const [isPermissionsNotConfirmed, setIsPermissionsNotConfirmed] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState("Pick a country");
+    const [selectedCountry, setSelectedCountry] = useState("United States");
     const [selectedCountryName, setSelectedCountryName] = useState("");
     const [isCountryErrorMessage, setIsCountryErrorMessage] = useState(false);
     const [countryErrorMessage,setCountryErrorMessage] = useState("");
@@ -231,7 +231,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
             <View style={styles.countryContainer}>
               <Text style={styles.countryTitle}>Country</Text>
               <View styles={styles.countryPicker}>
-                <View style={styles.containerUSA}>
+                {/* <View style={styles.containerUSA}>
                   <View style={styles.viewUSA}>
                     <Text style={styles.textUSA}>United States</Text>
                   </View>
@@ -239,8 +239,8 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
                     source={require('../../../images/worldIcon.png')}
                     style={styles.image}
                   />
-                </View>
-                {/* <PickCountry
+                </View> */}
+                <PickCountry
                   initValue={selectedCountry}
                   onChange={(option) => handleOnChangeCountry(option.label)}
                   visible={visible}
@@ -249,7 +249,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
                 />
                 {isCountryErrorMessage ? 
                   <Text style={styles.countryErrorText}>Pick a country</Text>
-                : null} */}
+                : null}
               </View>
             </View>
           </View>
@@ -401,7 +401,8 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginBottom: 50
     },
     nextButton: {
       width: Dimensions.get('window').width * .9,

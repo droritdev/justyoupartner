@@ -45,7 +45,7 @@ const Chat = ({navigation, route}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://justyou.iqdesk.info:8081/',
+        baseURL: 'http://10.0.2.2:3000/',
         headers: {
           "Content-Type": "application/json",
         },

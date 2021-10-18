@@ -31,6 +31,8 @@ const CreatePasswordTrainer = ({navigation}) => {
 
     //Handle the next button press - if ok, navigates to the ProfileDetailsPage1Trainer
     const handleNext = () => {
+      var hasNumber = /\d/
+      var hasLetter = /[a-zA-Z]/
       if(passwordInput.length > 0 && confirmedPassword.length > 0){
         if(confirmedPassword !== passwordInput){
           setPasswordErrorText("Passwords does not match")
@@ -39,6 +41,14 @@ const CreatePasswordTrainer = ({navigation}) => {
         else if(passwordInput.length < 6){
           setPasswordErrorText("Valid password is at least 6 characters")
           setIsPasswordsNotMatch(true);
+        }
+        else if(!hasNumber.test(passwordInput)){
+          setPasswordErrorText("Valid password must have at least one number")
+          setIsPasswordsNotMatch(true)
+        }
+        else if(!hasLetter.test(passwordInput)){
+          setPasswordErrorText("Valid password must have at least one letter")
+          setIsPasswordsNotMatch(true)
         }
         else{
           var encodedPass = Base64.encode(passwordInput);
@@ -160,7 +170,8 @@ const CreatePasswordTrainer = ({navigation}) => {
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginBottom: 50
     },
     nextButton: {
       width: Dimensions.get('window').width * .9,

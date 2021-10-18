@@ -11,10 +11,7 @@ const WhyUs = ({navigation}) => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
-            <ImageBackground
-                source={require('../../../../images/whyUs.png')}
-                style={styles.coverImage} 
-            >
+            
                 <TouchableOpacity
                         onPress={() => handleOnArrowPress()}
                     >
@@ -23,7 +20,6 @@ const WhyUs = ({navigation}) => {
                         style={styles.arrowImage}
                     />
                 </TouchableOpacity>
-            </ImageBackground>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Why Sould You Work With</Text>
                 <Text style={styles.juustYouTitle}>Just You Partner</Text>

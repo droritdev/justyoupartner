@@ -17,7 +17,7 @@ const SignUpTrainer = ({navigation}) => {
 
     const config = {
       withCredentials: true,
-      baseURL: 'http://justyou.iqdesk.info:8081/',
+      baseURL: 'http://10.0.2.2:3000/',
       headers: {
         "Content-Type": "application/json",
       },
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   fotterContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 50
   },
   nextButton: {
     width: Dimensions.get('window').width * .9,

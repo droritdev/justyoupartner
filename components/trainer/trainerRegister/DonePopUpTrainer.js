@@ -55,7 +55,7 @@ const DonePopUpTrainer = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://justyou.iqdesk.info:8081/',
+        baseURL: 'http://10.0.2.2:3000/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -242,7 +242,7 @@ const DonePopUpTrainer = ({navigation}) => {
             setIsLoading(false);
             setTimeout(function(){navigation.navigate('WelcomeTrainer')}, 2000);
         })
-        .catch((err) => alert(err.data));
+        .catch((err) => alert(err));
     }
 
 

@@ -103,7 +103,7 @@ const TrainerProfilePage = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://justyou.iqdesk.info:8081/',
+        baseURL: 'http://10.0.2.2:3000/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -469,7 +469,7 @@ const TrainerProfilePage = ({navigation}) => {
                         <View style={styles.ratingAndAge}>
                             <Text style={styles.ratingText}>{starRating} </Text>
                             <Image
-                                source={require('../../../../images/starIconBlue.png')}
+                                source={require('../../../../images/graystar.png')}
                                 style={styles.startIcon}
                             />
                             <Text style={styles.ageText}> - Age {age}</Text>
@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
     },
     ratingAndAge: {
         flexDirection: 'row',
-        height: Dimensions.get('window').height * .022
+        height: Dimensions.get('window').height * .03
     },
     ratingText: {
         fontSize: Dimensions.get('window').height * .02
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
     },
     categoryCertSitesAbout: {
         marginLeft: Dimensions.get('window').width * .0483,
-        marginTop: Dimensions.get('window').height * .033,
+        marginTop: Dimensions.get('window').height * .05,
         width: Dimensions.get('window').width * .9
     },
     categoriesRow: {

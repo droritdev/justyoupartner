@@ -49,7 +49,7 @@ const StatsAndIncomes = ({navigation}) => {
 
       const config = {
         withCredentials: true,
-        baseURL: 'http://justyou.iqdesk.info:8081/',
+        baseURL: 'http://10.0.2.2:3000/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -171,18 +171,27 @@ const StatsAndIncomes = ({navigation}) => {
             //Run through all orders.
             //Push completed orders into completedOrders array
             //Push order income by their month, into the incomesByMonth array
+            console.log('all orders ', allOrders)
             for (let index = 0; index < allOrders.length; index++) {
                 const singleOrder = allOrders[index];
+                console.log('single order ', singleOrder)
                 if (singleOrder.status === "completed") {
+                    console.log('in order status complete')
                     //Order full date
-                    const orderDate = new Date(getDateInFormat(singleOrder.trainingDate.startTime));
+                    console.log('start time ', singleOrder.trainingDate.startTime)
+                    console.log('date format ', getDateInFormat(singleOrder.trainingDate.startTime))
+                    //const orderDate = new Date(getDateInFormat(singleOrder.trainingDate.startTime));
+                    const orderDate = new Date(singleOrder.trainingDate.startTime);
+                    console.log('orderDate ', orderDate)
                     orderDate.setHours(orderDate.getHours()+orderDate.getTimezoneOffset()/60);
                     //Order month
                     const orderMonth = orderDate.getMonth();
+                    console.log('order month ', orderMonth)
 
                     //Calculate income per month
                     var currentTotalForMonth = incomesByMonth[orderMonth];
                     incomesByMonth[orderMonth] = currentTotalForMonth + singleOrder.cost;
+                    console.log('incomesbymonth ', incomesByMonth[orderMonth])
 
                     //Calculate total income
                     totalIncome = totalIncome  + singleOrder.cost;
@@ -197,7 +206,7 @@ const StatsAndIncomes = ({navigation}) => {
                     totalOrders.push(singleOrder);
                 } else if (singleOrder.status === "declined") {
                     //Order full date
-                    const orderDate = new Date(getDateInFormat(singleOrder.trainingDate.startTime));
+                    const orderDate = new Date(singleOrder.trainingDate.startTime);
                     orderDate.setHours(orderDate.getHours()+orderDate.getTimezoneOffset()/60);
                     //Order month
                     const orderMonth = orderDate.getMonth();
@@ -238,8 +247,10 @@ const StatsAndIncomes = ({navigation}) => {
 
 
     const updateData = (array, type) => {
+        console.log('in updateData before switch ', array, type)
         switch (type) {
             case "monthlyIncome":
+                console.log('in switch case monthlyIncome ', getUpdateData(array))
                 setMonthlyIncomeGraph(getUpdateData(array));
             break;
         }
@@ -460,8 +471,8 @@ const StatsAndIncomes = ({navigation}) => {
                     />
 
 
-                    <View style={ styles.underGraphTitle}>
-                        <View style={ styles.totalOrMonthlyContainer}>
+                    <View style={ styles.underGraphTitle}> 
+                        {/* <View style={ styles.totalOrMonthlyContainer}>
                             <TouchableOpacity 
                                 style={isTotal ? styles.totalLabled : styles.totalNotLabled}
                                 onPress={() => handleTotalToggle()}
@@ -474,9 +485,11 @@ const StatsAndIncomes = ({navigation}) => {
                             >
                                 <Text style={isTotal ? styles.monthlyTextNotLabled : styles.monthlyTextLabled}>MONTHLY</Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
 
-                        <View style={styles.monthPickerContainer} display={isTotal}>
+                        {/* <View style={styles.monthPickerContainer} display={!isTotal ? 'flex' : 'none'}> */}
+
+                        <View style={styles.monthPickerContainer} display={'none'}>
                             <TouchableOpacity 
                                     onPress={()=> handleLeftArrow()}
                             >
@@ -549,7 +562,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width,
+        width: Dimensions.get('window').width
     },
     headerContainer: {
         alignItems: 'center',
@@ -691,7 +704,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     rowInformation: {
-        fontSize: Dimensions.get('window').height * .014,
+        fontSize: Dimensions.get('window').height * .018,
         width: Dimensions.get('window').width * .205,
         textAlign: 'center',
         alignSelf: 'center'
@@ -702,7 +715,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     underGraphTitle: {
-        flexDirection: 'row',
         justifyContent: 'space-between'
     },
     underGraphRowInformation: {
@@ -712,7 +724,8 @@ const styles = StyleSheet.create({
     monthPickerContainer: {
         flexDirection: 'row',
         marginTop: Dimensions.get('window').height * .033,
-        marginRight: Dimensions.get('window').width * .1
+        marginRight: Dimensions.get('window').width * .1,
+        marginLeft: Dimensions.get('window').width * .0483
     },
     monthTitle: {
         fontSize: Dimensions.get('window').height * .025,
@@ -788,10 +801,11 @@ const styles = StyleSheet.create({
     totalContainer: {
         borderTopWidth: 2,
         borderTopColor: 'lightgrey',
-        marginTop: Dimensions.get('window').height * .01,
+        marginTop: Dimensions.get('window').height * .04,
         alignSelf: 'center',
         width: Dimensions.get('window').width * .85,
-        height: Dimensions.get('window').height * .03,
+        height: Dimensions.get('window').height * .40,
+        marginBottom: 60
     },
     infoRow: {
         backgroundColor: 'whitesmoke',

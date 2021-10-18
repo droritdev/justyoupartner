@@ -3,6 +3,7 @@ import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageB
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import {Accordion, Block} from 'galio-framework';
+import Icon from 'react-native-vector-icons/Feather';
 
 //The questions and answers content
 const SECTIONS = [
@@ -44,10 +45,6 @@ const QuestionsAndAnswers = ({navigation}) => {
     return(
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
-                <ImageBackground
-                    source={require('../../../../images/q&a.jpg')}
-                    style={styles.coverImage} 
-                >
                     <TouchableOpacity
                             onPress={() => handleOnArrowPress()}
                         >
@@ -56,7 +53,6 @@ const QuestionsAndAnswers = ({navigation}) => {
                             style={styles.arrowImage}
                         />
                     </TouchableOpacity>
-                </ImageBackground>
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouTitle}>Just You Partner</Text>
                     <Text style={styles.qA}>Q & A</Text>
@@ -67,7 +63,7 @@ const QuestionsAndAnswers = ({navigation}) => {
                             dataArray={SECTIONS} 
                             opened={null} 
                             listStyle={{
-                                width: Dimensions.get('window').width * .95
+                                width: Dimensions.get('window').width * 0.95
                             }}
                             style={{
                                 width: Dimensions.get('window').width,
@@ -80,6 +76,8 @@ const QuestionsAndAnswers = ({navigation}) => {
                             contentStyle={{
                                 color: 'deepskyblue'
                             }}
+                            icon={<Icon name='arrow-down' size={16} />}
+                            expandedIcon={<Icon name='arrow-up' size={16} />}
                         />
                     </Block>
                 </View>
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     block: {
-        height: Dimensions.get('window').height * .335,
+        height: Dimensions.get('window').height,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: Dimensions.get('window').height * .022

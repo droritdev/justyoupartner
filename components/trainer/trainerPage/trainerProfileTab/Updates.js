@@ -34,10 +34,7 @@ const Updates = ({navigation}) => {
 
             <View style={styles.greyBorder}></View>
             
-            <Image
-                source={require('../../../../images/comingSoon.png')}
-                style={styles.comingSoonImage}
-            />
+            
 
             <Text style={styles.explenationText}> {'New updates are coming, stay posted!'} </Text>
         </SafeAreaView>

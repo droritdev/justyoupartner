@@ -411,7 +411,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           });
         }
 
-        navigation.navigate('PaymentsAndPolicyTrainer');
+        navigation.navigate('PhoneNumberVerificationTrainer');
       }
     }
 
@@ -1171,7 +1171,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       flex: 1,
       justifyContent: 'flex-end',
       marginTop: Dimensions.get('window').height * .066,
-      alignItems: 'center'
+      alignItems: 'center',
+      marginBottom: 30
     },
     nextButton: {
       width: Dimensions.get('window').width * .9,

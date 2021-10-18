@@ -1,16 +1,18 @@
 import React, {useRef, useContext, useState, useEffect} from 'react';
-import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
-import { ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
+import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 // import EventCalendar from 'react-native-events-calendar';
 import EventCalendar from '../../../globalComponents/calendar/EventCalendar';
 import Dialog from "react-native-dialog";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {CalendarContext} from '../../../../context/trainerContextes/CalendarContext';
 import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // calendar [Object of type Event]
 /*
@@ -50,8 +52,11 @@ const TrainerCalendar = ({navigation}) => {
     const [currentDisplayedDate, setCurrentDisplayedDate] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
 
-    var blockStartTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
-    var blockEndTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
+    const [startTimeModalVisible, setStartTimeModalVisible] = useState(false);
+    const [endTimeModalVisible, setEndTimeModalVisible] = useState(false);
+
+    let blockStartTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
+    let blockEndTime = new Date(currentDisplayedDate+'T02:00:00.00Z');
   
     //ref to show covid alert
     let dropDownAlertRef = useRef(null);
@@ -63,7 +68,7 @@ const TrainerCalendar = ({navigation}) => {
     
     const config = {
         withCredentials: true,
-        baseURL: 'http://justyou.iqdesk.info:8081/',
+        baseURL: 'http://10.0.2.2:3000/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -71,10 +76,9 @@ const TrainerCalendar = ({navigation}) => {
 
     //When window is focused. load all events.
     React.useEffect(() => {
+        getTrainerCalendar();
         setCurrentDisplayedDate(getCurrentDate());
-        
-        
-      }, [navigation]);
+      }, []);
 
     //Update the covid alert var to false (will not display coivd alert anymore)
     const covidAlertCancel = () => {
@@ -278,7 +282,7 @@ const TrainerCalendar = ({navigation}) => {
 
     //Show confirmation pop-up to block specific time ranges
     const handleBlockTime = () => {
-        setModalVisible(true);
+        Alert.alert('Choose start time to block', '', [{text: 'OK', onPress: () => setStartTimeModalVisible(true)}])
     }
 
 
@@ -576,24 +580,43 @@ const TrainerCalendar = ({navigation}) => {
 
     //Update current displayed date
     const handleOnDateChange = (date) => {
+        console.log('date in date change ', date)
         setCurrentDisplayedDate(date);
+        AsyncStorage.setItem('@currentdisplayeddate', JSON.stringify(date))
+            .then((res) => console.log('async res ', res))
+            .catch((err) => console.log('async err ', err))
     }
 
     
 
     //Save value from start time picker
     const onStartTimeChage = (event) => {
-        var selectedTime = new Date(event.nativeEvent.timestamp);
-        selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
-        blockStartTime = new Date(selectedTime.toISOString());
+        // var selectedTime = new Date(event.nativeEvent.timestamp);
+        // selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+        // blockStartTime = new Date(selectedTime.toISOString());
+        console.log('start time ', event)
+        var selectedTime = new Date(event)
+        console.log('selectedTime ', selectedTime)
+        blockStartTime = new Date(selectedTime.toISOString())
+        AsyncStorage.setItem('@blockstarttime', JSON.stringify(blockStartTime))
+            .then((res) => console.log('async res ', res))
+            .catch((err) => console.log('async err ', err))
+        console.log('blockStartTime ', blockStartTime)
+        setStartTimeModalVisible(false)
+        Alert.alert('Choose end time to block', '', [{text: 'OK', onPress: () => setEndTimeModalVisible(true)}])
     }
 
     
     //Save value from end time picker
     const onEndTimeChage = (event) => {
-        var selectedTime = new Date(event.nativeEvent.timestamp);
-        selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+        console.log('end time ', event)
+        var selectedTime = new Date(event)
+        console.log('selectedTime ', selectedTime)
         blockEndTime = new Date(selectedTime.toISOString());
+        console.log('blockStartTime ', blockStartTime)
+        console.log('blockEndTime ', blockEndTime)
+        setEndTimeModalVisible(false)
+        handleBlockTimeSubmit()
     
     }
 
@@ -601,43 +624,59 @@ const TrainerCalendar = ({navigation}) => {
     //Check if time range is occupied -> another event is in those hours
     //If all good -> add unavailable event in the selected hours range
     const handleBlockTimeSubmit = () => {
-        if (blockStartTime.getTime() >= blockEndTime.getTime()) {
-            //time range isn't valid
-            Alert.alert(
-                'Invalid times',
-                'Start time must be before end time',
-                [
-                    {text: 'Okay'},
-                  ],
-                  { cancelable: false }
-                )
-        } else {
-            //time range is valid
-            var fullDate = currentDisplayedDate;
-            var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
-
-            var startTime = blockStartTime.toISOString().slice(11, 19);
-            var endTime = blockEndTime.toISOString().slice(11, 19);
-
-            var addAbleEvent =  {start: fullDate+' '+ startTime, end: fullDate+' '+ endTime, title: 'UNAVAILABLE', color: 'lightgrey'};
-            if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
-                //hours are empty of events
-                var events = [...allEvents];
-                events.push(addAbleEvent);
-                updateTrainerUnavailable(events);
-                setModalVisible(!modalVisible);
-            } else {
-                //the hours range collide with an event
-                Alert.alert(
-                    'Invalid times',
-                    'The selected time is occupied',
-                    [
-                        {text: 'Okay'},
-                      ],
-                      { cancelable: false }
-                    )
-            }
-        }
+        console.log('check dates ', blockStartTime, blockEndTime)
+        AsyncStorage.getItem('@blockstarttime')
+            .then(result => {
+                console.log('parse ', JSON.parse(result))
+                blockStartTime = JSON.parse(result)
+                console.log('check dates after async ', blockStartTime, blockEndTime)
+                blockStartTime = new Date(blockStartTime)
+                if (blockStartTime.getTime() >= blockEndTime.getTime()) {
+                    //time range isn't valid
+                    Alert.alert(
+                        'Invalid times',
+                        'Start time must be before end time',
+                        [
+                            {text: 'Okay'},
+                          ],
+                          { cancelable: false }
+                        )
+                } else {
+                    //time range is valid
+                    // AsyncStorage.getItem('@currentdisplayeddate')
+                    //     .then(result => {
+                    //         console.log('parse ', JSON.parse(result))
+                    //         var fullDate = JSON.parse(result)
+                    //         console.log('check fulldate after async ', fullDate)
+                            var fullDate = currentDisplayedDate;
+                            console.log('full date ', currentDisplayedDate)
+                            var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
+                            
+                            var startTime = blockStartTime.toISOString().slice(11, 19);
+                            var endTime = blockEndTime.toISOString().slice(11, 19);
+                
+                            var addAbleEvent =  {start: fullDate+' '+ startTime, end: fullDate+' '+ endTime, title: 'UNAVAILABLE', color: 'lightgrey'};
+                            if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
+                                //hours are empty of events
+                                var events = [...allEvents];
+                                events.push(addAbleEvent);
+                                console.log('events ', events)
+                                updateTrainerUnavailable(events);
+                                setModalVisible(!modalVisible);
+                            } else {
+                                //the hours range collide with an event
+                                Alert.alert(
+                                    'Invalid times',
+                                    'The selected time is occupied',
+                                    [{text: 'Okay'},],
+                                    {cancelable: false}
+                                    )
+                            }
+                        // })
+                        // .catch(err => console.log(err))
+                }
+            })
+            .catch(err => console.log(err))
     }
 
 
@@ -666,7 +705,7 @@ const TrainerCalendar = ({navigation}) => {
             </View>
 
 
-            <Modal
+            {/* <Modal
                 
                 animationType="slide"
                 transparent={true}
@@ -680,6 +719,7 @@ const TrainerCalendar = ({navigation}) => {
                         <Text style={styles.modalText}>Block time range</Text>
 
                         <Text style={styles.subtitleText}>Start time</Text>
+                        
                         <DateTimePicker
                             style={styles.pickerStyle}
                             testID="dateTimePicker"
@@ -726,10 +766,21 @@ const TrainerCalendar = ({navigation}) => {
                     </View>
                 </View>
 
-            </Modal>
+            </Modal> */}
 
+                        <DateTimePickerModal
+                            isVisible={startTimeModalVisible}
+                            mode="time"
+                            onConfirm={(time) => onStartTimeChage(time)}
+                            onCancel={() => setStartTimeModalVisible(false)}
+                        />
 
-
+                        <DateTimePickerModal
+                            isVisible={endTimeModalVisible}
+                            mode="time"
+                            onConfirm={(time) => onEndTimeChage(time)}
+                            onCancel={() => setEndTimeModalVisible(false)}
+                        />
             <Modal
                 
                 animationType="slide"

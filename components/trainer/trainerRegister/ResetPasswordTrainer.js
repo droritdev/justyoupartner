@@ -156,7 +156,8 @@ const ResetPasswordTrainer = ({navigation}) => {
     nextButtonContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginBottom: 50
     },
     nextButton: {
       width: Dimensions.get('window').width * .9,
