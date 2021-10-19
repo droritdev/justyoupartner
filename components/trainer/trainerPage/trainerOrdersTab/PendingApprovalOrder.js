@@ -291,7 +291,7 @@ const PendingApprovalOrder = ({navigation}) => {
         axios  
         .post('/orders/update-status', {
             _id: orderObject._id, 
-            status: 'decline'
+            status: 'declined'
         },
         config
         )
