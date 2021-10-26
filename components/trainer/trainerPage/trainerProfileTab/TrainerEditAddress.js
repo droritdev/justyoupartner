@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
         color: 'black',
         backgroundColor: 'white',
         opacity: 0.8,
-        height: Dimensions.get('window').height * .05,
+        height: Dimensions.get('window').height * .07,
         zIndex: 1,
         shadowColor: "black",
         shadowOffset: {

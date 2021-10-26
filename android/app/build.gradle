@@ -136,6 +136,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    android {
+        dexOptions {
+        javaMaxHeapSize "4g"
+        }
+    }
+
     defaultConfig {
         applicationId "com.justyoutrainer"
         minSdkVersion rootProject.ext.minSdkVersion

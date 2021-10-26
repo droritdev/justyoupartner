@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect, useCallback, useContext} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button, TouchableOpacity} from 'react-native';
 import axios from 'axios';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons';
@@ -117,7 +117,7 @@ const TrainerEditProfile = ({navigation}) => {
 
     const config = {
         withCredentials: true,
-        baseURL: 'http://10.0.2.2:3000/',
+        baseURL: 'https://trainer.iqdesk.info:443/',
         headers: {
           "Content-Type": "application/json",
         },
@@ -652,22 +652,25 @@ const TrainerEditProfile = ({navigation}) => {
           <View style={styles.trainingSiteContainer}>
             <Text style={styles.trainingSiteText}>Training Site</Text>
             <TouchableOpacity onPress = {() => openAddressWindow(1)}>
-              <TextInput
-                style={styles.trainingSiteInput}
-                title='address'
-                placeholder='Primary Address'
-                pointerEvents="none"
-                value = {trainingSite1 === "" ? "" : trainingSite1}
-              />    
+              <View style={{width: '100%'}}>
+                <Text style={styles.trainingSiteInput}>
+                  {trainingSite1 ? trainingSite1 : 'Primary Address'}
+                </Text>    
+              </View>
             </TouchableOpacity>
             <TouchableOpacity onPress = {() => openAddressWindow(2)}>
-              <TextInput
+              <View style={{width: '100%'}}>
+                <Text style={styles.trainingSiteInput}>
+                  {trainingSite2 ? trainingSite2 : 'Secondary Address'}
+                </Text>    
+              </View>
+              {/* <TextInput
                 style={styles.trainingSiteInput}
                 title='address'
                 placeholder='Secondary Address'
                 pointerEvents="none"
                 value = {trainingSite2 === "" ? "" : trainingSite2}
-              /> 
+              />  */}
             </TouchableOpacity>
             {isTrainingSiteError ? 
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
@@ -1062,8 +1065,10 @@ const TrainerEditProfile = ({navigation}) => {
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
-      fontSize: Dimensions.get('window').height * .017,
-      textAlign: 'center'
+      fontSize: Dimensions.get('window').height * .02,
+      textAlign: 'center',
+      justifyContent: 'center',
+      paddingTop: 10
     },
     trainingSiteErrorText: {
       marginTop: Dimensions.get('window').height * .011,
@@ -1160,12 +1165,13 @@ const TrainerEditProfile = ({navigation}) => {
     },
     atTrainerSitePrice: {
       flexDirection: 'row',
+      alignItems: 'center'
     },
     atTrainingSiteInput: {
       borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
-      height: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .06,
       textAlign: 'center',
       fontSize: Dimensions.get('window').height * .022
     },
@@ -1181,12 +1187,13 @@ const TrainerEditProfile = ({navigation}) => {
     },
     outDoorPrice: {
       flexDirection: 'row',
+      alignItems: 'center'
     },
     outDoorInput: {
       borderWidth: 2,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
-      height: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .06,
       textAlign: 'center',
       fontSize: Dimensions.get('window').height * .022
     },

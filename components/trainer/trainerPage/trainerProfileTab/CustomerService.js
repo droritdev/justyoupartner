@@ -13,7 +13,7 @@ const CustomerService = ({navigation}) => {
     //server config
     const config = {
         withCredentials: true,
-        baseURL: 'http://10.0.2.2:3000/',
+        baseURL: 'https://trainer.iqdesk.info:443/',
         headers: {
           "Content-Type": "application/json",
         },
