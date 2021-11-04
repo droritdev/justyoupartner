@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {StyleSheet, View, Text, Image, TextInput, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, Alert} from 'react-native';
 import axios from 'axios';
 
 import {CountryContext} from '../../../context/trainerContextes/CountryContext';
@@ -242,7 +242,20 @@ const DonePopUpTrainer = ({navigation}) => {
             setIsLoading(false);
             setTimeout(function(){navigation.navigate('WelcomeTrainer')}, 2000);
         })
-        .catch((err) => alert(err));
+        .catch((err) => {
+            setIsLoading(false);
+            console.log('registering trainer in mongodb failed ', err);
+            var user = auth().currentUser;
+            user.delete()
+            .then(() => {
+                console.log('firebase user deleted')
+                Alert.alert('Trainer registration failed')
+            })
+            .catch((err) => {
+                console.log('error firebase user not deleted ', err)
+                Alert.alert('Trainer registration failed  - email cannot be reused')
+            });
+        });
     }
 
 
