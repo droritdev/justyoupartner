@@ -180,8 +180,8 @@ const StatsAndIncomes = ({navigation}) => {
                     //Order full date
                     console.log('start time ', singleOrder.trainingDate.startTime)
                     console.log('date format ', getDateInFormat(singleOrder.trainingDate.startTime))
-                    //const orderDate = new Date(getDateInFormat(singleOrder.trainingDate.startTime));
-                    const orderDate = new Date(singleOrder.trainingDate.startTime);
+                    const orderDate = new Date(getDateInFormat(singleOrder.trainingDate.startTime));
+                    //const orderDate = new Date(singleOrder.trainingDate.startTime);
                     console.log('orderDate ', orderDate)
                     orderDate.setHours(orderDate.getHours()+orderDate.getTimezoneOffset()/60);
                     //Order month
@@ -289,7 +289,7 @@ const StatsAndIncomes = ({navigation}) => {
 
     //Convert  2021-01-03 07:00:00 to 2021-01-03T07:00:00.000Z
     const getDateInFormat = (dateString) => {
-        return ((dateString.replace(/ /g, 'T'))+ '.000Z');
+        return ((dateString.replace(/ /g, 'T'))+ ':00');
     }
 
 
@@ -344,12 +344,13 @@ const StatsAndIncomes = ({navigation}) => {
         if (totalCompletedOrders !== []) {
             for(let i = 0; i < totalCompletedOrders.length; i++) {
                 var orderObject = totalCompletedOrders[i];
+                console.log('start time ', orderObject.trainingDate.startTime)
                 repeats.push(
                     <View key={'row'+i} style={i % 2 === 0? styles.incomeRowContainer : styles.incomeRow2Container}>
                         <View style={styles.incomeRow}>
                             <Text style={styles.rowInformation}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
                             <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>
-                            <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(16, 21)}</Text>
+                            <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(11)}</Text>
                             <Text style={styles.rowInformation}>{orderObject.type.charAt(0).toLowerCase() === 's'?"Single":"Couple"}</Text>
                             <Text style={styles.rowInformation}>{orderObject.cost+"$"}</Text>
 

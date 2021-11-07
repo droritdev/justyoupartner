@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions} from 'react-native';
+import {Text, View, SafeAreaView, Image, StyleSheet, Dimensions, Alert} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import {OrderContext} from '../../../../context/orderContexts/OrderContext';
 import FastImage from 'react-native-fast-image';
@@ -65,7 +65,23 @@ const ApprovedOrder = ({navigation}) => {
         navigation.navigate('TrainerOrdersPage');
     }
 
-
+    const handleCompleteButton = () => {
+        axios  
+        .post('/orders/update-status', {
+            _id: orderObject._id,
+            status: "completed"
+        },
+        config
+        )
+        .then((res) => {
+            if (res.data.type === "success") {
+                Alert.alert('Training has been completed')
+            }
+        })
+        .catch((err) =>  {
+            console.log('error in handleCompleteButton ', err)
+        });
+    }
 
     return(
         <SafeAreaView style={styles.safeArea}>
@@ -165,6 +181,13 @@ const ApprovedOrder = ({navigation}) => {
                         <Text style={styles.approveButtonText}>Approved</Text>
                 </View>
 
+                <TouchableOpacity
+                        onPress={handleCompleteButton}
+                        style={styles.completeButton}
+                >
+                        <Text style={styles.approveButtonText}>Training Completed</Text>
+                </TouchableOpacity>
+
             </ScrollView>
         </SafeAreaView>
     );
@@ -263,6 +286,16 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * .85,
         alignSelf: 'center',
         backgroundColor: 'lightgrey',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    completeButton: {
+        marginTop: 10,
+        height: Dimensions.get('window').height * .055,
+        width: Dimensions.get('window').width * .85,
+        alignSelf: 'center',
+        backgroundColor: 'deepskyblue',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10

@@ -45,6 +45,11 @@ const PendingApprovalOrder = ({navigation}) => {
         },
     };
 
+    const configPayme = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+    };
 
     //Retrive the client information by ID
     const getClientInfo = async () => {
@@ -60,8 +65,58 @@ const PendingApprovalOrder = ({navigation}) => {
          .catch((err) => {});
      }
 
-     
+    const paymeSale = (paymeToken) => {
+        console.log('paymetoken ', paymeToken)
+        axios
+          .post(
+              'https://preprod.paymeservice.com/api/generate-sale',
+              {
+                  "seller_payme_id": "MPL16286-62772S4F-0CPOKDFP-GIWMKI6U",
+                  "sale_price": orderObject.cost * 100,
+                  "currency": "USD",
+                  "product_name": "Training",
+                  "transaction_id": clientInfo.email,
+                  "installments": 1,
+                  "buyer_key": paymeToken,
+                  "language": "en"
+              },
+              configPayme
+          )
+          .then(response => {
+              console.log('payme_status ', response.data.payme_status)
+              if(response.data.payme_status === 'success'){
+                console.log('payme success')
+                approveWorkout()
+              } else {
+                console.log('payme error')
+                Alert.alert('Payment failed')
+              }
+          })
+          .catch(err => {
+              console.log('payme call error catch ', err)
+          })
+    }
 
+    const getTokenForPayment = () => {
+        console.log('email ', clientInfo.email)
+        axios
+            .get('https://justyou.iqdesk.info:443/getPaymeToken/' + clientInfo.email.toLowerCase(),
+                config
+            )
+            .then((doc) => {
+                if (doc.data.length !== 0) {
+                    console.log('payme token in getpaymetoken ', doc.data[0].paymeToken)
+                    const paymeToken = doc.data[0].paymeToken
+                    paymeSale(paymeToken)
+                } else {
+                    Alert.alert('Cannot complete payment')
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                Alert.alert('Cannot complete payment')
+            })
+    }
 
     //Show bottom navgation UI
     const handleArrowButton = () => {
@@ -193,7 +248,7 @@ const PendingApprovalOrder = ({navigation}) => {
 
         //Check if the event can be added to the current time (is time occupied)
         if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
-            approveWorkout();
+            getTokenForPayment();
         } else {
             Alert.alert(
                 'Occupied time',
