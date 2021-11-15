@@ -8,6 +8,8 @@
 	<string>JustYou Partner</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -21,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,24 +39,34 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs Media access</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs Photo library access to add profile picture</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs Photo library access to add profile picture</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Calendars access to create trainings</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Camera access to add profile picture</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs Contacts access to create trainings</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Location access to create trainings</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Location access to create trainings</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Location access to create trainings</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Microphone access to create trainings</string>
+	<key>NSMotionUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs Photo library access to add profile picture</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Photo library access to add profile picture</string>
 	<key>NSRemindersUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Remainders access to create trainings</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) needs Tracking access to create trainings</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -72,6 +84,11 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
