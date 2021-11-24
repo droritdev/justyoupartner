@@ -29,12 +29,14 @@ const styles = StyleSheet.create({
     textContainer: {
         justifyContent: 'space-between',
         height: Dimensions.get('window').height * .15,
-        alignItems: 'center'
+        alignItems: 'center',
+        textAlign: 'center'
     },
     justYouText: {
         fontWeight: 'bold',
         color: 'deepskyblue',
-        fontSize: 80
+        fontSize: 80,
+        alignSelf: 'center'
     },
     welcomeUserText: {
         marginTop: 20,

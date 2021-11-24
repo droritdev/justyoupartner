@@ -29,7 +29,10 @@ const TrainerSettings = ({navigation}) => {
         setDialogVisible(false);
         auth()
         .signOut()
-        .then(() => navigation.navigate('GetStarted'));
+        .then(() => {
+            navigation.goBack()
+            navigation.navigate('GetStarted')
+        })
     };
 
     const handleNoDialog = () => {

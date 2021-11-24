@@ -300,11 +300,12 @@ const styles = StyleSheet.create({
     headerContainer: {
         borderBottomColor: 'lightgrey',
         borderBottomWidth: 2,
-        height: Dimensions.get('window').height * .05,
+        height: Dimensions.get('window').height * .055,
         justifyContent: 'center'
     },
     headerRow: {
         flexDirection: 'row',
+        alignItems: 'center',
         marginLeft: Dimensions.get('window').width * .0483
     },
     emailHeader: {

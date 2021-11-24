@@ -449,7 +449,7 @@ const TrainerProfilePage = ({navigation}) => {
                         messageNumOfLines={1}
                 />
             </View> */}
-            <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 60}}>
+            <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 60, justifyContent: 'space-between'}}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>
@@ -621,7 +621,8 @@ const TrainerProfilePage = ({navigation}) => {
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        justifyContent: 'space-between'
     },
     container: {
         backgroundColor: 'white',
@@ -938,8 +939,8 @@ const styles = StyleSheet.create({
     settingsButton: {
     },
     deadAreaBottom: {
-        backgroundColor: 'whitesmoke',
-        height: Dimensions.get('window').height * .033
+        backgroundColor: 'white',
+        height: 20
     },
     customerServicePanel: {
         flex: 1,

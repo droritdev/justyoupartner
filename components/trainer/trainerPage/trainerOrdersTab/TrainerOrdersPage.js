@@ -255,7 +255,7 @@ const TrainerOrdersPage = ({navigation}) => {
 
     const getApprovedOrdersPattern = () => {
         let repeats = [];
-        if (approvedOrders !== []) {
+        if (approvedOrders.length !== 0) {
             for(let i = 0; i < approvedOrders.length; i++) {
                 //Get the client object that contatins all of his information
                 var clientInfo = getCurrentClient(approvedOrders[i].client.id, approvedClientsInfo);
