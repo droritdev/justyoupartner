@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Text, View, Image, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, StyleSheet, BackHandler} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import TrainerProfilePageStack from './trainerProfileTab/TrainerProfilePageStack';
@@ -11,12 +11,19 @@ const Tab = createBottomTabNavigator();
 
 //The tab navigation container to handle the navigation in the trainer's area
 const TrainerContainer = () => {
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', () => true)
+        return () =>
+          BackHandler.removeEventListener('hardwareBackPress', () => true)
+    }, [])
+
     return(
         <Tab.Navigator
             tabBarOptions={{
                 style: {
                     height: 60,
-                    borderTopWidth: 1.5
+                    borderTopWidth: 1,
+                    paddingTop: 5
                 },
                 showLabel: false,
             }}
@@ -78,7 +85,7 @@ const TrainerContainer = () => {
                 options={{
                     tabBarIcon: ({ focused,tintColor }) => (
                         !focused ? <Image
-                            source={require('../../../images/calendarIcon.png')}
+                            source={require('../../../images/calendarIcon.jpg')}
                             style={[styles.statsIcon, {tintColor: tintColor}]}
                           />
                           :

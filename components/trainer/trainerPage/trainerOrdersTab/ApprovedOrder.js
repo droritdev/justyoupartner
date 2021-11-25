@@ -13,6 +13,8 @@ const ApprovedOrder = ({navigation}) => {
     const {orderObject} = useContext(OrderContext);
     const [clientInfo, setClientInfo] = useState([]);
 
+    const [isDisabled, setIsDisable] = useState(false)
+
     //Format the categories list to lower case with first letter upper case
     const textDisplayFormat = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -76,6 +78,7 @@ const ApprovedOrder = ({navigation}) => {
         .then((res) => {
             if (res.data.type === "success") {
                 Alert.alert('Training has been completed')
+                setIsDisable(true)
             }
         })
         .catch((err) =>  {
@@ -184,6 +187,7 @@ const ApprovedOrder = ({navigation}) => {
                 <TouchableOpacity
                         onPress={handleCompleteButton}
                         style={styles.completeButton}
+                        disabled={isDisabled}
                 >
                         <Text style={styles.approveButtonText}>Training Completed</Text>
                 </TouchableOpacity>

@@ -192,8 +192,10 @@ const styles = StyleSheet.create({
     },
     submitButtonContainer: {
         flex: 1,
-        marginTop: Dimensions.get('window').height * .3,
-        alignItems: 'center'
+        justifyContent: 'flex-end',
+        marginTop: Dimensions.get('window').height * .066,
+        alignItems: 'center',
+        marginBottom: 70
       },
     submitButton: {
         width: Dimensions.get('window').width * .9,

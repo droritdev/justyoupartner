@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {StyleSheet, View, Text, TextInput, Dimensions, SafeAreaView, TouchableWithoutFeedback, Keyboard} from 'react-native';
 
 import {CertificationsContext} from '../../../../context/trainerContextes/CertificationsContext';
 
@@ -88,6 +87,7 @@ const TrainerCertificationsEditProfile = ({navigation}) => {
     }
 
     return(
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
             <ArrowBackButton
@@ -104,6 +104,7 @@ const TrainerCertificationsEditProfile = ({navigation}) => {
                         style={styles.textInput}
                         onChangeText={(value) => handleOnInputChange(value)}
                         focusable={true}
+                        autoFocus={true}
                     />
                 </View>
             </View>
@@ -118,6 +119,7 @@ const TrainerCertificationsEditProfile = ({navigation}) => {
               />
           </View>
         </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 

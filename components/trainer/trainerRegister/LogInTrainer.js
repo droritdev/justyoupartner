@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {StyleSheet, View, Text, Dimensions, Image, SafeAreaView} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, SafeAreaView, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 
@@ -132,6 +132,7 @@ const LogInTrainer = ({navigation}) => {
     }
 
     return(
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
             <ArrowBackButton
                 onPress={handleArrowButton}
@@ -183,6 +184,7 @@ const LogInTrainer = ({navigation}) => {
                 </View>
             </View>
         </SafeAreaView>
+        </TouchableWithoutFeedback>
     )
 }
 

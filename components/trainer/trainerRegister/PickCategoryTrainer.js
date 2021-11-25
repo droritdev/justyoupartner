@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginTop: Dimensions.get('window').height * .066,
         alignItems: 'center',
-        marginBottom: 50
+        marginBottom: 70
       },
     submitButton: {
         width: Dimensions.get('window').width * .9,

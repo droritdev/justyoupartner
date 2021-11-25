@@ -412,7 +412,7 @@ const TrainerEditMedia = ({navigation}) => {
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
                 >
                 <Image
-                    source={require('../../../../images/plusIcon.png')}
+                    source={require('../../../../images/cameraIcon.png')}
                     style={styles.plusPicture}
                     key={pictures.length}
                 />
@@ -472,7 +472,7 @@ const TrainerEditMedia = ({navigation}) => {
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
                 >
                 <Image
-                    source={require('../../../../images/plusIcon.png')}
+                    source={require('../../../../images/videoIcon.png')}
                     style={styles.plusPicture}
                     key={pictures.length}
                 />

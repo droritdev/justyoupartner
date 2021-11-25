@@ -371,10 +371,6 @@ const TrainerOrdersPage = ({navigation}) => {
                             <View style={styles.pendingOrderView}>
                                 {pendingOrders.length === 0 ? 
                                 <View> 
-                                        <Image
-                                            source={require('../../../../images/noOrders.png')}
-                                            style={styles.noOrdersImage}
-                                        />
                                     <Text style={styles.noOrdersTitle}>{"NO PENDING ORDERS"}</Text>
                                     <Text style={styles.noOrdersMessage}>{"Looks like you haven't received orders yet."}</Text>
                                 </View>
@@ -394,11 +390,7 @@ const TrainerOrdersPage = ({navigation}) => {
                         <View style={styles.pendingContainer}>
                             <View style={styles.pendingOrderView}>
                                 {approvedOrders.length === 0 ? 
-                                <View> 
-                                    <Image
-                                        source={require('../../../../images/noOrders.png')}
-                                        style={styles.noOrdersImage}
-                                    />
+                                <View>
                                     <Text style={styles.noOrdersTitle}>{"NO APPROVED ORDERS"}</Text>
                                     <Text style={styles.noOrdersMessage}>{"Looks like you haven't approved orders yet."}</Text>
                                 </View>

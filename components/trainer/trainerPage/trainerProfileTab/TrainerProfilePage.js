@@ -485,12 +485,12 @@ const TrainerProfilePage = ({navigation}) => {
                     </Text>
 
                     <Text style={styles.trainingSiteTitle}>
-                        Primary Address: {<Text style={styles.certificationsText}>{trainingSite1}</Text>}
+                        Training Sites:
                     </Text>
+                    <Text style={styles.certificationsText}>{trainingSite1}</Text>
                     {trainingSite2===undefined? null : 
-                        <Text style={styles.trainingSiteTitle}>
-                        Secondary Address: {<Text style={styles.certificationsText}>{trainingSite2}</Text>}
-                    </Text>}
+                        <Text style={styles.certificationsText}>{trainingSite2}</Text>
+                    }
                     <Text style={styles.aboutMeTitle}>
                         About Me: {<Text style={styles.aboutMeText}>
                             {aboutMe.length > 80 ? aboutMe.slice(0, 80)+"..."
@@ -498,6 +498,7 @@ const TrainerProfilePage = ({navigation}) => {
                     </Text>
                 </View>
                 <View style={styles.pricingContainer}>
+                    <Text style={styles.categoriesTitle}>Training Price</Text>
                     <View style={ styles.pricingLabels}>
                         <TouchableOpacity 
                             style={isSingle ? styles.singlePricing : styles.singlePricingLabeld}
@@ -540,76 +541,61 @@ const TrainerProfilePage = ({navigation}) => {
                 </View>
                 
                 <View style={styles.moreContainer}>
+                    <View style={{marginBottom: 10}}>
                     <Text style={styles.moreTitle}>More</Text>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => handleOnEditProfilePressed()}
+                    >
                     <View style={styles.rowContainer}>
                         <View style={styles.editProfileRow}>
-                            <TouchableOpacity
-                                onPress={() => handleOnEditProfilePressed()}
-                            >
                                 <Text style={styles.editProfileTitle}>Edit Profile</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.arrowButton}
-                                onPress={() => handleOnEditProfilePressed()}
-                            >
                                 <Image
                                     source={require('../../../../images/arrowButton.png')}
                                     style={styles.arrowImage}
                                 />
-                            </TouchableOpacity>
                         </View>
                     </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleOnReviewsPressed() }
+                    >
                     <View style={styles.rowContainer}>
                         <View style={styles.reviewsRow}>
-                            <TouchableOpacity
-                            onPress={() => handleOnReviewsPressed() }
-                            >
                                 <Text style={styles.reviewsTitle}>Reviews</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                            style={styles.arrowButton} 
-                            onPress={() => handleOnReviewsPressed() }
-                            >
                                 <Image
                                     source={require('../../../../images/arrowButton.png')}
                                     style={styles.arrowImage}
                                 />
-                            </TouchableOpacity>
                         </View>
                     </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleOnCustomerServicePressed()}    
+                    >
                     <View style={styles.rowContainer}>
                         <View style={styles.customerServiceRow}>
-                            <TouchableOpacity
-                                onPress={() => handleOnCustomerServicePressed()}    
-                            >
                                 <Text style={styles.customerServicesTitle}>Customer Service</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.arrowButton}>
                                 <Image
                                     source={require('../../../../images/arrowButton.png')}
                                     style={styles.arrowImage}
                                 />
-                            </TouchableOpacity>
                         </View>
                     </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleOnSettingsPress()}
+                    >
                     <View style={styles.rowContainer}>
                         <View style={styles.settingsRow}>
-                            <TouchableOpacity
-                                onPress={() => handleOnSettingsPress()}
-                            >
                                 <Text style={styles.settingsTitle}>Settings</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.arrowButton}
-                                onPress={() => handleOnSettingsPress()}
-                            >
                                 <Image
                                     source={require('../../../../images/arrowButton.png')}
                                     style={styles.arrowImage}
                                 />
-                            </TouchableOpacity>
                         </View>
                     </View>
+                    </TouchableOpacity>
                     <View
                         style={styles.deadAreaBottom}
                     />
@@ -651,9 +637,7 @@ const styles = StyleSheet.create({
     profileImage: {
         height: Dimensions.get('window').width * .265,
         width: Dimensions.get('window').width * .265,
-        borderWidth: 2,
-        borderRadius: 20,
-        borderColor: 'grey'
+        borderRadius: 20
     },
     nameRatingAgeContainer: {
         justifyContent: 'center',
@@ -707,7 +691,8 @@ const styles = StyleSheet.create({
     },
     certificationsText: {
         fontSize: Dimensions.get('window').height * .02,
-        fontWeight: '400'
+        fontWeight: '400',
+        alignSelf: 'flex-start'
     },
     trainingSiteTitle: {
         fontWeight: 'bold',
@@ -733,7 +718,8 @@ const styles = StyleSheet.create({
         marginLeft: Dimensions.get('window').width * .0483
     },
     pricingLabels: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginTop: 10
     },
     singlePricing: {
         width: Dimensions.get('window').width * .25,
@@ -883,10 +869,10 @@ const styles = StyleSheet.create({
         marginLeft: Dimensions.get('window').width * .0483,
     },
     rowContainer: {
-        height: Dimensions.get('window').height * .044,
+        height: Dimensions.get('window').height * .05,
         justifyContent: 'center',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
     },
     arrowImage: {
         height: Dimensions.get('window').height * .018,
@@ -940,7 +926,7 @@ const styles = StyleSheet.create({
     },
     deadAreaBottom: {
         backgroundColor: 'white',
-        height: 20
+        height: 50
     },
     customerServicePanel: {
         flex: 1,
@@ -1042,7 +1028,8 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: 100,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingTop: 20
       },
       covidOverlayText: {
         color: 'white',

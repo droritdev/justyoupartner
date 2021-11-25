@@ -5,6 +5,8 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import {Accordion, Block} from 'galio-framework';
 import Icon from 'react-native-vector-icons/Feather';
 
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+
 //The questions and answers content
 const SECTIONS = [
     {
@@ -45,14 +47,9 @@ const QuestionsAndAnswers = ({navigation}) => {
     return(
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
-                    <TouchableOpacity
-                            onPress={() => handleOnArrowPress()}
-                        >
-                        <Image
-                            source={require('../../../../images/blackArrow.png')}
-                            style={styles.arrowImage}
-                        />
-                    </TouchableOpacity>
+                    <ArrowBackButton
+                        onPress={handleOnArrowPress}
+                    />
                 <View style={styles.headerContainer}>
                     <Text style={styles.justYouTitle}>Just You Partner</Text>
                     <Text style={styles.qA}>Q & A</Text>
@@ -71,7 +68,8 @@ const QuestionsAndAnswers = ({navigation}) => {
                                 borderRadius: 0
                             }}
                             headerStyle={{
-                                marginTop: 5
+                                marginTop: 5,
+                                height: 50
                             }}
                             contentStyle={{
                                 color: 'deepskyblue'
@@ -95,6 +93,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         flexDirection: 'column',
         height: Dimensions.get('window').height,
+        paddingTop: 20
     },
     coverImage: {
         height: Dimensions.get('window').height * .4,

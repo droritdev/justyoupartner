@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, View, Text, TextInput, Dimensions, SafeAreaView, TouchableWithoutFeedback, Keyboard} from 'react-native';
 
 import {AboutMeContext} from '../../../../context/trainerContextes/AboutMeContext';
 
@@ -88,6 +87,7 @@ const TrainerAboutMeEditProfile = ({navigation}) => {
     }
 
     return(
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <ArrowBackButton
@@ -104,6 +104,7 @@ const TrainerAboutMeEditProfile = ({navigation}) => {
                         style={styles.textInput}
                         onChangeText={(value) => handleOnInputChange(value)}
                         focusable={true}
+                        autoFocus={true}
                     />
                 </View>
             </View>
@@ -119,6 +120,7 @@ const TrainerAboutMeEditProfile = ({navigation}) => {
               />
           </View>
         </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 

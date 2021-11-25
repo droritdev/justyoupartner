@@ -1,6 +1,6 @@
 import React, {useRef, useContext, useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image, Dimensions} from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import Dialog from "react-native-dialog";
 import {MediaContext} from '../../../context/trainerContextes/MediaContext';
@@ -11,7 +11,7 @@ import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 
 //Here the traniner add photos and videos to his profile
-const AddPhotosTrainer = ({navigation}) => {
+const AddPhotosTrainer = ({route, navigation}) => {
     const {profileImage, dispatchProfileImage} = useContext(MediaContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
@@ -46,7 +46,21 @@ const AddPhotosTrainer = ({navigation}) => {
     }
 
     const handleSubmit = () => {
-        if (pictures[0] === undefined) {
+        if (route.params) {
+            dispatchProfileImage({
+                type: 'SET_PROFILE_IMAGE',
+                profileImage: route.params.photoUri
+              });
+            dispatchMediaPictures({
+                type: 'SET_MEDIA_PICTURES',
+                mediaPictures: [...pictures, route.params.photoUri]
+            });
+            dispatchMediaVideos({
+                type: 'SET_MEDIA_VIDEOS',
+                mediaVideos: videos
+            });
+            navigation.navigate('ProfileDetailsPage2Trainer');
+        } else if (pictures[0] === undefined) {
             scrollTo();
             setIsError(true);
             setErrorMessage('Please choose a profile picture');
@@ -177,6 +191,23 @@ const AddPhotosTrainer = ({navigation}) => {
     //Sets the view to rows and cols for the images
     const getImagePattern = () => {
         let repeats = [];
+        if(route.params){
+            console.log('route.params.photoUri ', route.params.photoUri)
+            repeats.push(
+                <View key={"cameraImage"} style={styles.rowPicturesContainer}>
+                    <TouchableOpacity
+                        onPress={() => {}}
+                        style={styles.shadowContainer}
+                        >
+                        <Image
+                            source={{uri: route.params.photoUri}}
+                            style={isPencilPressed ? styles.deletePicture : styles.picture}
+                            key={'camerImage'}
+                        />
+                    </TouchableOpacity>
+                </View>
+            )
+        }
         for(let i = 0; i < pictures.length; i++) {
             repeats.push(
                 <View key={"image"+i} style={styles.rowPicturesContainer}>
@@ -199,7 +230,7 @@ const AddPhotosTrainer = ({navigation}) => {
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
                 >
                 <Image
-                    source={require('../../../images/plusIcon.png')}
+                    source={require('../../../images/cameraIcon.png')}
                     style={styles.plusPicture}
                     key={'addImage'}
                 />
@@ -238,7 +269,7 @@ const AddPhotosTrainer = ({navigation}) => {
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
                 >
                 <Image
-                    source={require('../../../images/plusIcon.png')}
+                    source={require('../../../images/videoIcon.png')}
                     style={styles.plusPicture}
                     key={'addVideo'}
                 />
@@ -295,7 +326,16 @@ const AddPhotosTrainer = ({navigation}) => {
                     pagingEnabled={true}
                     >
                     {getVideoPattern()}
-                </ScrollView>            
+                </ScrollView>
+
+            <View>
+                <TouchableOpacity
+                    style={{backgroundColor: 'deepskyblue', borderRadius: 10, padding: 10, alignSelf: 'center'}}
+                    onPress={() => navigation.navigate('Camera')}
+                >
+                    <Text style={{color: 'white', fontSize: 20}}>Take a photo</Text>
+                </TouchableOpacity>
+            </View>    
 
             <View style={styles.submitButtonContainer}>
             {isError ?

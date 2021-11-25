@@ -522,7 +522,7 @@ const StatsAndIncomes = ({navigation}) => {
                             <Text style={styles.underGraphRowInformation} >{'Income : '+totalIncome +'$'}</Text>
                         </View>
                         <View style={styles.infoRow}>
-                            <Text style={styles.underGraphRowInformation} >{'Average order price : '+((totalIncome === 0 && totalCompletedOrders.length === 0) ? 0 : totalIncome/totalCompletedOrders.length) +'$'}</Text>
+                            <Text style={styles.underGraphRowInformation} >{'Average order price : '+((totalIncome === 0 && totalCompletedOrders.length === 0) ? 0 : (totalIncome/totalCompletedOrders.length).toFixed(2)) +'$'}</Text>
                         </View> 
                     </View>
                     :

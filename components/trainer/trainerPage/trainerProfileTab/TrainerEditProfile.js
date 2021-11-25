@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect, useCallback, useContext} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -676,6 +676,7 @@ const TrainerEditProfile = ({navigation}) => {
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
             : null}                                                          
           </View>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View style={styles.priceSectionContainer}>
             <Text style={styles.pricingTitle}>Training Price</Text>
             <View style={ styles.pricingLabels}>
@@ -732,6 +733,7 @@ const TrainerEditProfile = ({navigation}) => {
               : null}
             </View>
           </View>
+          </KeyboardAvoidingView>
           <View style={styles.nextButtonContainer}>
           <AppButton 
               title="Submit"
@@ -1065,10 +1067,14 @@ const TrainerEditProfile = ({navigation}) => {
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
+      lineHeight: Dimensions.get('window').height * .065,
       fontSize: Dimensions.get('window').height * .02,
       textAlign: 'center',
       justifyContent: 'center',
-      paddingTop: 10
+      alignItems: 'center',
+      paddingTop: 0,
+      paddingBottom: 0,
+      textAlignVertical: 'center'
     },
     trainingSiteErrorText: {
       marginTop: Dimensions.get('window').height * .011,

@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect, useCallback, useContext} from 'react';
-import {StyleSheet, View, Text, Image, TextInput, Dimensions, Button, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Image, TextInput, Dimensions, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -610,7 +610,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           <View style={styles.trainingSiteContainer}>
             <Text style={styles.trainingSiteText}>Training Site</Text>
             <TouchableOpacity onPress = {() => openAddressWindow(1)}>
-            <View style={{width: '100%'}}>
+            <View style={styles.trainingSiteView}>
               <Text style={styles.trainingSiteInput}>{trainingSite1 ? trainingSite1 : 'Primary Address'}</Text>
               {/* <TextInput
                 style={styles.trainingSiteInput}
@@ -622,7 +622,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               </View>   
             </TouchableOpacity>
             <TouchableOpacity onPress={() => openAddressWindow(2)}>
-              <View style={{width: '100%'}}>
+              <View style={styles.trainingSiteView}>
                 <Text style={styles.trainingSiteInput}>{trainingSite2 ? trainingSite2 : 'Secondary Address'}</Text>
               </View>  
             </TouchableOpacity>
@@ -630,6 +630,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
             : null}                                                          
           </View>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View style={styles.priceSectionContainer}>
             <Text style={styles.pricingTitle}>Training Price</Text>
             <View style={ styles.pricingLabels}>
@@ -686,6 +687,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               : null}
             </View>
           </View>
+          </KeyboardAvoidingView>
           <View style={styles.nextButtonContainer}>
           <AppButton 
               title="Next"
@@ -1017,18 +1019,26 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .0278,
       marginLeft: Dimensions.get('window').width * .0241,
     },
+    trainingSiteView: {
+      width: '100%',
+      //justifyContent: 'center',
+      //alignItems: 'center'
+    },
     trainingSiteInput: {
       marginTop: Dimensions.get('window').height * .022,
       borderWidth: 2,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
+      lineHeight: Dimensions.get('window').height * .065,
       fontSize: Dimensions.get('window').height * .017,
       textAlign: 'center',
       fontSize: 16,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingTop: 7
+      paddingTop: 0,
+      paddingBottom: 0,
+      textAlignVertical: 'center'
     },
     trainingSiteErrorText: {
       marginTop: Dimensions.get('window').height * .011,
