@@ -535,7 +535,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                   onPress={() => handleOnCategoryPressed()}
                 >
                   <Image
-                    source={require('../../../images/categoryIcon.png')}
+                    source={require('../../../images/pencilIcon.png')}
                     style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
@@ -560,7 +560,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                   onPress={() => handleOnAboutMePress()}
                 >
                   <Image
-                    source={require('../../../images/pencil.png')}
+                    source={require('../../../images/pencilIcon.png')}
+                    style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -582,7 +583,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                   onPress={() => handleCertificationsPress()}
                 >
                   <Image
-                    source={require('../../../images/pencil.png')}
+                    source={require('../../../images/pencilIcon.png')}
+                    style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -739,7 +741,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .032,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .34,
       fontSize: Dimensions.get('window').height * .025
@@ -779,7 +781,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     birthdayBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -829,7 +831,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       borderColor: 'deepskyblue',
       backgroundColor: 'lightgrey',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
       justifyContent: 'center',
@@ -863,7 +865,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     categoryBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -916,7 +918,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -957,7 +959,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -1026,7 +1028,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     trainingSiteInput: {
       marginTop: Dimensions.get('window').height * .022,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
@@ -1062,7 +1064,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     singlePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -1072,7 +1074,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     singlePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -1094,7 +1096,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     couplePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -1103,7 +1105,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     couplePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -1138,13 +1140,14 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center'
     },
     atTrainingSiteInput: {
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .05,
       textAlign: 'center',
       fontSize: Dimensions.get('window').height * .022,
-      padding: 0
+      padding: 0,
+      marginBottom: 5
     },
     atTrainerSiteText: {
       fontSize: Dimensions.get('window').height * .022,
@@ -1161,7 +1164,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center'
     },
     outDoorInput: {
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .05,

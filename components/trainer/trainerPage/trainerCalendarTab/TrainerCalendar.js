@@ -773,6 +773,9 @@ const TrainerCalendar = ({navigation}) => {
                             mode="time"
                             onConfirm={(time) => onStartTimeChage(time)}
                             onCancel={() => setStartTimeModalVisible(false)}
+                            headerTextIOS="Choose the start time"
+                            style={{width: 320, backgroundColor: "white"}}
+                            backdropStyleIOS={{width: 320, backgroundColor: "white"}}
                         />
 
                         <DateTimePickerModal
@@ -780,6 +783,9 @@ const TrainerCalendar = ({navigation}) => {
                             mode="time"
                             onConfirm={(time) => onEndTimeChage(time)}
                             onCancel={() => setEndTimeModalVisible(false)}
+                            headerTextIOS="Choose the end time"
+                            style={{width: 320, backgroundColor: "white"}}
+                            backdropStyleIOS={{width: 320, backgroundColor: "white"}}
                         />
             <Modal
                 

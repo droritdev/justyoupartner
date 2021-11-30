@@ -2,6 +2,8 @@ import React, {useContext, useState, useEffect} from 'react';
 import { Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+
 const WhyUs = ({navigation}) => {
 
     //Navigates back to the profile page
@@ -12,14 +14,9 @@ const WhyUs = ({navigation}) => {
     return(
         <SafeAreaView style={styles.safeArea}>
             
-                <TouchableOpacity
-                        onPress={() => handleOnArrowPress()}
-                    >
-                    <Image
-                        source={require('../../../../images/blackArrow.png')}
-                        style={styles.arrowImage}
-                    />
-                </TouchableOpacity>
+                <ArrowBackButton
+                    onPress={handleOnArrowPress}
+                />
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Why Sould You Work With</Text>
                 <Text style={styles.juustYouTitle}>Just You Partner</Text>
@@ -96,10 +93,11 @@ const styles = StyleSheet.create({
     },
     reasonsPreview: {
         fontSize: Dimensions.get('window').height * .019,
+        fontWeight: 'bold',
         marginTop: Dimensions.get('window').height * .011
     },
     reasonsContainer: {
-        marginTop: Dimensions.get('window').height * .022,
+        marginTop: Dimensions.get('window').height * .05,
         width: Dimensions.get('window').width * .9,
         height: Dimensions.get('window').height * .275,
         justifyContent: 'space-between',
@@ -109,7 +107,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: Dimensions.get('window').width * .9,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 50
     },
     viImage: {
         marginRight: Dimensions.get('window').width * .0724

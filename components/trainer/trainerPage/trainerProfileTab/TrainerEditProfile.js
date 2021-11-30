@@ -576,7 +576,7 @@ const TrainerEditProfile = ({navigation}) => {
                   onPress={() => handleOnCategoryPressed()}
                 >
                   <Image
-                    source={require('../../../../images/categoryIcon.png')}
+                    source={require('../../../../images/pencilIcon.png')}
                     style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
@@ -601,7 +601,8 @@ const TrainerEditProfile = ({navigation}) => {
                   onPress={() => handleOnAboutMePress()}
                 >
                   <Image
-                    source={require('../../../../images/pencil.png')}
+                    source={require('../../../../images/pencilIcon.png')}
+                    style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -623,7 +624,8 @@ const TrainerEditProfile = ({navigation}) => {
                   onPress={() => handleCertificationsPress()}
                 >
                   <Image
-                    source={require('../../../../images/pencil.png')}
+                    source={require('../../../../images/pencilIcon.png')}
+                    style={styles.categoryIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -785,7 +787,7 @@ const TrainerEditProfile = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .032,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .34,
       fontSize: Dimensions.get('window').height * .025
@@ -825,7 +827,7 @@ const TrainerEditProfile = ({navigation}) => {
     birthdayBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -874,7 +876,7 @@ const TrainerEditProfile = ({navigation}) => {
       borderColor: 'deepskyblue',
       backgroundColor: 'lightgrey',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
       justifyContent: 'center',
@@ -908,7 +910,7 @@ const TrainerEditProfile = ({navigation}) => {
     categoryBoxContainer: {
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .93,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       justifyContent: 'center'
@@ -960,7 +962,7 @@ const TrainerEditProfile = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -1000,7 +1002,7 @@ const TrainerEditProfile = ({navigation}) => {
       marginTop: Dimensions.get('window').height * .010,
       borderColor: 'deepskyblue',
       borderRadius: 17,
-      borderWidth: 2,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .135,
       width: Dimensions.get('window').width * .9,
       alignSelf: 'center',
@@ -1063,12 +1065,13 @@ const TrainerEditProfile = ({navigation}) => {
     },
     trainingSiteInput: {
       marginTop: Dimensions.get('window').height * .022,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderRadius: 17,
       height: Dimensions.get('window').height * .065,
       lineHeight: Dimensions.get('window').height * .065,
-      fontSize: Dimensions.get('window').height * .02,
+      fontSize: Dimensions.get('window').height * .017,
+      fontSize: 16,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
@@ -1098,7 +1101,7 @@ const TrainerEditProfile = ({navigation}) => {
     singlePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -1108,7 +1111,7 @@ const TrainerEditProfile = ({navigation}) => {
     singlePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
@@ -1130,7 +1133,7 @@ const TrainerEditProfile = ({navigation}) => {
     couplePricing: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -1139,7 +1142,7 @@ const TrainerEditProfile = ({navigation}) => {
     couplePricingLabeld: {
       width: Dimensions.get('window').width * .25,
       height: Dimensions.get('window').height * .04,
-      borderWidth: 2,
+      borderWidth: 1,
       borderTopRightRadius: 15,
       borderBottomRightRadius: 15,
       borderColor: 'deepskyblue',
@@ -1174,12 +1177,13 @@ const TrainerEditProfile = ({navigation}) => {
       alignItems: 'center'
     },
     atTrainingSiteInput: {
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .06,
       textAlign: 'center',
-      fontSize: Dimensions.get('window').height * .022
+      fontSize: Dimensions.get('window').height * .022,
+      marginBottom: 5
     },
     atTrainerSiteText: {
       fontSize: Dimensions.get('window').height * .022,
@@ -1196,7 +1200,7 @@ const TrainerEditProfile = ({navigation}) => {
       alignItems: 'center'
     },
     outDoorInput: {
-      borderWidth: 2,
+      borderWidth: 1,
       borderColor: 'deepskyblue',
       width: Dimensions.get('window').width * .17,
       height: Dimensions.get('window').height * .06,

@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     },
     ratingAndAge: {
         flexDirection: 'row',
-        height: Dimensions.get('window').height * .022
+        height: Dimensions.get('window').height * .04
     },
     ratingText: {
         fontSize: Dimensions.get('window').height * .02

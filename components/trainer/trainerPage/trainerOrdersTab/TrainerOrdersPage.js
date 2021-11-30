@@ -67,7 +67,6 @@ const TrainerOrdersPage = ({navigation}) => {
 
     //Sets the single/couple flipToggle value
     const handleFlipToggle = () => {
-
         getTrainerOrders();
         setIsPending(!isPending);
     }
@@ -255,10 +254,13 @@ const TrainerOrdersPage = ({navigation}) => {
 
     const getApprovedOrdersPattern = () => {
         let repeats = [];
+        console.log('approved orders ', approvedOrders)
         if (approvedOrders.length !== 0) {
+            console.log('approved orders length ', approvedOrders.length)
             for(let i = 0; i < approvedOrders.length; i++) {
                 //Get the client object that contatins all of his information
                 var clientInfo = getCurrentClient(approvedOrders[i].client.id, approvedClientsInfo);
+                console.log('clientInfo ', i, clientInfo)
 
                 repeats.push(
                     <View key={'approvedRow'+i} style={i % 2 === 0? styles.pendingOrder : styles.pendingOrderSecond}>
@@ -269,13 +271,14 @@ const TrainerOrdersPage = ({navigation}) => {
                     <FastImage
                                 style={styles.image}
                                 source={{
-                                uri: clientInfo.image,
+                                uri: approvedOrders[i].client.profilePic,
                                 priority: FastImage.priority.normal,
                                 }}
                                 resizeMode={FastImage.resizeMode.stretch}
                     />
                     <View style={styles.nameBox}>
-                        <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last  }</Text>
+                        {/* <Text style={styles.nameText}>{clientInfo.name.first + " " + clientInfo.name.last  }</Text> */}
+                        <Text style={styles.nameText}>{approvedOrders[i].client.firstName + " " + approvedOrders[i].client.lastName }</Text>
                     </View>
                     <View style={styles.dateBox}>
                         <Text style={styles.dateText}>{approvedOrders[i].trainingDate.startTime.slice(0, 10)}</Text>
@@ -370,7 +373,7 @@ const TrainerOrdersPage = ({navigation}) => {
                         <View style={styles.pendingContainer}>
                             <View style={styles.pendingOrderView}>
                                 {pendingOrders.length === 0 ? 
-                                <View> 
+                                <View style={{marginTop: 100}}> 
                                     <Text style={styles.noOrdersTitle}>{"NO PENDING ORDERS"}</Text>
                                     <Text style={styles.noOrdersMessage}>{"Looks like you haven't received orders yet."}</Text>
                                 </View>
@@ -390,7 +393,7 @@ const TrainerOrdersPage = ({navigation}) => {
                         <View style={styles.pendingContainer}>
                             <View style={styles.pendingOrderView}>
                                 {approvedOrders.length === 0 ? 
-                                <View>
+                                <View style={{marginTop: 100}}>
                                     <Text style={styles.noOrdersTitle}>{"NO APPROVED ORDERS"}</Text>
                                     <Text style={styles.noOrdersMessage}>{"Looks like you haven't approved orders yet."}</Text>
                                 </View>

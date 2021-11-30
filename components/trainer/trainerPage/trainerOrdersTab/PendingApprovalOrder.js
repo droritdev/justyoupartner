@@ -187,32 +187,50 @@ const PendingApprovalOrder = ({navigation}) => {
             }
 
             //Full date + time of the start of the addAbleEvent
-            var eventStartDate = new Date((event.start.replace(/ /g, 'T')) + '.000Z'); //2021-01-03T07:00:00.000Z
+            var eventStartDate = new Date((event.start.replace(/ /g, 'T'))); //2021-01-03T07:00:00.000Z
             //Full date + time of the end of the addAbleEvent
-            var eventEndDate = new Date((event.end.replace(/ /g, 'T')) + '.000Z'); // 2021-01-03T08:00:00.000Z
-
+            console.log('in checkiftimeisoccupied eventstarttime ', eventStartDate)
+            var eventEndDate = new Date((event.end.replace(/ /g, 'T'))); // 2021-01-03T08:00:00.000Z
+            console.log('in checkiftimeisoccupied eventendtime ', eventEndDate)
             //Set time according to Timezone
-            eventStartDate.setHours(eventStartDate.getHours()+eventStartDate.getTimezoneOffset()/60);
-            eventEndDate.setHours(eventEndDate.getHours()+eventStartDate.getTimezoneOffset()/60);
-
+            //eventStartDate.setHours(eventStartDate.getHours()+eventStartDate.getTimezoneOffset()/60);
+            //eventEndDate.setHours(eventEndDate.getHours()+eventStartDate.getTimezoneOffset()/60);
+            //console.log('in checkiftimeisoccupied eventstarttime 2', eventStartDate)
+            //console.log('in checkiftimeisoccupied eventendtime 2', eventEndDate)
             for (let index = 0; index < occupiedHours.length; index++) {
                 const hoursRange = occupiedHours[index]; //example: "05:00:00-06:00:00"
+                console.log('hours range ', hoursRange)
 
+                console.log('event start ', event.start)
                 var occupiedEventStartDate = new Date(event.start.slice(0, 10));  // 2021-01-03T00:00:00.000Z
                 var occupiedEventEndDate = new Date(event.start.slice(0, 10)); // 2021-01-03T00:00:00.000Z
+
+                console.log('occupiedEventStartDate first', occupiedEventStartDate)
+                console.log('occupiedEventEndDate first', occupiedEventEndDate)
                 
-                var startTime = hoursRange.slice(0, 8); //example: "05:00:00"
-                var endTime = hoursRange.slice(9); //example: "06:00:00"
+                var startTime = hoursRange.slice(0, 5); //example: "05:00:00"
+                var endTime = hoursRange.slice(6); //example: "06:00:00"
+                console.log('startTime ', startTime)
+                console.log('endTme ', endTime)
 
                 //example: 2021-01-03T05:00:00.000Z
                 occupiedEventStartDate.setHours(startTime.split(":")[0]);
                 occupiedEventStartDate.setMinutes(startTime.split(":")[1]);
-                occupiedEventStartDate.setSeconds(startTime.split(":")[2]);
+                //occupiedEventStartDate.setSeconds(startTime.split(":")[2]);
 
                 //example: 2021-01-03T06:00:00.000Z
                 occupiedEventEndDate.setHours(endTime.split(":")[0]);
                 occupiedEventEndDate.setMinutes(endTime.split(":")[1]);
-                occupiedEventEndDate.setSeconds(endTime.split(":")[2]);
+                //occupiedEventEndDate.setSeconds(endTime.split(":")[2]);
+
+                console.log('occupiedEventStartDate ', occupiedEventStartDate)
+                console.log('occupiedEventEndDate ', occupiedEventEndDate)
+
+                console.log('eventStartDate.getTime ', eventStartDate.getTime())
+                console.log('eventEndDate.getTime ', eventEndDate.getTime())
+
+                console.log('occupiedEventStartDate.getTime ', occupiedEventStartDate.getTime())
+                console.log('occupiedEventEndDate.getTime ', occupiedEventEndDate.getTime())
 
                 isOccupied = (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventEndDate.getTime() <= occupiedEventEndDate.getTime())
                 || (eventStartDate.getTime() >= occupiedEventStartDate.getTime() && eventStartDate.getTime() < occupiedEventEndDate.getTime()  && eventEndDate.getTime() > occupiedEventEndDate.getTime())
@@ -234,8 +252,9 @@ const PendingApprovalOrder = ({navigation}) => {
     //Check if the time range is available on the trainer calendar
     const handleApproveClicked = () => {
         //Get currently occupied hours (array) from according to the training date
+        console.log('handleApproveClicked training date ', orderObject.trainingDate.startTime)
         var occupiedHours = getOccupiedHours(getEventsFromDate(orderObject.trainingDate.startTime.slice(0, 10)));
-
+        console.log('occupied hours ', occupiedHours)
         //Event to be added if time is available
         var addAbleEvent = 
         { 
@@ -246,6 +265,7 @@ const PendingApprovalOrder = ({navigation}) => {
             color: 'deepskyblue'  
         }
 
+        console.log('ableevent ', addAbleEvent)
         //Check if the event can be added to the current time (is time occupied)
         if (checkIfTimeIsOccupied(addAbleEvent, occupiedHours) === false) {
             getTokenForPayment();

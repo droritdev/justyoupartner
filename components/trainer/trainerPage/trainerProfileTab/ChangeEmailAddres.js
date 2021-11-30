@@ -8,6 +8,8 @@ import {PasswordContext} from '../../../../context/trainerContextes/PasswordCont
 import {IdContext} from '../../../../context/trainerContextes/IdContext';
 import auth from '@react-native-firebase/auth';
 
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+
 
 const ChangeEmailAddress = ({navigation}) => {
     const {emailAddress, dispatchEmail} = useContext(EmailContext);
@@ -262,14 +264,9 @@ const ChangeEmailAddress = ({navigation}) => {
                 <Text style={styles.justYouHeader}>Just You</Text>
                 <Text style={styles.partnerText}>Partner</Text>
             </View>
-            <TouchableOpacity
-                    style={styles.arrowBackButton} 
-                    onPress={() => handleOnArrowPress()}
-                >
-                <Image
-                    source={require('../../../../images/blackArrow.png')}
-                />
-            </TouchableOpacity>
+            <ArrowBackButton
+                onPress={handleOnArrowPress}
+            />
             <Text style={styles.changeEmailTitle}>Change email address</Text>
             <View style={styles.emailAndErrorContainer}>
                 <View style={styles.emailInput}>

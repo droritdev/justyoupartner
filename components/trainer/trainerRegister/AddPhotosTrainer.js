@@ -1,5 +1,5 @@
 import React, {useRef, useContext, useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Alert} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import Dialog from "react-native-dialog";
@@ -134,13 +134,16 @@ const AddPhotosTrainer = ({route, navigation}) => {
         ImagePicker.openPicker({
             mediaType: "video",
           }).then((video) => {
+            Alert.alert('video.sourceURL', video.sourceURL)
             const source = {uri: video.sourceURL};
             let videosTemp = [...videos];
+            Alert.alert('videostemp', videosTemp.join())
             videosTemp[index] = source.uri;
             videosTemp = bubbleSort(videosTemp);
+            Alert.alert('videostemp after bubblesort', videosTemp.join())
             setVideos(videosTemp);
         }).catch(err => {
-            //user cancel the picker
+            Alert.alert('handleVideo catch', err)
         });
     }
 

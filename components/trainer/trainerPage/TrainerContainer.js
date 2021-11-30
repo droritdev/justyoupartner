@@ -23,7 +23,7 @@ const TrainerContainer = () => {
                 style: {
                     height: 60,
                     borderTopWidth: 1,
-                    paddingTop: 5
+                    paddingTop: 10
                 },
                 showLabel: false,
             }}

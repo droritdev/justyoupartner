@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     searchIcon: {
-        height: Dimensions.get('window').height * .04,
-        width: Dimensions.get('window').width * .09,
+        height: Dimensions.get('window').height * .05,
+        width: Dimensions.get('window').width * .07,
         marginLeft: Dimensions.get('window').width * .0241,
     },
     textInputStyle: {

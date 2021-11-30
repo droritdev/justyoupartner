@@ -5,6 +5,8 @@ import Dialog from "react-native-dialog";
 import {Accordion, Block} from 'galio-framework';
 import auth from '@react-native-firebase/auth';
 
+import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
+
 //The question and answers page
 const TrainerSettings = ({navigation}) => {
 
@@ -74,61 +76,50 @@ const TrainerSettings = ({navigation}) => {
                     <Text style={styles.justYouHeader}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>
                 </View>
-                <TouchableOpacity
-                        style={styles.arrowBackButton} 
-                        onPress={() => handleOnArrowPress()}
-                    >
-                    <Image
-                        source={require('../../../../images/blackArrow.png')}
-                    />
-                </TouchableOpacity>
+                <ArrowBackButton
+                    onPress={handleOnArrowPress}
+                />
                 <Text style={styles.settingsTitle}>Settings</Text>
                 <View style={styles.settingsContainer1}>
                     <View style={styles.paymentsRow}>
                         <TouchableOpacity
                             //onPress={() => handleOnEditProfilePressed()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.paymentsTitle}>Methods of payment</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.arrowButton}
-                            //onPress={() => handleOnEditProfilePressed()}
-                        >
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.changeEmailRow}>
                         <TouchableOpacity
                             onPress={() => handleOnChangeEmailPress()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.changeEmailTitle}>Change email address</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.arrowButton}
-                            onPress={() => handleOnChangeEmailPress()}
-                        >
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                                 onPress={() => handleOnChangeEmailPress()}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.changePhoneRow}>
                         <TouchableOpacity
                             onPress={() => handleOnChangePhonePressed()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.changePhoneTitle}>Change phone number</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.arrowButton}>
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                                 onPress={() => handleOnChangePhonePressed()}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -138,45 +129,39 @@ const TrainerSettings = ({navigation}) => {
                         <TouchableOpacity
                             onPress={() => handlePrivacyPolicy()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.policytitle}>Privacy policy</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.arrowButton}
-                            //onPress={() => handleOnEditProfilePressed()}
-                        >
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.termsRow}>
                         <TouchableOpacity
                             onPress={() => handleTermsConditions()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.termsTitle}>Terms & Conditions</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.arrowButton}>
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.signOutRow}>
                         <TouchableOpacity
                             onPress={() => handleOnSignOutPress()}
                         >
+                            <View style={styles.rowStyle}>
                             <Text style={styles.signOutTitle}>Sign out</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.arrowButton}
-                            onPress={() => handleOnSignOutPress()}
-                        >
                             <Image
                                 source={require('../../../../images/arrowButton.png')}
                                 style={styles.arrowImage}
                             />
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -342,7 +327,11 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .022,
         marginLeft: Dimensions.get('window').width * .0483,
     },
-
+    rowStyle: {
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    }
 
 });
 
