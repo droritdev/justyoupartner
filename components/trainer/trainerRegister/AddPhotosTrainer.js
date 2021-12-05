@@ -134,16 +134,16 @@ const AddPhotosTrainer = ({route, navigation}) => {
         ImagePicker.openPicker({
             mediaType: "video",
           }).then((video) => {
-            Alert.alert('video.sourceURL', video.sourceURL)
+            //Alert.alert('video.sourceURL', video.sourceURL)
             const source = {uri: video.sourceURL};
             let videosTemp = [...videos];
-            Alert.alert('videostemp', videosTemp.join())
+            //Alert.alert('videostemp', videosTemp.join())
             videosTemp[index] = source.uri;
             videosTemp = bubbleSort(videosTemp);
-            Alert.alert('videostemp after bubblesort', videosTemp.join())
+            //Alert.alert('videostemp after bubblesort', videosTemp.join())
             setVideos(videosTemp);
         }).catch(err => {
-            Alert.alert('handleVideo catch', err)
+            //Alert.alert('handleVideo catch', err)
         });
     }
 
@@ -303,7 +303,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
                     onPress={handleAPencilButton}
                 >
                     <Image
-                        source={require('../../../images/pencil.png')}
+                        source={require('../../../images/pencilIcon.png')}
                         style={styles.pencilImage}
                     />
                 </TouchableOpacity>
@@ -331,7 +331,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
                     {getVideoPattern()}
                 </ScrollView>
 
-            <View>
+            <View style={{marginTop: 20}}>
                 <TouchableOpacity
                     style={{backgroundColor: 'deepskyblue', borderRadius: 10, padding: 10, alignSelf: 'center'}}
                     onPress={() => navigation.navigate('Camera')}
@@ -376,8 +376,8 @@ const styles = StyleSheet.create ({
     },
     pencilImage: {
         marginTop: Dimensions.get('window').height * .015,
-        height: Dimensions.get('window').height * .035,
-        width: Dimensions.get('window').width * .07,
+        height: Dimensions.get('window').height * .03,
+        width: Dimensions.get('window').width * .03,
     },
     mainScrollContainer: {
         height: Dimensions.get('window').height * .9,
@@ -445,8 +445,8 @@ const styles = StyleSheet.create ({
         shadowRadius: 16.00,    
     },
     plusPicture: {
-        height: Dimensions.get('window').height * .15,
-        width: Dimensions.get('window').width * .43,
+        height: Dimensions.get('window').height * .05,
+        width: Dimensions.get('window').width * .1,
         borderRadius: 16,
         backgroundColor: 'whitesmoke',
         resizeMode: 'stretch'

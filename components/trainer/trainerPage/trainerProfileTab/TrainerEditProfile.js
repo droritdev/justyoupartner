@@ -471,7 +471,9 @@ const TrainerEditProfile = ({navigation}) => {
 
     return(
       <SafeAreaView style={styles.safeArea}>
-
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
             <View>
                 <Dialog.Container visible={update}>
                     <Dialog.Title>Updating your info</Dialog.Title>
@@ -678,7 +680,6 @@ const TrainerEditProfile = ({navigation}) => {
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
             : null}                                                          
           </View>
-          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View style={styles.priceSectionContainer}>
             <Text style={styles.pricingTitle}>Training Price</Text>
             <View style={ styles.pricingLabels}>
@@ -735,7 +736,6 @@ const TrainerEditProfile = ({navigation}) => {
               : null}
             </View>
           </View>
-          </KeyboardAvoidingView>
           <View style={styles.nextButtonContainer}>
           <AppButton 
               title="Submit"
@@ -743,6 +743,7 @@ const TrainerEditProfile = ({navigation}) => {
             />
           </View>
        </ScrollView>
+       </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
@@ -925,7 +926,7 @@ const TrainerEditProfile = ({navigation}) => {
     categoryUnPicked: {
       textAlign: 'center',
       color: 'grey',
-      fontSize: Dimensions.get('window').height * .022,
+      fontSize: Dimensions.get('window').height * .02,
       fontWeight: '300',
       marginLeft: Dimensions.get('window').width * .3
     },
@@ -935,8 +936,8 @@ const TrainerEditProfile = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .022,
     },
     categoryIcon: {
-      height: Dimensions.get('window').height * .04,
-      width: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .02,
+      width: Dimensions.get('window').height * .02,
     },
     categoryErrorMessage: {
       color: 'red',

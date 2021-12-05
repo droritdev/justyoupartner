@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, Alert, Image } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import { BottomNavigation } from 'react-native-paper'
 
 const Camera = ({navigation}) => {
     const [takingPic, setTakingPic] = useState(false)
+    const [typePhoto, setTypePhoto] = useState(RNCamera.Constants.Type.back)
     const [img, setImg] = useState(null)
     let cameraRef = useRef(null)
 
@@ -48,7 +49,7 @@ const Camera = ({navigation}) => {
                 ref={cameraRef}
                 captureAudio={false}
                 style={{flex: 1}}
-                type={RNCamera.Constants.Type.back}
+                type={typePhoto}
                 androidCameraPermissionOptions={{
                     title: 'Permission to use camera',
                     message: 'We need your permission to use your camera',
@@ -56,12 +57,33 @@ const Camera = ({navigation}) => {
                     buttonNegative: 'Cancel',
                 }}
             />
+            <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
-                style={{backgroundColor: 'deepskyblue', padding: 10, alignItems: 'center'}}
+                style={{backgroundColor: 'deepskyblue', padding: 10, alignItems: 'center', width: '80%'}}
                 onPress={takePicture}
             >
                 <Text style={{color: 'white', fontSize: 18}}>Click here to take a photo</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={{backgroundColor: 'white', padding: 10, alignItems: 'center', width: '20%'}}
+                onPress={() => {setTypePhoto(typeP => {
+                    if(typeP === RNCamera.Constants.Type.back){
+                        console.log('back')
+                        setTypePhoto(RNCamera.Constants.Type.front)
+                    } else {
+                        console.log('front')
+                        setTypePhoto(RNCamera.Constants.Type.back)
+                    }
+                })}}
+            >
+                <View>
+                <Image
+                    source={require('../../images/selfie.png')}
+                    style={{height: 30, width: 30}}
+                />
+                </View>
+            </TouchableOpacity>
+            </View>
         </View>
     )
 }

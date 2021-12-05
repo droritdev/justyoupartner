@@ -8,9 +8,11 @@ import FastImage from 'react-native-fast-image';
 import * as Progress from 'react-native-progress';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/Feather';
+import { useIsFocused } from "@react-navigation/native";
 
 //The trainer's order page - pennding + approved
 const TrainerOrdersPage = ({navigation}) => {
+    const isFocused = useIsFocused()
     //Trainer ID to get orders related to this ID
     const {trainerID} = useContext(IdContext);
 
@@ -50,8 +52,10 @@ const TrainerOrdersPage = ({navigation}) => {
     };
     
     useEffect(() => {
-        getTrainerOrders()
-    }, [navigation])
+        if(isFocused){
+            getTrainerOrders()
+        }
+    }, [navigation, isFocused])
 
     //Update the covid alert var to false (will not display coivd alert anymore)
     const covidAlertCancel = () => {
@@ -216,7 +220,7 @@ const TrainerOrdersPage = ({navigation}) => {
 
     const getPendingOrdersPattern = () => {
         let repeats = [];
-        if (pendingOrders !== [] && pendingClientsInfo.length > 0) {
+        if (pendingOrders.length !== 0 && pendingClientsInfo.length > 0) {
             for(let i = 0; i < pendingOrders.length; i++) {
                 //Get the client object that contatins all of his information
                 var clientInfo = getCurrentClient(pendingOrders[i].client.id, pendingClientsInfo);

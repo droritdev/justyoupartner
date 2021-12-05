@@ -433,6 +433,9 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
 
     return(
       <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <ScrollView ref={scrollRef} style={styles.container}>
         <ArrowBackButton
           onPress={handleArrowButton}
@@ -632,7 +635,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               <Text style={styles.trainingSiteErrorText}>{trainingSiteErrorMessage}</Text>
             : null}                                                          
           </View>
-          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View style={styles.priceSectionContainer}>
             <Text style={styles.pricingTitle}>Training Price</Text>
             <View style={ styles.pricingLabels}>
@@ -689,7 +691,6 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
               : null}
             </View>
           </View>
-          </KeyboardAvoidingView>
           <View style={styles.nextButtonContainer}>
           <AppButton 
               title="Next"
@@ -697,6 +698,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
             />
           </View>
        </ScrollView>
+       </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
@@ -891,8 +893,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       fontSize: Dimensions.get('window').height * .022,
     },
     categoryIcon: {
-      height: Dimensions.get('window').height * .04,
-      width: Dimensions.get('window').height * .04,
+      height: Dimensions.get('window').height * .02,
+      width: Dimensions.get('window').height * .02,
     },
     categoryErrorMessage: {
       color: 'red',

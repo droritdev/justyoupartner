@@ -14,7 +14,8 @@ import * as Progress from 'react-native-progress';
 import ImagePicker from 'react-native-image-crop-picker';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
-import uuid from 'uuid';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 import Video from 'react-native-video';
 
 const Chat = ({navigation, route}) => {
@@ -254,7 +255,7 @@ const Chat = ({navigation, route}) => {
             case "image" :
                 newMessage =
                 [{
-                    _id: uuid.v4(),
+                    _id: uuidv4(),
                     text: '',
                     createdAt: new Date(),
                     user: trainerUser,
@@ -265,7 +266,7 @@ const Chat = ({navigation, route}) => {
             case "video":
                 newMessage =
                 [{
-                    _id: uuid.v4(),
+                    _id: uuidv4(),
                     text: '',
                     createdAt: new Date(),
                     user: trainerUser,

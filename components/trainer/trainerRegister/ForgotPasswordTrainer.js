@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import {StyleSheet, View, Text, Image, TextInput, Dimensions, SafeAreaView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 //Page where the trainer verifies his phone/email before re-sets his password
 const ForgotPassword = ({navigation}) => {
@@ -18,14 +19,9 @@ const ForgotPassword = ({navigation}) => {
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.upperContainer}>
-                <TouchableOpacity
-                onPress={handleArrowButton}
-                >
-                <Image
-                    source={require('../../../images/arrowBack.png')}
-                    style={styles.arrowImage}
+                <ArrowBackButton
+                    onPress={handleArrowButton}
                 />
-                </TouchableOpacity>
                 <View style={styles.justYouHeader}>
                     <Text style={styles.justYouText}>Just You</Text>
                     <Text style={styles.partnerText}>Partner</Text>

@@ -428,6 +428,8 @@ const StatsAndIncomes = ({navigation}) => {
                             <View style={styles.incomesTableContainer}>
                                 {getCompletedOrders()}
                             </View>
+                            <View style={{height: 80}}>
+                            </View>
                         </View>
                         }
                     </View>
