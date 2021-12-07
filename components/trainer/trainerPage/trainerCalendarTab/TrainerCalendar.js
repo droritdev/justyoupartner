@@ -1,5 +1,5 @@
 import React, {useRef, useContext, useState, useEffect} from 'react';
-import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {Modal, Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, TouchableOpacity, Platform} from 'react-native';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 // import EventCalendar from 'react-native-events-calendar';
 import EventCalendar from '../../../globalComponents/calendar/EventCalendar';
@@ -282,7 +282,10 @@ const TrainerCalendar = ({navigation}) => {
 
     //Show confirmation pop-up to block specific time ranges
     const handleBlockTime = () => {
-        Alert.alert('Choose start time to block', '', [{text: 'OK', onPress: () => setStartTimeModalVisible(true)}])
+        Alert.alert((Platform.OS === 'ios' ? 'Choose time to block' : 'Choose start time to block'), '', [{text: 'OK', onPress: () => {
+            setStartTimeModalVisible(true)
+            setModalVisible(true)
+        }}])
     }
 
 
@@ -323,9 +326,11 @@ const TrainerCalendar = ({navigation}) => {
 
     //Return if the addAbleEvent is on occupiedHours and can't add him
     const checkIfTimeIsOccupied = (event, occupiedHours) => {
+            console.log('in checkIfTimeIsOccupied event ', event)
+            console.log('in checkIfTimeIsOccupied event ', occupiedHours)
             var isOccupied = false;
             
-            if (occupiedHours === []) {
+            if (occupiedHours.length === 0) {
                 return false;
             }
 
@@ -599,11 +604,15 @@ const TrainerCalendar = ({navigation}) => {
         console.log('selectedTime ', selectedTime)
         blockStartTime = new Date(selectedTime.toISOString())
         AsyncStorage.setItem('@blockstarttime', JSON.stringify(blockStartTime))
-            .then((res) => console.log('async res ', res))
+            .then((res) => {
+                //console.log('async res ', res)
+                //console.log('blockStartTime ', blockStartTime)
+                if(Platform.OS === 'android'){
+                    setStartTimeModalVisible(false)
+                    Alert.alert('Choose end time to block', '', [{text: 'OK', onPress: () => setEndTimeModalVisible(true)}])
+                }
+            })
             .catch((err) => console.log('async err ', err))
-        console.log('blockStartTime ', blockStartTime)
-        setStartTimeModalVisible(false)
-        Alert.alert('Choose end time to block', '', [{text: 'OK', onPress: () => setEndTimeModalVisible(true)}])
     }
 
     
@@ -613,7 +622,7 @@ const TrainerCalendar = ({navigation}) => {
         var selectedTime = new Date(event)
         console.log('selectedTime ', selectedTime)
         blockEndTime = new Date(selectedTime.toISOString());
-        console.log('blockStartTime ', blockStartTime)
+        //console.log('blockStartTime ', blockStartTime)
         console.log('blockEndTime ', blockEndTime)
         setEndTimeModalVisible(false)
         handleBlockTimeSubmit()
@@ -662,7 +671,7 @@ const TrainerCalendar = ({navigation}) => {
                                 events.push(addAbleEvent);
                                 console.log('events ', events)
                                 updateTrainerUnavailable(events);
-                                setModalVisible(!modalVisible);
+                                //setModalVisible(!modalVisible);
                             } else {
                                 //the hours range collide with an event
                                 Alert.alert(
@@ -705,69 +714,69 @@ const TrainerCalendar = ({navigation}) => {
             </View>
 
 
-            {/* <Modal
-                
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Block time range</Text>
+        {Platform.OS === 'ios' && (<Modal
+            
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            }}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Block time range</Text>
 
-                        <Text style={styles.subtitleText}>Start time</Text>
+                    <Text style={styles.subtitleText}>Start time</Text>
+                    
+                    <DateTimePicker
+                        style={styles.pickerStyle}
+                        testID="dateTimePicker"
+                        minuteInterval={10}
+                        value={new Date(currentDisplayedDate)}
+                        mode={'time'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(event, time) => onStartTimeChage(time)}
                         
-                        <DateTimePicker
-                            style={styles.pickerStyle}
-                            testID="dateTimePicker"
-                            minuteInterval={10}
-                            value={new Date(currentDisplayedDate)}
-                            mode={'time'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(time) => onStartTimeChage(time)}
-                           
-                        />
+                    />
 
-                        <Text style={styles.subtitleText}>End time</Text>
-                        <DateTimePicker
-                            style={styles.pickerStyle}
-                            testID="dateTimePicker"
-                            minuteInterval={10}
-                            value={new Date(currentDisplayedDate)}
-                            mode={'time'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(time) => onEndTimeChage(time)}
-                        />
-                        <View style={styles.buttonsRow}> 
-                            <TouchableOpacity
-                                style={styles.cancelButton}
-                                onPress={() => {
-                                    setModalVisible(!modalVisible);
-                                }}
-                            >
-                                <Text style={styles.cancelTextStyle}>Cancel</Text>
-                            </TouchableOpacity>
+                    <Text style={styles.subtitleText}>End time</Text>
+                    <DateTimePicker
+                        style={styles.pickerStyle}
+                        testID="dateTimePicker"
+                        minuteInterval={10}
+                        value={new Date(currentDisplayedDate)}
+                        mode={'time'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(event, time) => onEndTimeChage(time)}
+                    />
+                    <View style={styles.buttonsRow}> 
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={() => {
+                                setModalVisible(!modalVisible);
+                            }}
+                        >
+                            <Text style={styles.cancelTextStyle}>Cancel</Text>
+                        </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={styles.submitButton}
-                                onPress={() => {
-                                    handleBlockTimeSubmit();
-                                    // setModalVisible(!modalVisible);
-                                }}
-                            >
-                                <Text style={styles.submitTextStyle}>Submit</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity
+                            style={styles.submitButton}
+                            onPress={() => {
+                                handleBlockTimeSubmit();
+                                // setModalVisible(!modalVisible);
+                            }}
+                        >
+                            <Text style={styles.submitTextStyle}>Submit</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
+            </View>
 
-            </Modal> */}
-
+        </Modal>)}
+                        {Platform.OS === 'android' &&
                         <DateTimePickerModal
                             isVisible={startTimeModalVisible}
                             mode="time"
@@ -777,7 +786,8 @@ const TrainerCalendar = ({navigation}) => {
                             style={{width: 320, backgroundColor: "white"}}
                             backdropStyleIOS={{width: 320, backgroundColor: "white"}}
                         />
-
+                        }
+                        {Platform.OS === 'android' &&
                         <DateTimePickerModal
                             isVisible={endTimeModalVisible}
                             mode="time"
@@ -787,6 +797,8 @@ const TrainerCalendar = ({navigation}) => {
                             style={{width: 320, backgroundColor: "white"}}
                             backdropStyleIOS={{width: 320, backgroundColor: "white"}}
                         />
+                        }
+
             <Modal
                 
                 animationType="slide"
