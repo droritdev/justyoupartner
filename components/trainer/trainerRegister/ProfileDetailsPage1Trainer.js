@@ -363,7 +363,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
-      marginTop: Dimensions.get('window').height * .02,
+      marginTop: Dimensions.get('window').height * .01,
       marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {

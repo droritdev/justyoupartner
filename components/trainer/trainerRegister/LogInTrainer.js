@@ -54,10 +54,13 @@ const LogInTrainer = ({navigation}) => {
     //Auth user with Firebase after validation and login button click
     //After auth is complete, navigate to welcome page
     const authUser = () => {
+        console.log('in auth user')
         var encodedPass = Base64.encode(passwordInput);
+        console.log('auth user after encodedpass')
         auth()
         .signInWithEmailAndPassword(emailAddressInput, encodedPass)
         .then(() => {
+            console.log('auth user then')
             dispatchEmail({
                 type: 'SET_EMAIL_ADDRESS',
                 emailAddress: emailAddressInput
@@ -66,11 +69,14 @@ const LogInTrainer = ({navigation}) => {
                 type: 'SET_PASSWORD',
                 password: encodedPass
               });
+            console.log('auth user before navigate')
             navigation.navigate('WelcomeTrainer');
+            console.log('auth user after navigate')
         })
         .catch(error => {
             setErrorMessage("The account doesn't exist");
             setIsErrorMessage(true);
+            console.log('auth user catch')
         });
     }
 

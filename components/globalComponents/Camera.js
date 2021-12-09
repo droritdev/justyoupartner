@@ -30,12 +30,12 @@ const Camera = ({navigation}) => {
       
             try {
                const data = await cameraRef.current.takePictureAsync(options)
-               Alert.alert('Success', JSON.stringify(data))
+               //Alert.alert('Success', JSON.stringify(data))
                navigation.navigate('AddPhotosTrainer', {
                    photoUri: data.uri
                })
             } catch (err) {
-              Alert.alert('Error', 'Failed to take picture: ' + (err.message || err))
+              //Alert.alert('Error', 'Failed to take picture: ' + (err.message || err))
               return
             } finally {
               setTakingPic(false)

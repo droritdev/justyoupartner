@@ -133,6 +133,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
     const handleVideo = (index) => {
         ImagePicker.openPicker({
             mediaType: "video",
+            compressVideoPreset: "LowQuality"
           }).then((video) => {
             //Alert.alert('video.sourceURL', video.sourceURL)
             const source = {uri: video.sourceURL};

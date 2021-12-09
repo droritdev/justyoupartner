@@ -349,7 +349,7 @@ const StatsAndIncomes = ({navigation}) => {
                     <View key={'row'+i} style={i % 2 === 0? styles.incomeRowContainer : styles.incomeRow2Container}>
                         <View style={styles.incomeRow}>
                             <Text style={styles.rowInformation}>{orderObject.client.firstName + " " + orderObject.client.lastName}</Text>
-                            <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>
+                            <Text style={styles.dateInformation}>{orderObject.trainingDate.startTime.slice(0, 10)}</Text>
                             <Text style={styles.rowInformation}>{orderObject.trainingDate.startTime.slice(11)}</Text>
                             <Text style={styles.rowInformation}>{orderObject.type.charAt(0).toLowerCase() === 's'?"Single":"Couple"}</Text>
                             <Text style={styles.rowInformation}>{orderObject.cost+"$"}</Text>
@@ -708,6 +708,12 @@ const styles = StyleSheet.create({
     },
     rowInformation: {
         fontSize: Dimensions.get('window').height * .018,
+        width: Dimensions.get('window').width * .205,
+        textAlign: 'center',
+        alignSelf: 'center'
+    },
+    dateInformation: {
+        fontSize: Dimensions.get('window').height * .015,
         width: Dimensions.get('window').width * .205,
         textAlign: 'center',
         alignSelf: 'center'

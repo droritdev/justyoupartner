@@ -20,6 +20,8 @@ const WhyUs = ({navigation}) => {
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Why Sould You Work With</Text>
                 <Text style={styles.juustYouTitle}>Just You Partner</Text>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
                 <Text style={styles.reasonsPreview}>Five reasons why you should work with Just You:</Text>
             </View>
             <View style={styles.reasonsContainer}>
@@ -80,7 +82,14 @@ const styles = StyleSheet.create({
     headerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: Dimensions.get('window').height * .0055
+        marginTop: Dimensions.get('window').height * .0055,
+        paddingBottom: 20,
+        borderBottomColor: 'lightgray',
+        borderBottomWidth: 1,
+        shadowColor: "#000000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.4,
+        shadowRadius: 6
     },
     headerTitle: {
         fontWeight: 'bold',

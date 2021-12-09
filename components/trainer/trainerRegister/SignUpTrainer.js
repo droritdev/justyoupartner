@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 50
+    marginBottom: 30
   },
   nextButton: {
     width: Dimensions.get('window').width * .9,
