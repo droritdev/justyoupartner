@@ -596,13 +596,19 @@ const TrainerCalendar = ({navigation}) => {
 
     //Save value from start time picker
     const onStartTimeChage = (event) => {
-        // var selectedTime = new Date(event.nativeEvent.timestamp);
-        // selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
-        // blockStartTime = new Date(selectedTime.toISOString());
-        console.log('start time ', event)
-        var selectedTime = new Date(event)
-        console.log('selectedTime ', selectedTime)
-        blockStartTime = new Date(selectedTime.toISOString())
+        if(Platform.OS === 'ios'){
+            var selectedTime = new Date(event.nativeEvent.timestamp);
+            console.log('selectedTime1 ', selectedTime)
+            selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+            console.log('selectedTime2 ', selectedTime)
+            blockStartTime = new Date(selectedTime.toISOString());
+            console.log('blockStartTime ', blockStartTime)
+        } else {
+            console.log('start time ', event)
+            var selectedTime = new Date(event)
+            console.log('selectedTime ', selectedTime)
+            blockStartTime = new Date(selectedTime.toISOString())
+        }
         AsyncStorage.setItem('@blockstarttime', JSON.stringify(blockStartTime))
             .then((res) => {
                 //console.log('async res ', res)
@@ -629,6 +635,21 @@ const TrainerCalendar = ({navigation}) => {
     
     }
 
+    const onEndTimeChageIOS = (event) => {
+        var selectedTime = new Date(event.nativeEvent.timestamp);
+        console.log('selectedTime1 ', selectedTime)
+        selectedTime.setHours(selectedTime.getHours()-selectedTime.getTimezoneOffset()/60);
+        console.log('selectedTime2 ', selectedTime)
+        blockEndTime = new Date(selectedTime.toISOString());
+        //console.log('blockEndTime ', blockEndTime)
+
+        //console.log('end time ', event)
+        //var selectedTime = new Date(event)
+        //console.log('selectedTime ', selectedTime)
+        //blockEndTime = new Date(selectedTime.toISOString());
+        //console.log('blockEndTime ', blockEndTime)
+    }
+
     //Check if time range is valid -> start time is before end time
     //Check if time range is occupied -> another event is in those hours
     //If all good -> add unavailable event in the selected hours range
@@ -652,13 +673,13 @@ const TrainerCalendar = ({navigation}) => {
                         )
                 } else {
                     //time range is valid
-                    // AsyncStorage.getItem('@currentdisplayeddate')
-                    //     .then(result => {
-                    //         console.log('parse ', JSON.parse(result))
-                    //         var fullDate = JSON.parse(result)
-                    //         console.log('check fulldate after async ', fullDate)
-                            var fullDate = currentDisplayedDate;
-                            console.log('full date ', currentDisplayedDate)
+                     AsyncStorage.getItem('@currentdisplayeddate')
+                         .then(result => {
+                             console.log('parse ', JSON.parse(result))
+                             var fullDate = JSON.parse(result)
+                             console.log('check fulldate after async ', fullDate)
+                            //var fullDate = currentDisplayedDate;
+                            //console.log('full date ', currentDisplayedDate)
                             var occupiedHours = getOccupiedHours(getEventsFromDate(fullDate));
                             
                             var startTime = blockStartTime.toISOString().slice(11, 19);
@@ -671,7 +692,7 @@ const TrainerCalendar = ({navigation}) => {
                                 events.push(addAbleEvent);
                                 console.log('events ', events)
                                 updateTrainerUnavailable(events);
-                                //setModalVisible(!modalVisible);
+                                setModalVisible(!modalVisible);
                             } else {
                                 //the hours range collide with an event
                                 Alert.alert(
@@ -681,7 +702,7 @@ const TrainerCalendar = ({navigation}) => {
                                     {cancelable: false}
                                     )
                             }
-                        // })
+                         })
                         // .catch(err => console.log(err))
                 }
             })
@@ -737,7 +758,7 @@ const TrainerCalendar = ({navigation}) => {
                         mode={'time'}
                         is24Hour={true}
                         display="default"
-                        onChange={(event, time) => onStartTimeChage(time)}
+                        onChange={(event, time) => onStartTimeChage(event)}
                         
                     />
 
@@ -750,7 +771,7 @@ const TrainerCalendar = ({navigation}) => {
                         mode={'time'}
                         is24Hour={true}
                         display="default"
-                        onChange={(event, time) => onEndTimeChage(time)}
+                        onChange={(event, time) => onEndTimeChageIOS(event)}
                     />
                     <View style={styles.buttonsRow}> 
                         <TouchableOpacity

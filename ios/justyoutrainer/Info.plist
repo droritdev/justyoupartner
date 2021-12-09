@@ -48,7 +48,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs Calendars access to create trainings</string>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs Camera access to add profile picture</string>
+	<string>Camera is used</string>
 	<key>NSContactsUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs Contacts access to create trainings</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -99,12 +99,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera is used</string>
 </dict>
 </plist>
