@@ -347,7 +347,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       marginLeft: Dimensions.get('window').width * .0483
     },
     countryContainer: {
-      marginTop: Dimensions.get('window').height * .022,
+      //marginTop: Dimensions.get('window').height * .005,
       height: Dimensions.get('window').height * .11,
     },
     countryTitle: {
@@ -430,7 +430,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     fontSize: Dimensions.get('window').height * .015,
   },
   readMoreContainer: {
-    marginTop: Dimensions.get('window').height * .01,
+    marginTop: Dimensions.get('window').height * .005,
     marginLeft: Dimensions.get('window').width * .0483
   },
   containerUSA: {

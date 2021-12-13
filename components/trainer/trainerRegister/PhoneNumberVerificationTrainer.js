@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {PhoneContext} from '../../../context/trainerContextes/PhoneContext';
 import {CountryContext} from '../../../context/trainerContextes/CountryContext';
 import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
  
 //Here the user enters his full phone number (area code and phone number) and verify it with a code sent to his phone
@@ -223,6 +224,9 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
     return(
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
+            <ArrowBackButton
+              onPress={() => navigation.goBack()}
+            />
             <View style={styles.headerContainer}>
               <Text style={styles.justYouHeader}>Just You</Text>
               <Text style={styles.partnerHeader}>Partner</Text>
@@ -358,7 +362,7 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       marginRight: Dimensions.get('window').width * .0241,
       borderColor: 'deepskyblue',
-      borderWidth: 3,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .06,
       width: Dimensions.get('window').width * .3,
       fontSize: Dimensions.get('window').height * .025
@@ -366,7 +370,7 @@ const styles = StyleSheet.create({
   phoneNumberInput: {
       borderRadius: 20,
       borderColor: 'deepskyblue',
-      borderWidth: 3,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .06,
       width: Dimensions.get('window').width * .6,
       fontSize: Dimensions.get('window').height * .025
@@ -401,7 +405,7 @@ const styles = StyleSheet.create({
   codeTextInput: {
       borderColor: 'deepskyblue',
       borderRadius: 20,
-      borderWidth: 3,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .07,
       width: Dimensions.get('window').width * .9,
       marginTop: Dimensions.get('window').height * .015,

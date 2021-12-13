@@ -30,7 +30,7 @@ const AddressTrainer = ({ navigation, route }) => {
     const [longitude, setLongitude] = useState(0);
     const [latitudeDelta, setLatitudeDelta] = useState(0);
     const [longitudeDelta, setLongitudeDelta] = useState(0);
-    const [listData, setListData] = useState({});
+    const [listData, setListData] = useState([]);
     const [inputText, setInputText] = useState("");
     const [locationTitle, setLocationTitle] = useState("");
     const [locationCoordinates, setLocationCoordinates] = useState([]);
@@ -52,7 +52,7 @@ const AddressTrainer = ({ navigation, route }) => {
         setIsSubmitOn('none');
 
         if (text === "") {
-            setListData({});
+            setListData([]);
             showUserCurrentLocation();
         } else {
             axios
@@ -74,7 +74,7 @@ const AddressTrainer = ({ navigation, route }) => {
 
     //Display pressed item and and navigate to location
     const handleItemPressed = (text) => {
-        setListData({});
+        setListData([]);
         setInputText(text);
 
         // Search by address
@@ -215,7 +215,7 @@ const AddressTrainer = ({ navigation, route }) => {
                             </TouchableOpacity>
                         );
                     }}
-                    keyExtractor={(item) => item.key}
+                    keyExtractor={(item, index) => index.toString()}
                     style={styles.searchResultsContainer}
                 />
             </View>

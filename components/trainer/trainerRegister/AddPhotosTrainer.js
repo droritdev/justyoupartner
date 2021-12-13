@@ -5,6 +5,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Dialog from "react-native-dialog";
 import {MediaContext} from '../../../context/trainerContextes/MediaContext';
 import Video from 'react-native-video';
+import { useIsFocused } from "@react-navigation/native";
 
 import AppButton from '../../globalComponents/AppButton';
 import ArrowBackButton from '../../globalComponents/ArrowBackButton';
@@ -12,6 +13,7 @@ import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 //Here the traniner add photos and videos to his profile
 const AddPhotosTrainer = ({route, navigation}) => {
+    const isFocused = useIsFocused()
     const {profileImage, dispatchProfileImage} = useContext(MediaContext);
     const {mediaPictures, dispatchMediaPictures} = useContext(MediaContext);
     const {mediaVideos, dispatchMediaVideos} = useContext(MediaContext);
@@ -34,7 +36,15 @@ const AddPhotosTrainer = ({route, navigation}) => {
       });
     }
 
-
+    useEffect(() => {
+        if(isFocused){
+            if(route.params){
+                console.log('useeffect routeparams')
+                let tempUri = route.params.photoUri
+                setPictures([tempUri])
+            }
+        }
+    }, [navigation, isFocused])
 
     //Navigates back to the profile details page
     const handleArrowButton = () => {
@@ -43,6 +53,11 @@ const AddPhotosTrainer = ({route, navigation}) => {
 
     const handleAPencilButton = () => {
         isPencilPressed ? setIsPencilPressed(false) : setIsPencilPressed(true);
+        if(route.params){
+            console.log('handle routeparams')
+            let tempUri = route.params.photoUri
+            setPictures([tempUri])
+        }
     }
 
     const handleSubmit = () => {
@@ -172,8 +187,10 @@ const AddPhotosTrainer = ({route, navigation}) => {
 
     //Views the dialog
     const handlePencilPressed = (type, index) => {
+        console.log('pencil pressed ', type, index)
         switch (type) {
             case "pic":
+               console.log('pictures ', pictures)
                if (pictures[index] !== undefined) {
                 setSelectedType(type);
                 setSelectedItem(index);
@@ -200,7 +217,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
             repeats.push(
                 <View key={"cameraImage"} style={styles.rowPicturesContainer}>
                     <TouchableOpacity
-                        onPress={() => {}}
+                        onPress={() => isPencilPressed ? handlePencilPressed("pic", 0) : handleImage(0)}
                         style={styles.shadowContainer}
                         >
                         <Image
@@ -212,7 +229,8 @@ const AddPhotosTrainer = ({route, navigation}) => {
                 </View>
             )
         }
-        for(let i = 0; i < pictures.length; i++) {
+        for(let i = 1; i < pictures.length; i++) {
+            console.log('in image repeats ', i)
             repeats.push(
                 <View key={"image"+i} style={styles.rowPicturesContainer}>
                     <TouchableOpacity
@@ -232,6 +250,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
             <View key={"addImage"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
+                style={styles.iconViewStyle}
                 >
                 <Image
                     source={require('../../../images/cameraIcon.png')}
@@ -271,6 +290,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
             <View key={"addVideo"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
+                style={styles.iconViewStyle}
                 >
                 <Image
                     source={require('../../../images/videoIcon.png')}
@@ -379,6 +399,7 @@ const styles = StyleSheet.create ({
         marginTop: Dimensions.get('window').height * .015,
         height: Dimensions.get('window').height * .03,
         width: Dimensions.get('window').width * .03,
+        padding: 10
     },
     mainScrollContainer: {
         height: Dimensions.get('window').height * .9,
@@ -430,7 +451,7 @@ const styles = StyleSheet.create ({
     shadowContainer: {
         backgroundColor: '#fff',
         borderRadius: 16,
-        overflow: 'visible'
+        overflow: 'visible',
     },
     picture: {
         height: Dimensions.get('window').height * .15,
@@ -448,8 +469,6 @@ const styles = StyleSheet.create ({
     plusPicture: {
         height: Dimensions.get('window').height * .05,
         width: Dimensions.get('window').width * .1,
-        borderRadius: 16,
-        backgroundColor: 'whitesmoke',
         resizeMode: 'stretch'
     },
     deletePicture: {
@@ -505,7 +524,14 @@ const styles = StyleSheet.create ({
         alignSelf: 'center',
         color: 'red'
     },
-      
+    iconViewStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 16,
+        width: Dimensions.get('window').width * .43
+    }
 });
 
 export default AddPhotosTrainer;

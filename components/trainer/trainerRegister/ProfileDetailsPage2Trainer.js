@@ -37,8 +37,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     const {profileImage} = useContext(MediaContext);
     const {dispatchBirthday} = useContext(BirthdayContext);
     const {categories, dispatchCategories} = useContext(CategoryContext);
-    const {aboutMe} = useContext(AboutMeContext);
-    const {certifications} = useContext(CertificationsContext);
+    const {aboutMe, dispatchAboutMe} = useContext(AboutMeContext);
+    const {certifications, dispatchCertifications} = useContext(CertificationsContext);
     const {dispatchMaximumDistance} = useContext(MaximumDistanceContext);
     const {trainingSite1, dispatchTrainingSite1} = useContext(TrainingSiteContext);
     const {trainingSite2, dispatchTrainingSite2} = useContext(TrainingSiteContext);
@@ -119,6 +119,29 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       setMaximumDate(new Date().setFullYear(currentYear - 18, currentMonth, currentDay));
       setMinimumDate(new Date().setFullYear(currentYear - 120, currentMonth, currentDay));
     }, []);
+
+    useEffect(() => {
+      dispatchCategories({
+        type: 'SET_CATEGORIES',
+        categories: []
+      });
+      dispatchAboutMe({
+        type: 'SET_ABOUT_ME',
+        aboutMe: ""
+      });
+      dispatchCertifications({
+        type: 'SET_CERTIFICATIONS',
+        certifications: ""
+      });
+      dispatchTrainingSite1({
+        type: 'SET_TRAINING_SITE_1',
+        trainingSite1: ""
+      });
+      dispatchTrainingSite2({
+        type: 'SET_TRAINING_SITE_2',
+        trainingSite2: ""
+      });
+    }, [navigation])
     
     //Navigates back to the ProfileDetailsPage1Trainer
     const handleArrowButton = () => {

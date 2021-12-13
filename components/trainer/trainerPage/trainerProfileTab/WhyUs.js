@@ -120,7 +120,9 @@ const styles = StyleSheet.create({
         height: 50
     },
     viImage: {
-        marginRight: Dimensions.get('window').width * .0724
+        marginRight: Dimensions.get('window').width * .0724,
+        height: 25,
+        width: 25
     },
     reasonText: {
         fontSize: Dimensions.get('window').height * .018,
