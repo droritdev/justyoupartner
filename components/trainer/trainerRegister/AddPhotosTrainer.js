@@ -398,8 +398,8 @@ const styles = StyleSheet.create ({
     },
     pencilImage: {
         marginTop: Dimensions.get('window').height * .015,
-        height: Dimensions.get('window').height * .03,
-        width: Dimensions.get('window').width * .03,
+        height: Dimensions.get('window').height * .02,
+        width: Dimensions.get('window').width * .02,
         padding: 10
     },
     mainScrollContainer: {
@@ -531,7 +531,8 @@ const styles = StyleSheet.create ({
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 16,
-        width: Dimensions.get('window').width * .43
+        width: Dimensions.get('window').width * .43,
+        marginBottom: 10
     }
 });
 

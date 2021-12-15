@@ -25,7 +25,8 @@ const categoriesData = [
         { id: 16, label: 'ENDURANCE' },
         { id: 17, label: 'POWERLIFTING' },
         { id: 18, label: 'CROSSFIT' },
-        { id: 19, label: 'HORSEBACK RIDING' }
+        { id: 19, label: 'HORSEBACK RIDING' },
+        { id: 20, label: 'OTHER' }
 ];
 
 const PickCategory = ({navigation}) => {
@@ -175,7 +176,8 @@ const styles = StyleSheet.create({
     searchIcon: {
         height: Dimensions.get('window').height * .03,
         width: Dimensions.get('window').width * .04,
-        marginLeft: Dimensions.get('window').width * .035,
+        marginLeft: Dimensions.get('window').width * .03,
+        padding: 10
     },
     textInputStyle: {
         marginLeft: Dimensions.get('window').width * .0362,

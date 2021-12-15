@@ -294,7 +294,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
             </View>
 
 
-            <View display={isCodeSent} style={{flexDirection:'row'}}>
+          {/*  <View display={isCodeSent} style={{flexDirection:'row'}}>
                 <View>
                 <Text style={styles.resendCodeText}>{"Didn't recive an SMS?"}</Text> 
                 </View>
@@ -305,7 +305,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
                     <Text style={styles.resendButton}>{"resend"}</Text> 
                     </TouchableOpacity>
                 </View>
-            </View>
+              </View> */}
 
             <View display={isCodeSent} style={styles.nextButtonContainer}>
               {isNextError ?

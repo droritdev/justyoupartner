@@ -85,11 +85,7 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * .0055,
         paddingBottom: 20,
         borderBottomColor: 'lightgray',
-        borderBottomWidth: 1,
-        shadowColor: "#000000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.4,
-        shadowRadius: 6
+        borderBottomWidth: 1
     },
     headerTitle: {
         fontWeight: 'bold',

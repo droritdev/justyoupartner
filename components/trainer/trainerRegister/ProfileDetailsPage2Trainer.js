@@ -559,6 +559,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleOnCategoryPressed()}
+                  style={{position: 'absolute', right: 5, bottom: 10}}
                 >
                   <Image
                     source={require('../../../images/pencilIcon.png')}
@@ -904,6 +905,8 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
       alignItems: 'center',
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .9,
+      position: 'relative'
+      //paddingRight: 5
     },
     categoryUnPicked: {
       textAlign: 'center',

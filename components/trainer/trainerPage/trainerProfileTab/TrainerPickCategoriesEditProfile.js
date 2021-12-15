@@ -25,7 +25,8 @@ const categoriesData = [
         { id: 16, label: 'ENDURANCE' },
         { id: 17, label: 'POWERLIFTING' },
         { id: 18, label: 'CROSSFIT' },
-        { id: 19, label: 'HORSEBACK RIDING' }
+        { id: 19, label: 'HORSEBACK RIDING' },
+        { id: 20, label: 'OTHER' }
 ];
 
 const TrainerPickCategoriesEditProfile = ({navigation}) => {

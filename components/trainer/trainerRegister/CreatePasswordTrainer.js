@@ -84,6 +84,9 @@ const CreatePasswordTrainer = ({navigation}) => {
           </View>
           <View style={styles.passwordContainer}>
             <Text style={styles.createPasswordText}>Create Password</Text>
+            <View style={{width: Dimensions.get('window').width * .69, paddingTop: 30}}>
+              <Text>Please enter a password with at least one number and one letter. The password must be at least 6 characters.</Text>
+            </View>
             <View style={styles.passwordInput}>
               <TextInput
                 value={passwordInput}
@@ -156,7 +159,7 @@ const CreatePasswordTrainer = ({navigation}) => {
       borderWidth: 2,
       height: Dimensions.get('window').height * .08,
       width: Dimensions.get('window').width * .7,
-      marginTop: Dimensions.get('window').height * .088,
+      marginTop: Dimensions.get('window').height * .05,
       justifyContent: 'center'
     },
     confirmedPasswordInput: {
