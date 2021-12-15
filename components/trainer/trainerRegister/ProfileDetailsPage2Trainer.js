@@ -573,13 +573,13 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           </View>
           <View style={styles.inputsContainer}>
             <Text style={styles.categoryTitle}>About Me</Text>
-            <View style={styles.aboutMeContainer}>
-              <View style={aboutMe === "Write about yourself..." ? styles.aboutMeButton : styles.aboutMeButtonWritten}>
-                <TouchableOpacity
+            <TouchableOpacity
                   onPress={() => handleOnAboutMePress()}
                 >
+            <View style={styles.aboutMeContainer}>
+            
+              <View style={aboutMe === "Write about yourself..." ? styles.aboutMeButton : styles.aboutMeButtonWritten}>
                   <Text style={aboutMe === "Write about yourself..." ? styles.aboutMeTitle :styles.aboutMeText}>{aboutMe.length > charsLimit ? aboutMe.slice(0,charsLimit)+"..." : aboutMe}</Text>
-                </TouchableOpacity>
               </View>
               <View style={styles.pencilButtonAboutMe}>
                 <TouchableOpacity
@@ -592,17 +592,19 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            </TouchableOpacity>
+
             {isAboutMeError ?
                 <Text style={styles.aboutMeErrorMessage}>{aboutMeMessageError}</Text>
               : null}
             <Text style={styles.categoryTitle}>Certifications</Text>
-            <View style={styles.certificationsContainer}>
-              <View style={certifications === "Write your certifications..." ? styles.certificationsButton : styles.certificationsButtonWritten}>
-                <TouchableOpacity
+            <TouchableOpacity
                   onPress={() => handleCertificationsPress()}
                 >
+            <View style={styles.certificationsContainer}>
+              <View style={certifications === "Write your certifications..." ? styles.certificationsButton : styles.certificationsButtonWritten}>
+                
                   <Text style={certifications === "Write your certifications..." ? styles.certificationsTitle : styles.certificationsText}>{certifications.length > charsLimit ? certifications.slice(0,{charsLimit})+"..." : certifications}</Text>
-                </TouchableOpacity>
               </View>
               <View style={styles.pencilButtonCertifications}>
                 <TouchableOpacity
@@ -615,6 +617,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            </TouchableOpacity>
             {isCertificationError ?
                 <Text style={styles.certificationErrorMessage}>{certificationMessageError}</Text>
               : null}
@@ -952,8 +955,9 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
     },
     aboutMeButton: {
       height: Dimensions.get('window').height * .12,
+      width: '100%',
       alignSelf: 'center',
-      justifyContent: 'center',
+      justifyContent: 'center'
     },
     aboutMeButtonWritten: {
       alignSelf: 'flex-start',

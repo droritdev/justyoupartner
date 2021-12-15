@@ -6,6 +6,7 @@ import {PasswordContext} from '../../../context/trainerContextes/PasswordContext
 import { Base64 } from 'js-base64';
 
 import AppButton from '../../globalComponents/AppButton';
+import ArrowBackButton from '../../globalComponents/ArrowBackButton';
 
 
 //Here the user creates his password
@@ -72,6 +73,11 @@ const CreatePasswordTrainer = ({navigation}) => {
     return(
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
+          <View style={{width: '100%'}}>
+            <ArrowBackButton
+              onPress={() => navigation.goBack()}
+            />
+          </View>
           <View style={styles.headerContainer}>
             <Text style={styles.justYouHeader}>Just You</Text>
             <Text style={styles.partnerText}>Partner</Text>

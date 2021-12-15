@@ -182,6 +182,7 @@ const AddPhotosTrainer = ({route, navigation}) => {
             break;
         }
         setVisible(false);
+        setIsPencilPressed(false)
     };
     
 

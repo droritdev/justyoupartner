@@ -469,7 +469,7 @@ const TrainerProfilePage = ({navigation}) => {
                         <View style={styles.ratingAndAge}>
                             <Text style={styles.ratingText}>{starRating} </Text>
                             <Image
-                                source={require('../../../../images/graystar.png')}
+                                source={require('../../../../images/starIconBlue.png')}
                                 style={styles.startIcon}
                             />
                             <Text style={styles.ageText}> - Age {age}</Text>
@@ -651,7 +651,7 @@ const styles = StyleSheet.create({
     },
     personalTrainerText: {
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height * .022,
+        fontSize: Dimensions.get('window').height * .019,
         color: 'deepskyblue'
     },
     ratingAndAge: {

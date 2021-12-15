@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     emailInput: {
       borderColor: 'deepskyblue',
       borderRadius: 20,
-      borderWidth: 3,
+      borderWidth: 1,
       height: Dimensions.get('window').height * .07,
       marginRight: Dimensions.get('window').width * .0483,
       marginTop: Dimensions.get('window').height * .033,
