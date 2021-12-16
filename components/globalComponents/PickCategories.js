@@ -1,9 +1,10 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {useEffect, useState, Fragment, useRef} from 'react';
 import {View, Text, Button, ScrollView, Dimensions, Image, StyleSheet, SafeAreaView, TextInput, Switch} from 'react-native'
 
 import { TagSelect } from 'react-native-tag-select';
 
 const PickCategories = (props) => {
+    const ref = useRef()
     const categories = [
         { id: 1, label: 'STRENGTH' },
         { id: 2, label: 'KICKBOXING' },
@@ -34,9 +35,7 @@ const PickCategories = (props) => {
             itemStyle={styles.item}
             itemLabelStyle={styles.label}
             itemStyleSelected={styles.itemSelected}
-            ref={(tag) => {
-                this.tag = tag;
-            }}
+            ref={ref}
             onItemPress={props.onItemPress}
         />
     )

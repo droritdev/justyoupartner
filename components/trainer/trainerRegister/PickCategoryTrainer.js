@@ -34,13 +34,22 @@ const PickCategory = ({navigation}) => {
     const [isError, setIsError] = useState(false); 
     const [errorMessage ,setErrorMessage] = useState("");
 
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(categories);
     const [items, setItems] = useState(categoriesData);
+    const [categoriesTag, setCategoriesTag] = useState([])
 
+    // useEffect(() => {
+    //     console.log('in useeffect ', categories)
+    //     createCategoriesTag(categories)
+    //     console.log('categoriestag ', categoriesTag)
+    // }, [categories])
 
-    useEffect(() => {
-        
-    }, [])
+    const createCategoriesTag = (selectedCategories) => {
+        const categoriesTagTemp = categoriesData.filter(item => selectedCategories.includes(item.label))
+        console.log('in createCategoriesTag categoriesTagTemp ', categoriesTagTemp)
+        //setCategoriesTag(categoriesTagTemp)
+        return categoriesTagTemp
+    }
 
     //Navigate user back to profile details page
     const handleArrowButton = () => {
@@ -112,6 +121,7 @@ const PickCategory = ({navigation}) => {
         <View style={styles.categoryPickerContainer}>
             <View style={styles.categorySelect}>
                 <PickCategories
+                    value={createCategoriesTag(categories)}
                     data={items}
                     onItemPress={(item) => handleOnItemPress(item)}
                 />
