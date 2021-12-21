@@ -16,6 +16,7 @@ import TrainingSiteContextProvider from './TrainingSiteContext';
 import TrainingPriceContextProvider from './TrainingPriceContext';
 import CalendarContextProvider from './CalendarContext';
 import ReviewsContextProvider from './ReviewsContext';
+import PaypalUsernameContextProvider from './PaypalUsernameContext';
 
 
 const TrainerGlobalStore = ({children}) => {
@@ -37,7 +38,9 @@ const TrainerGlobalStore = ({children}) => {
                                                             <PhoneContextProvider>
                                                                 <CalendarContextProvider>
                                                                     <ReviewsContextProvider>
+                                                                        <PaypalUsernameContextProvider>
                                                                 {children}  
+                                                                        </PaypalUsernameContextProvider>
                                                                     </ReviewsContextProvider>
                                                                 </CalendarContextProvider>
                                                             </PhoneContextProvider>

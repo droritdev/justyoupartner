@@ -434,7 +434,7 @@ const ProfileDetailsPage2Trainer = ({navigation}) => {
           });
         }
 
-        navigation.navigate('PhoneNumberVerificationTrainer');
+        navigation.navigate('PaypalUsername');
       }
     }
 

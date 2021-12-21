@@ -15,6 +15,7 @@ import {TrainingPriceContext} from '../../../context/trainerContextes/TrainingPr
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 import {PhoneContext} from '../../../context/trainerContextes/PhoneContext';
 import {MediaContext} from '../../../context/trainerContextes/MediaContext';
+import {PaypalUsernameContext} from '../../../context/trainerContextes/PaypalUsernameContext';
 
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
@@ -47,6 +48,7 @@ const DonePopUpTrainer = ({navigation}) => {
     const {phoneNumber} = useContext(PhoneContext);
     const {mediaPictures} = useContext(MediaContext);
     const {mediaVideos} = useContext(MediaContext);
+    const {paypalUsername} = useContext(PaypalUsernameContext);
 
     var picturesURL = [];
     var videosURL = [];
@@ -193,6 +195,7 @@ const DonePopUpTrainer = ({navigation}) => {
     //Register trainer to mongodb
     const registerTrainer = async () => {
         console.log('in register trainer')
+        console.log('paypalUsername ', paypalUsername)
         axios  
         .post('/trainers/register', {
             name: {
@@ -202,6 +205,7 @@ const DonePopUpTrainer = ({navigation}) => {
             birthday: birthday,
             email: emailAddress,
             password: password,
+            paypalUsername: paypalUsername,
             country: country,
             categories: categories,
             about: aboutMe,

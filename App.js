@@ -26,6 +26,7 @@ import ForgotPasswordTrainer from './components/trainer/trainerRegister/ForgotPa
 import TermsConditionsTrainer from './components/trainer/trainerRegister/TermsConditionsTrainer';
 import TrainerContainer from './components/trainer/trainerPage/TrainerContainer';
 import Camera from './components/globalComponents/Camera';
+import PaypalUsername from './components/trainer/trainerRegister/PaypalUsername';
 
 import SignUpPlace from './components/place/placeRegister/SignUpPlace';
 import LogInPlace from './components/place/placeRegister/LogInPlace';
@@ -92,6 +93,7 @@ const App = () => {
           <Stack.Screen name='TermsConditionsTrainer' component={TermsConditionsTrainer} />
           <Stack.Screen name='TrainerContainer' component={TrainerContainer} />
           <Stack.Screen name='Camera' component={Camera} />
+          <Stack.Screen name='PaypalUsername' component={PaypalUsername} />
 
           <Stack.Screen name='SignUpPlace' component={SignUpPlace} />
           <Stack.Screen name='LogInPlace' component={LogInPlace} />
