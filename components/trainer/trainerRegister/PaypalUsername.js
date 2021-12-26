@@ -45,11 +45,11 @@ const PaypalUsername = ({navigation}) => {
               <Text style={styles.partnerHeader}>Partner</Text>
             </View>
             <View style={{paddingHorizontal: 80, marginVertical: 80}}>
-                <Text style={{fontSize: 18}}>Enter your paypal username. This will be used to send you your monthly payments.</Text>
+                <Text style={{fontSize: 18}}>Enter your paypal email. This will be used to send you your monthly payments.</Text>
             </View>
             <View>
                 <TextInput
-                    placeholder='paypal username'
+                    placeholder='paypal email'
                     style={styles.input}
                     value={paypalInput}
                     onChangeText={value => handleChangeInput(value)}
