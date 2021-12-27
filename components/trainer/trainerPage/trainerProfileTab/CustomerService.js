@@ -120,21 +120,23 @@ const CustomerService = ({navigation}) => {
             to: supportEmail,
             from: supportEmail,
             subject: subjectInput,
-            text: senderInfo + mailInput,
+            text: senderInfo + mailInput
         },
         config
         )
         .then((res) => {
             //Check if email was sent to the support
+            console.log('sendEmail success')
             if (res.data.status === 'success') {
                 //Send automatic response
-                sendAutomaticResponse();
+                //sendAutomaticResponse();
             }
         })
         .catch((err) => {
+            console.log('sendEmail catch ', err, err.response)
             Alert.alert(
-                'System failure',
-                "Couldn't send message, please try again later.",
+                "System failure",
+                "Couldn't send message, please try again later",
                 [
                     {text: 'OK'},
                   ],
@@ -268,7 +270,8 @@ const CustomerService = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        height: Dimensions.get('window').height 
+        height: Dimensions.get('window').height * 0.93,
+        marginBottom: 50
     },
     cancelButton: {
         marginLeft: Dimensions.get('window').width * .0483,
