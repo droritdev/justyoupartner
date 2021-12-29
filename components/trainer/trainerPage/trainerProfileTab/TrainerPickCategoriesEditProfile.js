@@ -174,9 +174,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     searchIcon: {
-        height: Dimensions.get('window').height * .05,
-        width: Dimensions.get('window').width * .07,
-        marginLeft: Dimensions.get('window').width * .0241,
+        height: Dimensions.get('window').height * .03,
+        width: Dimensions.get('window').width * .04,
+        marginLeft: Dimensions.get('window').width * .03,
+        padding: 10
     },
     textInputStyle: {
         marginLeft: Dimensions.get('window').width * .0362,
@@ -193,8 +194,8 @@ const styles = StyleSheet.create({
     },
     submitButtonContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
-        marginTop: Dimensions.get('window').height * .066,
+        //justifyContent: 'flex-end',
+        //marginTop: Dimensions.get('window').height * .066,
         alignItems: 'center',
         marginBottom: 70
       },

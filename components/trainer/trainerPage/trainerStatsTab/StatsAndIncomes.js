@@ -439,7 +439,7 @@ const StatsAndIncomes = ({navigation}) => {
             :
                 <View>
                 
-                    <LineChart
+                    {/* <LineChart
                     data={{
                         labels: getMonthsArray(),
                         datasets: [
@@ -471,7 +471,7 @@ const StatsAndIncomes = ({navigation}) => {
                     }}
                     bezier
                     style={styles.graphStyle}
-                    />
+                    /> */}
 
 
                     <View style={ styles.underGraphTitle}> 

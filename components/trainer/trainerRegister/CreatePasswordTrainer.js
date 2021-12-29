@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, Dimensions, SafeAreaView, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Dimensions, SafeAreaView, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
@@ -71,6 +71,10 @@ const CreatePasswordTrainer = ({navigation}) => {
     }
   
     return(
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "position"}
+        style={{flex: 1}}
+      >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
           <View style={{width: '100%'}}>
@@ -120,6 +124,7 @@ const CreatePasswordTrainer = ({navigation}) => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     );
   }
   
