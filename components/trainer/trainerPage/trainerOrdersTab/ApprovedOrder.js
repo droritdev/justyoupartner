@@ -68,6 +68,12 @@ const ApprovedOrder = ({navigation}) => {
     }
 
     const handleCompleteButton = () => {
+        console.log('completebutton endtime replace ', orderObject.trainingDate.endTime.replace(' ', 'T') + ':00')
+        let orderEndTime = new Date(orderObject.trainingDate.endTime.replace(' ', 'T') + ':00')
+        if(orderEndTime.getTime() > new Date().getTime()){
+            Alert.alert('You cannot complete a training that has not occured yet')
+            return
+        }
         axios  
         .post('/orders/update-status', {
             _id: orderObject._id,

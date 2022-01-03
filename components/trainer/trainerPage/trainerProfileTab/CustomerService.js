@@ -115,7 +115,7 @@ const CustomerService = ({navigation}) => {
             console.log('emailarray of ccinput ', emailsArray)
             if (emailsArray.length > 0) {
                 console.log('in emailarray larger than 0')
-                await sendEmailCopy(emailsArray);
+                //await sendEmailCopy(emailsArray);
             }
         }
 
@@ -238,7 +238,7 @@ const CustomerService = ({navigation}) => {
                         <Text style={styles.companyEmail}> {supportEmail}</Text>
                     </View>
                 </View>
-                <View style={styles.headerContainer}>
+                {/* <View style={styles.headerContainer}>
                     <View style={styles.headerRow}>
                         <Text style={styles.emailHeader}>Cc: </Text>
                         <TextInput
@@ -248,7 +248,7 @@ const CustomerService = ({navigation}) => {
                             value={ccInput}
                         />
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.headerContainer}>
                     <View style={styles.headerRow}>
                         <Text style={styles.emailHeader}>Subject: </Text>
