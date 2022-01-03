@@ -334,7 +334,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
       marginLeft: Dimensions.get('window').width * .0483
     },
     upperContainer: {
-      height: Dimensions.get('window').height * .275,
+      //height: Dimensions.get('window').height * .275,
     },
     profileDetailesText: {
       fontWeight: 'bold',
@@ -363,7 +363,7 @@ const ProfileDetailsPage1Trainer = ({navigation}) => {
     permissionsContainer: {
       justifyContent: 'space-between',
       height: Dimensions.get('window').height * .24,
-      marginTop: Dimensions.get('window').height * .01,
+      marginTop: Dimensions.get('window').height * .02,
       marginLeft: Dimensions.get('window').width * .0483
     },
     permissionsText: {

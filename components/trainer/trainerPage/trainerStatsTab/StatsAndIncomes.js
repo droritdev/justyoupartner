@@ -406,11 +406,7 @@ const StatsAndIncomes = ({navigation}) => {
                     :
                         <View>
                         {totalCompletedOrders.length === 0?
-                            <View> 
-                                <Image
-                                    source={require('../../../../images/noReceipts.png')}
-                                    style={styles.noOrdersImage}
-                                />
+                            <View>
                                 <Text style={styles.noOrdersTitle}>{"NO RECEIPTS FOUND"}</Text>
                                 <Text style={styles.noOrdersMessage}>{"Looks like you haven't completed an order yet."}</Text>
                             </View>

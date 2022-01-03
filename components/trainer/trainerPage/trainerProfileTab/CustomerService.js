@@ -106,11 +106,15 @@ const CustomerService = ({navigation}) => {
         //Information of the sender for customer service
         var senderInfo = 'Email: ' + emailAddress + 
                         '\n' + 'Name: '+ firstName + ' ' + lastName +  '\n \n \n';
-
+        console.log('in sendEmail ccinput ', ccInput)
         //Check if there is need to send a copy to anyone
-        if (ccInput !== "") {
-            var emailsArray = ccInput.split(", ");
+        if (ccInput.length !== 0) {
+            console.log('ccinput not nothing')
+            //var emailsArray = ccInput.split(", ");
+            var emailsArray = ccInput
+            console.log('emailarray of ccinput ', emailsArray)
             if (emailsArray.length > 0) {
+                console.log('in emailarray larger than 0')
                 await sendEmailCopy(emailsArray);
             }
         }
@@ -158,6 +162,7 @@ const CustomerService = ({navigation}) => {
 
     //Send copy of the email to every email in the array
     const sendEmailCopy = async (emailArray) => {
+        console.log('in sendemailcopy emailarray ', emailArray)
         await axios
         .post('/send-email', {
             to: emailArray,
@@ -168,11 +173,13 @@ const CustomerService = ({navigation}) => {
         config
         )
         .then((res) => {
+            console.log('sendemailcopy then res data ', res.data)
             //Check if the copy was sent to the specified email address
-            if (res.data.status === 'success') {
-            }
+            //if (res.data.status === 'success') {
+            //}
         })
         .catch((err) => {
+            console.log('sendcopyemail ctach ', err)
             Alert.alert(
                 'System failure',
                 "Couldn't send message, please try again later.",
@@ -238,6 +245,7 @@ const CustomerService = ({navigation}) => {
                             style={styles.headerInput}
                             placeholder={"just@gmail.com, you@hotmail.com"}
                             onChangeText={(text) => handleOnCcInputChange(text)}
+                            value={ccInput}
                         />
                     </View>
                 </View>
@@ -330,6 +338,7 @@ const styles = StyleSheet.create({
     },
     headerInput: {
         fontSize: Dimensions.get('window').height * .022,
+        width: '100%'
     },
     emailContentContainer: {
         marginLeft: Dimensions.get('window').width * .0483,

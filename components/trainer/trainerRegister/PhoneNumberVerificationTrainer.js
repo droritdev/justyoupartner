@@ -152,6 +152,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
               console.log('res not null resdata ', res.data)
               setRequestId(res.data)
               console.log('requestId after filled ', requestId)
+              Alert.alert('Code sent to phone')
             }
             else{
               console.log('success but res null ', error)
