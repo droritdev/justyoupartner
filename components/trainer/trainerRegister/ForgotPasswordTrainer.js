@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .022
     },
     verifyButton: {
-        width: Dimensions.get('window').width * .3,
+        width: Dimensions.get('window').width * .4,
         height: Dimensions.get('window').height * .05,
         alignItems: 'center',
         justifyContent: 'center',

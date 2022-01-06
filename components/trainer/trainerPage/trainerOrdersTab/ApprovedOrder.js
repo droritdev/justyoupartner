@@ -9,6 +9,7 @@ import axios from 'axios';
 
 //The trainer's order page - pennding + approved
 const ApprovedOrder = ({navigation}) => {
+    const [trainingCompletedBG, setTrainingCompletedBG] = useState('deepskyblue')
 
     const {orderObject} = useContext(OrderContext);
     const [clientInfo, setClientInfo] = useState([]);
@@ -83,6 +84,7 @@ const ApprovedOrder = ({navigation}) => {
         )
         .then((res) => {
             if (res.data.type === "success") {
+                setTrainingCompletedBG('lightgray')
                 Alert.alert('Training has been completed')
                 setIsDisable(true)
             }
@@ -192,7 +194,7 @@ const ApprovedOrder = ({navigation}) => {
 
                 <TouchableOpacity
                         onPress={handleCompleteButton}
-                        style={styles.completeButton}
+                        style={{...styles.completeButton, backgroundColor: trainingCompletedBG}}
                         disabled={isDisabled}
                 >
                         <Text style={styles.approveButtonText}>Training Completed</Text>
@@ -305,7 +307,6 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width * .85,
         alignSelf: 'center',
-        backgroundColor: 'deepskyblue',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10

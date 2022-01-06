@@ -3,6 +3,8 @@ import {StyleSheet, View, Text, Dimensions, SafeAreaView, TouchableWithoutFeedba
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 
+import axios from 'axios'
+
 import {EmailContext} from '../../../context/trainerContextes/EmailContext';
 import {PasswordContext} from '../../../context/trainerContextes/PasswordContext';
 import { Base64 } from 'js-base64';
@@ -27,6 +29,14 @@ const LogInTrainer = ({navigation}) => {
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
+
+    const config = {
+        withCredentials: true,
+        baseURL: 'https://trainer.iqdesk.info:443/',
+        headers: {
+          "Content-Type": "application/json",
+        }
+    };
 
 
     //Navigates back to the SignUpTrainer page
@@ -80,6 +90,22 @@ const LogInTrainer = ({navigation}) => {
         });
     }
 
+    const checkEmailIsUsed = () => {
+        axios  
+        .get('/trainers/email/'+emailAddressInput.toLowerCase(), config)
+        .then((doc) => {
+            if(doc) {
+                if(doc.data[0].email!=null) {
+                    authUser()
+                }
+            }
+        })
+        .catch((err) =>  {
+            setErrorMessage("The account doesn't exist");
+            setIsErrorMessage(true);
+        });
+    }
+
 
     //Handle when user enters his email address
     const handleOnChangePhoneEmail = (text) => {
@@ -116,7 +142,7 @@ const LogInTrainer = ({navigation}) => {
                 setIsErrorMessage(true);
         } 
         else if (isEmailValid && passwordInput != "") {
-            authUser();
+            checkEmailIsUsed();
         }
         else if (!isEmailValid) {
             setErrorMessage("Email is not valid");
