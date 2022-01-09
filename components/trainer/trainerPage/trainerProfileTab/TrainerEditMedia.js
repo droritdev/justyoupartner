@@ -410,6 +410,7 @@ const TrainerEditMedia = ({navigation}) => {
             <View  key={"addPhoto"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleImage(pictures.length)}
+                style={styles.iconViewStyle}
                 >
                 <Image
                     source={require('../../../../images/cameraIcon.png')}
@@ -470,6 +471,7 @@ const TrainerEditMedia = ({navigation}) => {
             <View key={"addVideo"} style={styles.rowPicturesContainer}>
                 <TouchableOpacity
                 onPress={() => isPencilPressed ? null : handleVideo(videos.length)}
+                style={styles.iconViewStyle}
                 >
                 <Image
                     source={require('../../../../images/videoIcon.png')}
@@ -510,7 +512,7 @@ const TrainerEditMedia = ({navigation}) => {
                     onPress={handleAPencilButton}
                 >
                     <Image
-                        source={require('../../../../images/pencil.png')}
+                        source={require('../../../../images/pencilIcon.png')}
                         style={styles.pencilImage}
                     />
                 </TouchableOpacity>
@@ -574,8 +576,8 @@ const styles = StyleSheet.create ({
     },
     pencilImage: {
         marginTop: Dimensions.get('window').height * .015,
-        height: Dimensions.get('window').height * .035,
-        width: Dimensions.get('window').width * .07,
+        height: Dimensions.get('window').height * .037,
+        width: Dimensions.get('window').width * .08,
     },
     mainScrollContainer: {
         height: Dimensions.get('window').height * .9,
@@ -643,10 +645,8 @@ const styles = StyleSheet.create ({
         shadowRadius: 16.00,    
     },
     plusPicture: {
-        height: Dimensions.get('window').height * .15,
-        width: Dimensions.get('window').width * .43,
-        borderRadius: 16,
-        backgroundColor: 'whitesmoke',
+        height: Dimensions.get('window').height * .05,
+        width: Dimensions.get('window').width * .1,
         resizeMode: 'stretch'
     },
     deletePicture: {
@@ -702,7 +702,16 @@ const styles = StyleSheet.create ({
         alignSelf: 'center',
         color: 'red'
     },
-      
+    iconViewStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 16,
+        width: Dimensions.get('window').width * .43,
+        height: Dimensions.get('window').width * .32,
+        marginBottom: 10
+    }
 });
 
 export default TrainerEditMedia;
