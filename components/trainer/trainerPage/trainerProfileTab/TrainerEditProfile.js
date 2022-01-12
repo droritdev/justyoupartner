@@ -576,6 +576,7 @@ const TrainerEditProfile = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleOnCategoryPressed()}
+                  style={styles.categoryIconCat}
                 >
                   <Image
                     source={require('../../../../images/pencilIcon.png')}
@@ -922,6 +923,7 @@ const TrainerEditProfile = ({navigation}) => {
       alignItems: 'center',
       height: Dimensions.get('window').height * .065,
       width: Dimensions.get('window').width * .9,
+      position: 'relative'
     },
     categoryUnPicked: {
       textAlign: 'center',
@@ -937,8 +939,14 @@ const TrainerEditProfile = ({navigation}) => {
     },
     categoryIcon: {
       height: Dimensions.get('window').height * .02,
-      width: Dimensions.get('window').height * .02,
+      width: Dimensions.get('window').height * .02
     },
+    categoryIconCat: {
+      position: 'absolute',
+      right: -7,
+      bottom: 7
+    },
+
     categoryErrorMessage: {
       color: 'red',
       alignSelf: 'center',
