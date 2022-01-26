@@ -85,7 +85,7 @@ const TrainerContainer = () => {
                 options={{
                     tabBarIcon: ({ focused,tintColor }) => (
                         !focused ? <Image
-                            source={require('../../../images/calendarIcon.jpg')}
+                            source={require('../../../images/calendarIconGray.jpg')}
                             style={[styles.statsIcon, {tintColor: tintColor}]}
                           />
                           :
