@@ -238,6 +238,8 @@ const TermsConditions = ({navigation}) => {
                 <Text style={styles.paragraphStyle}>                                           
                     If you have any questions about this Privacy Policy, please contact us at service@JustYou.com, or post to Just You Corporation, ________________________ (address).
                 </Text>
+                <View style={{height: 100}}>
+                </View>
                 </ScrollView>
 
         </SafeAreaView>

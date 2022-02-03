@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Dimensions, Image, SafeAreaView, ScrollView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import PickCategories from '../../../globalComponents/PickCategories';
@@ -34,13 +34,20 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
     const [isError, setIsError] = useState(false); 
     const [errorMessage ,setErrorMessage] = useState("");
 
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(categories);
     const [items, setItems] = useState(categoriesData);
 
 
     useEffect(() => {
         
     }, [])
+
+    const createCategoriesTag = (selectedCategories) => {
+        const categoriesTagTemp = categoriesData.filter(item => selectedCategories.includes(item.label))
+        console.log('in createCategoriesTag categoriesTagTemp ', categoriesTagTemp)
+        //setCategoriesTag(categoriesTagTemp)
+        return categoriesTagTemp
+    }
 
     //Navigate user back to profile details page
     const handleArrowButton = () => {
@@ -88,6 +95,7 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
   
     return(
       <SafeAreaView style={styles.container}>
+        <ScrollView>
         <View style={styles.headerContainer}>
             <Text style={styles.justYouHeader}>Just You</Text>
             <Text style={styles.partnerText}>Partner</Text>
@@ -112,6 +120,7 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
         <View style={styles.categoryPickerContainer}>
             <View style={styles.categorySelect}>
                 <PickCategories
+                    value={createCategoriesTag(categories)}
                     data={items}
                     onItemPress={(item) => handleOnItemPress(item)}
                 />
@@ -128,6 +137,7 @@ const TrainerPickCategoriesEditProfile = ({navigation}) => {
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
+          </ScrollView>
       </SafeAreaView>
     );
 }

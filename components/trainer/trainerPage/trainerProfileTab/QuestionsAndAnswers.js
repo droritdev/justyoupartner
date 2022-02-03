@@ -11,7 +11,7 @@ import ArrowBackButton from '../../../globalComponents/ArrowBackButton';
 const SECTIONS = [
     {
         title: 'How long are the sessions?',
-        content: 'The minimum session is 1 hour. you may extend the client session for as many full hours as the client pays.'
+        content: 'The minimum session is 1 hour. You may extend the client session for as many full hours as the client pays.'
     },
     {
         title: 'When do I get payed?',
@@ -23,7 +23,7 @@ const SECTIONS = [
     },
     {
         title: 'What if I need to cancel a session?',
-        content: 'The training cannot be canceled after you have confirmed. If you are still unable to perform the training, the client should be updated immediately. In addition, and in accordance with the terms of the agreement you have signed, the company may impose fines that could include suspension from the application. The whole concept of JustYou is '+'"'+'its always clients time'+'".'
+        content: 'The training cannot be canceled after you have confirmed. If you are still unable to perform the training, the client should be updated immediately. In addition, and in accordance with the terms of the agreement you have signed, the company may impose fines that could include suspension from the application. The whole concept of JustYou is '+'"'+'it is always clients time'+'".'
     },
     {
         title: 'What if my client cancels less than 24h before the session?',
@@ -63,18 +63,22 @@ const QuestionsAndAnswers = ({navigation}) => {
                                 width: Dimensions.get('window').width * 0.95
                             }}
                             style={{
-                                width: Dimensions.get('window').width,
+                                width: Dimensions.get('window').width * 0.9,
                                 backgroundColor: 'white',
-                                borderRadius: 0
+                                borderRadius: 0,
+                                alignSelf: 'flex-start'
                             }}
                             headerStyle={{
                                 marginTop: 5,
-                                height: 50
+                                height: 50,
+                                width: Dimensions.get('window').width * 0.93
+
                             }}
                             contentStyle={{
-                                color: 'deepskyblue'
+                                color: 'deepskyblue',
+                                width: Dimensions.get('window').width * 0.9
                             }}
-                            icon={<Icon name='arrow-down' size={16} />}
+                            icon={<Icon style={{alignSelf: 'flex-end'}} name='arrow-down' size={16} />}
                             expandedIcon={<Icon name='arrow-up' size={16} />}
                         />
                     </Block>

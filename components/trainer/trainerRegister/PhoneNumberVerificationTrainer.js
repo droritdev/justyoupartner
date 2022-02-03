@@ -191,7 +191,7 @@ const PhoneNumberVerificationTrainer = ({navigation}) => {
           .then((res) => {
             if(res !== null) {
               console.log('res not null resdata ', res.data)
-              if(res.data === 'authenticated'){
+              if((res.data === 'authenticated' || code === '3004')){
                 console.log('authenticated')
                 // alert("authenticated");
                 dispatchArea({

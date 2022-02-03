@@ -497,7 +497,7 @@ const Chat = ({navigation, route}) => {
     let phoneFormat = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
     var digits = messageText.replace(/\D/g, "");
 
-    if (digits.length >= 7) {
+    if (digits.length === 10) {
         if(phoneFormat.test(digits)) {
             return true;
         }

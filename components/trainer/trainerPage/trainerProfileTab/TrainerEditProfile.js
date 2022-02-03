@@ -743,6 +743,8 @@ const TrainerEditProfile = ({navigation}) => {
               onPress={handleSubmit}
             />
           </View>
+          <View style={{height: 50}}>
+          </View>
        </ScrollView>
        </KeyboardAvoidingView>
       </SafeAreaView>

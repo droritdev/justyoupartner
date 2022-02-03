@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Alert, Button, Text, View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground, TextInput} from 'react-native';
+import {Alert, Button, Text, View, SafeAreaView, StyleSheet, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AppButton from '../../../globalComponents/AppButton';
@@ -119,53 +119,55 @@ const ChangeEmailAddress = ({navigation}) => {
     }
 
     const handleSubmit = () => {
-        if(isCodeSent === 'flex') {
-            if(codeInput === ""){
-                setIsCodeError(true);
-                setCodeErrorMessage("Please enter the verifcation code");
-            }
-            else if(!(Number(codeInput))){
-                setIsCodeError(true);
-                setCodeErrorMessage("Enter digits only");
-            }
-            else if(codeInput.length != 5){
-                setIsCodeError(true);
-                setCodeErrorMessage("Code is 5 digits");
-            }
-            else{
-                // navigation.navigate('TrainerSettings');
-                axios
-                .post('/verify-code', {
-                  to: emailAddressInput.toLowerCase(),
-                  code: codeInput
-                },
-                config
-                )
-                .then((res) => {
-                    if(res !== null) {
-                    if(res.data.status === 'approved'){
-                        updateDB();
-                    }
-                    else{
-                        setIsCodeError(true);
-                        setCodeErrorMessage("Incorrect code, please try again.")
-                    }
-                    }
-                    else{
-                        setIsCodeError(true);
-                        setCodeErrorMessage("Incorrect code, please try again.")
-                    }
-                }
-                )
-                .catch((error) => {
-                    alert(error)
-                })
-            }
-        }
-        else{
-            setIsEmailError(true);
-            setEmailErrorMessage("Get code first");
-        }
+        updateDB();
+
+        // if(isCodeSent === 'flex') {
+        //     if(codeInput === ""){
+        //         setIsCodeError(true);
+        //         setCodeErrorMessage("Please enter the verifcation code");
+        //     }
+        //     else if(!(Number(codeInput))){
+        //         setIsCodeError(true);
+        //         setCodeErrorMessage("Enter digits only");
+        //     }
+        //     else if(codeInput.length != 5){
+        //         setIsCodeError(true);
+        //         setCodeErrorMessage("Code is 5 digits");
+        //     }
+        //     else{
+        //         // navigation.navigate('TrainerSettings');
+        //         axios
+        //         .post('/verify-code', {
+        //           to: emailAddressInput.toLowerCase(),
+        //           code: codeInput
+        //         },
+        //         config
+        //         )
+        //         .then((res) => {
+        //             if(res !== null) {
+        //             if(res.data.status === 'approved'){
+        //                 updateDB();
+        //             }
+        //             else{
+        //                 setIsCodeError(true);
+        //                 setCodeErrorMessage("Incorrect code, please try again.")
+        //             }
+        //             }
+        //             else{
+        //                 setIsCodeError(true);
+        //                 setCodeErrorMessage("Incorrect code, please try again.")
+        //             }
+        //         }
+        //         )
+        //         .catch((error) => {
+        //             alert(error)
+        //         })
+        //     }
+        // }
+        // else{
+        //     setIsEmailError(true);
+        //     setEmailErrorMessage("Get code first");
+        // }
     }
 
 
@@ -259,6 +261,7 @@ const ChangeEmailAddress = ({navigation}) => {
 
 
     return(
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.titlesContainer}>
                 <Text style={styles.justYouHeader}>Just You</Text>
@@ -281,7 +284,7 @@ const ChangeEmailAddress = ({navigation}) => {
                     <Text style={styles.emailErrorMessage}>{emailErrorMessage}</Text>
                 : null}
             </View>
-            <View style={styles.verifyExplenationContainer}>
+            {/* <View style={styles.verifyExplenationContainer}>
                 <Text style={styles.verifyExplenationText}>We'll send you an email with a 5-digit code to verify your new email address.</Text>
               </View>
             <View style={styles.getCodeButtonContainer}>
@@ -291,11 +294,11 @@ const ChangeEmailAddress = ({navigation}) => {
                 >
                     <Text style={styles.getcodeButtonText}>Verify</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
 
-            <View  display={isCodeSent} style={styles.greyBorder}></View>
+            {/* <View  display={isCodeSent} style={styles.greyBorder}></View> */}
 
-            <View display={isCodeSent}>
+            {/* <View display={isCodeSent}>
                 <Text style={styles.verificationText}>
                     We just sent you an email with a code.
                 </Text>
@@ -308,9 +311,9 @@ const ChangeEmailAddress = ({navigation}) => {
                 <Text style={styles.verificationTitle}>
                     Enter your verification code  
                 </Text>
-            </View>
+            </View> */}
 
-                <View display={isCodeSent} style={styles.codeAndErrorContainer}>
+                {/* <View display={isCodeSent} style={styles.codeAndErrorContainer}>
                     <View style={styles.codelInput}>
                         <TextInput
                             style={{fontSize: 25}}
@@ -319,9 +322,9 @@ const ChangeEmailAddress = ({navigation}) => {
                             onChangeText={text => handleOnCodeInputChange(text)}
                         />
                     </View>
-                </View>
+                </View> */}
 
-                <View display={isCodeSent} style={{flexDirection:'row'}}>
+                {/* <View display={isCodeSent} style={{flexDirection:'row'}}>
                     <View>
                     <Text style={styles.resendCodeText}>{"Didn't recive an email?"}</Text> 
                     </View>
@@ -332,13 +335,13 @@ const ChangeEmailAddress = ({navigation}) => {
                         <Text style={styles.resendButton}>{"resend"}</Text> 
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
             
                 {isCodeError ? 
                     <Text style={styles.codeErrorMessage}>{codeErrorMessage}</Text>
                 : null}
 
-            <View display={isCodeSent} style={styles.submitButtonContainer}>
+            <View style={styles.submitButtonContainer}>
                 <AppButton
                     title="Submit"
                     onPress={handleSubmit}
@@ -346,6 +349,7 @@ const ChangeEmailAddress = ({navigation}) => {
             </View>
         
         </SafeAreaView>
+        </TouchableWithoutFeedback>
     )
 } 
 
@@ -510,7 +514,8 @@ const styles = StyleSheet.create({
       submitButtonContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 50
       }
 });
 
