@@ -18,7 +18,7 @@ const SECTIONS = [
         content: 'At the end of each month..'
     },
     {
-        title: 'If my client is late, do I still give the full session?',
+        title: 'If my client is late, do I give the full session?',
         content: 'In terms of the agreement, you may terminate the training on time. We recommend that you do complete the full workout session, for the sake of good service that will likely be reflected on you.'
     },
     {
@@ -26,11 +26,11 @@ const SECTIONS = [
         content: 'The training cannot be canceled after you have confirmed. If you are still unable to perform the training, the client should be updated immediately. In addition, and in accordance with the terms of the agreement you have signed, the company may impose fines that could include suspension from the application. The whole concept of JustYou is '+'"'+'it is always clients time'+'".'
     },
     {
-        title: 'What if my client cancels less than 24h before the session?',
+        title: 'If my client cancels less than 24h before?',
         content: 'The client will be charged in full and you will receive full payment.'
     },
     {
-        title: 'What if I have an emergency during the session?',
+        title: 'If I have an emergency during the session?',
         content: 'If you have a medical emergency, call 911 immediately.'
     }
 ];
@@ -63,20 +63,16 @@ const QuestionsAndAnswers = ({navigation}) => {
                                 width: Dimensions.get('window').width * 0.95
                             }}
                             style={{
-                                width: Dimensions.get('window').width * 0.9,
+                                width: Dimensions.get('window').width,
                                 backgroundColor: 'white',
-                                borderRadius: 0,
-                                alignSelf: 'flex-start'
+                                borderRadius: 0
                             }}
                             headerStyle={{
                                 marginTop: 5,
-                                height: 50,
-                                width: Dimensions.get('window').width * 0.93
-
+                                height: 50
                             }}
                             contentStyle={{
-                                color: 'deepskyblue',
-                                width: Dimensions.get('window').width * 0.9
+                                color: 'deepskyblue'
                             }}
                             icon={<Icon style={{alignSelf: 'flex-end'}} name='arrow-down' size={16} />}
                             expandedIcon={<Icon name='arrow-up' size={16} />}

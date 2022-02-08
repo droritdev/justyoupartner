@@ -19,6 +19,8 @@ const PendingApprovalOrder = ({navigation}) => {
     const [declineClicked, setDeclineClicked] = useState(false);
     const [clientInfo, setClientInfo] = useState([]);
 
+    const [disableButton, setDisableButton] = useState(false)
+
     //Format the categories list to lower case with first letter upper case
     const textDisplayFormat = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -251,6 +253,7 @@ const PendingApprovalOrder = ({navigation}) => {
 
     //Check if the time range is available on the trainer calendar
     const handleApproveClicked = () => {
+        //handleDismiss()
         //Get currently occupied hours (array) from according to the training date
         console.log('handleApproveClicked training date ', orderObject.trainingDate.startTime)
         var occupiedHours = getOccupiedHours(getEventsFromDate(orderObject.trainingDate.startTime.slice(0, 10)));
@@ -397,7 +400,10 @@ const PendingApprovalOrder = ({navigation}) => {
                     <Dialog.Title>Approve Order</Dialog.Title>
                     <Dialog.Description>Do you want to approve this order ?</Dialog.Description>
                     <Dialog.Button label="No" onPress={()=>handleDismiss()} />
-                    <Dialog.Button label="Yes" onPress={()=>handleApproveClicked()} />
+                    <Dialog.Button label="Yes" disabled={disableButton} onPress={()=>{
+                        setDisableButton(true)
+                        handleApproveClicked()
+                    }} />
                 </Dialog.Container>
             </View>
 
